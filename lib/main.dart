@@ -12,7 +12,7 @@ import 'package:oasisathletic/ui/drawer/payment_Information.dart';
 import 'package:oasisathletic/ui/drawer/policies.dart';
 import 'package:oasisathletic/ui/drawer/sendMessagesScreen.dart';
 import 'package:oasisathletic/ui/drawer/settings.dart';
-import 'package:oasisathletic/ui/home_screen/home_screen.dart';
+import 'package:oasisathletic/ui/home_screen/Home/home_screen.dart';
 import 'package:oasisathletic/ui/home_screen/widgets/student_inside.dart';
 import 'package:oasisathletic/ui/login_screen/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';

@@ -55,5 +55,5 @@ class AppStyle{
     // ),
     //==> ColorScheme Ends Here <==//
   );
-  //==> Dark Theme Ends Here <==//
+//==> Dark Theme Ends Here <==//
 }

@@ -15,7 +15,7 @@ import '../../core/reusable_components/text_field.dart';
 import '../../core/reusable_components/toastErrorMsg.dart';
 import '../../core/services/loginServices/AuthLoginService.dart';
 import '../../core/strings_manager.dart';
-import '../home_screen/home_screen.dart';
+import '../home_screen/Home/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/login';

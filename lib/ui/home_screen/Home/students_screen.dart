@@ -1,0 +1,304 @@
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../core/colors_Manager.dart';
+import '../../../core/model/regStdModels/StdData.dart';
+import '../../../core/reusable_components/app_background.dart';
+import '../../../core/reusable_components/app_colors_extension.dart';
+import '../../../core/reusable_components/student_card.dart';
+import '../widgets/student_inside.dart';
+
+
+
+class StudentsScreen extends StatelessWidget {
+  final List<StdData> students;
+
+  const StudentsScreen({super.key, required this.students});
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final isLight = scheme.brightness == Brightness.light;
+
+    final Color primaryBlue = isLight
+        ? ColorsManager.primaryGradientStart
+        : ColorsManager.primaryGradientStartDark;
+
+    final Color secondaryBlue = isLight
+        ? ColorsManager.primaryGradientEnd
+        : ColorsManager.primaryGradientEndDark;
+
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      // appBar: AppBar(
+      //   elevation: 0,
+      //   backgroundColor: Colors.white.withOpacity(0.65),
+      //   surfaceTintColor: Colors.transparent,
+      //   centerTitle: true,
+      //   title: Text(
+      //     'Students',
+      //     style: TextStyle(
+      //       color: scheme.textMainBlack,
+      //       fontSize: 18.sp,
+      //       fontWeight: FontWeight.w700,
+      //     ),
+      //   ),
+      //   flexibleSpace: ClipRect(
+      //     child: BackdropFilter(
+      //       filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+      //       child: Container(
+      //         decoration: BoxDecoration(
+      //           gradient: LinearGradient(
+      //             colors: [
+      //               Colors.white.withOpacity(0.96),
+      //               Colors.white.withOpacity(0.92),
+      //               Colors.white.withOpacity(0.88),
+      //             ],
+      //             begin: Alignment.topCenter,
+      //             end: Alignment.bottomCenter,
+      //           ),
+      //           border: Border(
+      //             bottom: BorderSide(
+      //               color: Colors.black.withOpacity(0.04),
+      //               width: 0.5,
+      //             ),
+      //           ),
+      //         ),
+      //       ),
+      //     ),
+      //   ),
+      //   iconTheme: IconThemeData(
+      //     color: scheme.textMainBlack,
+      //   ),
+      // ),
+
+      body: AppBackground(
+        //useAppBarBlur: true,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /// TITLE + ICON (نفس الحركة)
+              TweenAnimationBuilder<double>(
+                tween: Tween(begin: 0.0, end: 1.0),
+                duration: const Duration(milliseconds: 260),
+                curve: Curves.easeOutBack,
+                builder: (context, value, child) {
+                  final safe = value.clamp(0.0, 1.0);
+                  return Opacity(
+                    opacity: safe,
+                    child: Transform.translate(
+                      offset: Offset(0, (1 - safe) * 10),
+                      child: child,
+                    ),
+                  );
+                },
+                child: Row(
+                  children: [
+                    Container(
+                      width: 32.w,
+                      height: 32.w,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: SweepGradient(
+                          colors: [
+                            ColorsManager.accentSun,
+                            ColorsManager.accentMint,
+                            ColorsManager.accentSky,
+                            primaryBlue,
+                            ColorsManager.accentSun,
+                          ],
+                        ),
+                      ),
+                      child: const Center(
+                        child: Text('🎒',
+                            style: TextStyle(fontSize: 18)),
+                      ),
+                    ),
+                    SizedBox(width: 10.w),
+                    Text(
+                      "Students",
+                      style: TextStyle(
+                        fontSize: 22.sp,
+                        fontWeight: FontWeight.bold,
+                        color: scheme.textMainBlack,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: 20.h),
+
+              /// GRID (نفس الشكل 100%)
+              Expanded(
+                child: GridView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: students.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16.w,
+                    mainAxisSpacing: 16.h,
+                    childAspectRatio: 0.85,
+                  ),
+                  itemBuilder: (_, index) {
+                    final student = students[index];
+
+                    return _buildAnimatedStudentCard(
+                      context,
+                      student: student,
+                      index: index,
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// نفس أنيميشن الكروت في HomeScreen
+  Widget _buildAnimatedStudentCard(
+      BuildContext context, {
+        required StdData student,
+        required int index,
+      }) {
+    final name = student.stdFirstname ?? 'No Name';
+    final photo = student.stdPicture ?? '';
+
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.0, end: 1.0),
+      duration: Duration(milliseconds: 260 + index * 40),
+      curve: Curves.easeOutBack,
+      builder: (context, value, child) {
+        final double safe = value.clamp(0.0, 1.0);
+        return Opacity(
+          opacity: safe,
+          child: Transform.translate(
+            offset: Offset(0, (1 - safe) * 14),
+            child: child,
+          ),
+        );
+      },
+      child: Center(
+        child: StudentCard(
+          name: name,
+          photo: photo,
+          onTap: () => Navigator.pushNamed(
+            context,
+            StudentInside.routeName,
+            arguments: {"student": student},
+          ),
+        ),
+      ),
+    );
+  }
+}
+// class StudentsScreen extends StatelessWidget {
+//   final List<StdData> students;
+//
+//   const StudentsScreen({super.key, required this.students});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//
+//     return Padding(
+//       padding: const EdgeInsets.all(16.0),
+//       child: GridView.builder(
+//         itemCount: students.length,
+//         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+//           crossAxisCount: 2,
+//           crossAxisSpacing: 16,
+//           mainAxisSpacing: 16,
+//           childAspectRatio: 0.85,
+//         ),
+//         itemBuilder: (_, index) {
+//           final student = students[index];
+//
+//           return buildAnimatedStudentCard(
+//             context,
+//             index: index,
+//             name: student.stdFirstname ?? '',
+//             photo: student.stdPicture ?? '',
+//             student: student,
+//           );
+//         },
+//       ),
+//     );
+//   }
+//
+//   /// --------------------------------------------------------
+//   /// OLD ANIMATION (restored)
+//   /// --------------------------------------------------------
+//   Widget buildAnimatedStudentCard(
+//       BuildContext context, {
+//         required int index,
+//         required String name,
+//         required String photo,
+//         required StdData student,
+//       }) {
+//     return TweenAnimationBuilder<double>(
+//       tween: Tween(begin: 0.0, end: 1.0),
+//       duration: Duration(milliseconds: 260 + index * 40),
+//       curve: Curves.easeOutBack,
+//       builder: (context, value, child) {
+//         final double safe = value.clamp(0.0, 1.0);
+//         return Opacity(
+//           opacity: safe,
+//           child: Transform.translate(
+//             offset: Offset(0, (1 - safe) * 14),
+//             child: child,
+//           ),
+//         );
+//       },
+//
+//       child: Center(
+//         child: StudentCard(
+//           name: name,
+//           photo: photo,
+//           onTap: () => Navigator.pushNamed(
+//             context,
+//             StudentInside.routeName,
+//             arguments: {"student": student},
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+//}
+//******************************
+//
+// class StudentsScreen extends StatelessWidget {
+//   final List<StdData> students;
+//
+//   const StudentsScreen({super.key, required this.students});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.all(16.0),
+//       child: GridView.builder(
+//         itemCount: students.length,
+//         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+//           crossAxisCount: 2,
+//           crossAxisSpacing: 16,
+//           mainAxisSpacing: 16,
+//           childAspectRatio: 0.85,
+//         ),
+//         itemBuilder: (_, index) {
+//           final student = students[index];
+//           return StudentCard(
+//             name: student.stdFirstname ?? '',
+//             photo: student.stdPicture ?? '',
+//             onTap: () {},
+//           );
+//         },
+//       ),
+//     );
+//   }
+// }

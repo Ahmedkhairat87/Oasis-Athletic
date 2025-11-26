@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class MessagesWidget extends StatelessWidget {
-  final Map<String, dynamic> msg;
+import '../../../../core/model/msgsModels/BaseMessage.dart';
 
-  const MessagesWidget({super.key, required this.msg});
+class MessagesWidget extends StatelessWidget {
+  final BaseMessage msg;
+  final String? studentFirstName;
+  const MessagesWidget({super.key, required this.msg, this.studentFirstName});
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +51,7 @@ class MessagesWidget extends StatelessWidget {
     return Row(
       children: [
         Text(
-          msg["senderType"],
+          msg.enDesc as String,
           style: TextStyle(
             fontWeight: FontWeight.w600,
             color: isDark ? Colors.white70 : Colors.black,
@@ -57,7 +59,7 @@ class MessagesWidget extends StatelessWidget {
         ),
         const Spacer(),
         Text(
-          msg["date"],
+          msg.actualEditdate as String,
           style: TextStyle(
             color: isDark ? Colors.white38 : Colors.grey,
             fontSize: 12,
@@ -72,7 +74,7 @@ class MessagesWidget extends StatelessWidget {
   // -------------------------------
   Widget _buildSenderName(bool isDark) {
     return Text(
-      msg["senderName"],
+      msg.empName as String,
       style: TextStyle(
         fontWeight: FontWeight.w500,
         color: isDark ? Colors.white : Colors.black,
@@ -85,7 +87,7 @@ class MessagesWidget extends StatelessWidget {
   // -------------------------------
   Widget _buildMessageText(bool isDark) {
     return Text(
-      msg["message"],
+      msg.noteSubject as String,
       style: TextStyle(
         color: isDark ? Colors.white70 : Colors.grey,
       ),
@@ -105,7 +107,7 @@ class MessagesWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(12.r),
         ),
         child: Text(
-          msg["child"],
+          studentFirstName ?? msg.studentNom,
           style: TextStyle(
             color: Colors.white,
             fontSize: 12,

@@ -1,161 +1,106 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../bloc/nav_drawer_bloc.dart';
-import '../bloc/nav_drawer_state.dart';
-// import '../views/cart_view.dart';
-// import '../views/home_view.dart';
-// import '../views/order_view.dart';
-// import '../views/profile_view.dart';
-// import '../views/setting_view.dart';
-// import '../widget/drawer_widget.dart';
-// import '../widget/info_builder.dart';
-import 'package:iconly/iconly.dart';
-
-import '../ui/drawer/appointments.dart';
-import '../ui/drawer/bus_registeration.dart';
-import '../ui/drawer/canteen_charge.dart';
-import '../ui/drawer/settings.dart';
-import '../ui/home_screen/home_screen.dart';
+import 'package:oasisathletic/core/reusable_components/app_background.dart';
+import '../ui/home_screen/Home/students_screen.dart';
 import '../ui/home_screen/widgets/home_drawer.dart';
-import 'info_builder.dart';
+import 'model/regStdModels/SideMenu.dart';
+import 'model/regStdModels/StdData.dart';
 
 
 class MainWrapper extends StatefulWidget {
-  const MainWrapper({super.key});
+  final List<SideMenu> sideMenuList;
+  final List<StdData> students;
+
+  const MainWrapper({
+    super.key,
+    required this.sideMenuList,
+    required this.students,
+  });
 
   @override
   MainWrapperState createState() => MainWrapperState();
 }
 
 class MainWrapperState extends State<MainWrapper> {
-  /// NavDrawer Bloc
-  late NavDrawerBloc _bloc;
-
-  /// Each Item in Drawer Content
-  late Widget _content;
-
-  @override
-  void initState() {
-    super.initState();
-    _bloc = NavDrawerBloc();
-    _content = _getContentForState(_bloc.state.selectedItem);
-  }
-
-  //
-// Created by CodeWithFlexZ
-// Tutorials on my YouTube
-//
-//! Instagram
-//! @CodeWithFlexZ
-//
-//? GitHub
-//? AmirBayat0
-//
-//* YouTube
-//* Programming with FlexZ
-//
-
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<NavDrawerBloc>(
-      create: (BuildContext context) => _bloc,
-      child: BlocConsumer<NavDrawerBloc, NavDrawerState>(
-        /// Listener
-        listener: (BuildContext context, NavDrawerState state) {
-          _content = _getContentForState(state.selectedItem);
-        },
-
-        /// Build When
-        buildWhen: (previous, current) {
-          return previous.selectedItem != current.selectedItem;
-        },
-
-        /// Listen When
-        listenWhen: (previous, current) {
-          return previous.selectedItem != current.selectedItem;
-        },
-
-        /// Builder
-        builder: (BuildContext context, NavDrawerState state) {
-          /// Main App Scaffold
-          return Scaffold(
-            /// Drawer
-            drawer: HomeDrawer(),
-
-            /// AppBar
-            appBar: _buildAppBar(state),
-
-            /// FAB
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                Navigator.push(context,
-                    CupertinoPageRoute(builder: (_) => const Settings()));
-              },
-              child: const Icon(IconlyBold.setting),
-            ),
-
-            /// Body
-            body: AnimatedSwitcher(
-              switchInCurve: Curves.easeInExpo,
-              switchOutCurve: Curves.easeOutExpo,
-              duration: const Duration(milliseconds: 400),
-
-              /// Each Item Body/Content
-              child: _content,
-            ),
-            bottomNavigationBar: const InfoBuilder(),
-          );
-        },
-      ),
+    return Scaffold(
+      //backgroundColor: Colors.transparent,
+      appBar: _buildStyledAppBar(context),
+      drawer: HomeDrawer(sideMenuList: widget.sideMenuList),
+      body: StudentsScreen(students: widget.students),
     );
   }
 
-  /// MainWrapper AppBar
-  AppBar _buildAppBar(NavDrawerState state) {
+  PreferredSizeWidget _buildStyledAppBar(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
     return AppBar(
-      iconTheme: const IconThemeData(color: Colors.white),
+      elevation: 0,
+      backgroundColor: Colors.white.withOpacity(0.65),
+      surfaceTintColor: Colors.transparent,
+      centerTitle: true,
       title: Text(
-        _getAppBarTitle(state.selectedItem),
-        style: const TextStyle(color: Colors.white),
+        'Students',
+        style: TextStyle(
+          color: scheme.onBackground,
+          fontSize: 18,
+          fontWeight: FontWeight.w700,
+        ),
       ),
-      centerTitle: false,
-      backgroundColor: const Color.fromARGB(255, 112, 119, 249),
-      systemOverlayStyle: SystemUiOverlayStyle.dark,
+      flexibleSpace: ClipRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.white.withOpacity(0.96),
+                  Colors.white.withOpacity(0.92),
+                  Colors.white.withOpacity(0.88),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+              border: Border(
+                bottom: BorderSide(
+                  color: Colors.black.withOpacity(0.04),
+                  width: 0.5,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
-  }
-
-  /// Content For Each Drawer Item
-  Widget _getContentForState(NavItem selectedItem) {
-    switch (selectedItem) {
-      case NavItem.homeView:
-        return const HomeScreen();
-      case NavItem.appointmentsView:
-        return const Appointments();
-      case NavItem.busRegView:
-        return const BusRegisteration();
-      case NavItem.canteenChargeView:
-        return const CanteenCharge();
-      default:
-        return Container();
-    }
-  }
-
-  /// Get AppBar Title For Each Drawer Item
-  String _getAppBarTitle(NavItem selectedItem) {
-    switch (selectedItem) {
-      case NavItem.homeView:
-        return "Home";
-      case NavItem.appointmentsView:
-        return "Appointments";
-      case NavItem.busRegView:
-        return "Bus Regestration";
-      case NavItem.canteenChargeView:
-        return "Canteen Charge";
-      default:
-        return "Navigation Drawer Demo";
-    }
   }
 }
+//
+// class MainWrapper extends StatefulWidget {
+//   final List<SideMenu> sideMenuList;
+//   final List<StdData> students;
+//
+//   const MainWrapper({
+//     super.key,
+//     required this.sideMenuList,
+//     required this.students,
+//   });
+//
+//   @override
+//   MainWrapperState createState() => MainWrapperState();
+// }
+//
+// class MainWrapperState extends State<MainWrapper> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Students'),
+//       ),
+//       drawer: HomeDrawer(sideMenuList: widget.sideMenuList),
+//       body: StudentsScreen(students: widget.students),
+//     );
+//   }
+// }
