@@ -1,4 +1,5 @@
 // lib/ui/login_screen/login.dart
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -14,8 +15,9 @@ import '../../core/reusable_components/role_selector.dart';
 import '../../core/reusable_components/text_field.dart';
 import '../../core/reusable_components/toastErrorMsg.dart';
 import '../../core/services/loginServices/AuthLoginService.dart';
+import '../../core/setMobileData.dart';
 import '../../core/strings_manager.dart';
-import '../home_screen/home_screen.dart';
+import '../home_screen/Home/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/login';
@@ -30,6 +32,7 @@ Future<void> saveUserData(String token, String empName) async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.setString("token", token);
   await prefs.setString("empName", empName);
+
 }
 
 class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin {
@@ -40,6 +43,8 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
 
   UserRole? selectedRole;
   late FocusNode userFocusNode;
+
+
 
   // Animation controllers (for optional fine control)
   late final AnimationController _switchController;
@@ -488,11 +493,15 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
     if (!formKey.currentState!.validate()) return;
 
     try {
+      final deviceData = await getDeviceData();
+
+      final deviceId = deviceData["deviceId"] ?? "unknown";
+      final deviceType = deviceData["deviceType"]?? "0";
       LoginResponse response = await AuthLoginService.login(
         username: userController.text,
         password: passController.text,
-        deviceId: selectedRole.toString(),
-        DeviceType: 1,
+        deviceId: deviceId ,
+        DeviceType: deviceType,
         fcmToken: "",
       );
 

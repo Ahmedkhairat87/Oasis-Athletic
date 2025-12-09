@@ -47,9 +47,15 @@ dependencies:
   http: ^1.4.0
   shared_preferences: ^2.5.3
   fluttertoast: ^8.2.4
-
+  url_launcher: ^6.3.0
+  syncfusion_flutter_pdfviewer: ^31.2.15
+  webview_flutter: ^4.7.0
+  file_picker: 10.3.7
+  image_picker: ^1.1.0
 
   intl: any
+  device_info_plus: ^12.2.0
+  dio: ^5.9.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

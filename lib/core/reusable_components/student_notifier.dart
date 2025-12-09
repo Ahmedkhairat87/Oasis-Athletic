@@ -6,12 +6,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/regStdModels/stdData.dart';
 import '../model/regStdModels/stdData.dart';
+import '../model/stdLinks/StdFullData.dart';
 
 const String _kStudentPrefsKey = 'oasis_student_profile_v1';
 
 /// Global ValueNotifier used across the app.
-final ValueNotifier<StdData> studentNotifier =
-ValueNotifier<StdData>(StdData(
+final ValueNotifier<stdData> studentNotifier =
+ValueNotifier<stdData>(stdData(
   stdId: 0,
   stdFirstname: "Unknown",
   stdPicture: "",
@@ -27,7 +28,7 @@ Future<void> loadStudentFromPrefs() async {
 
     if (jsonStr != null && jsonStr.isNotEmpty) {
       final map = json.decode(jsonStr) as Map<String, dynamic>;
-      final loaded = StdData.fromJson(map);
+      final loaded = stdData.fromJson(map);
       studentNotifier.value = loaded;
     }
   } catch (e) {
@@ -47,7 +48,7 @@ Future<void> saveStudentToPrefs() async {
 }
 
 /// Update whole student object
-Future<void> updateStudent(StdData newStudent, {bool persist = true}) async {
+Future<void> updateStudent(stdData newStudent, {bool persist = true}) async {
   studentNotifier.value = newStudent;
   if (persist) await saveStudentToPrefs();
 }
@@ -56,7 +57,7 @@ Future<void> updateStudent(StdData newStudent, {bool persist = true}) async {
 Future<void> updateStudentName(String newName, {bool persist = true}) async {
   final current = studentNotifier.value;
 
-  studentNotifier.value = StdData(
+  studentNotifier.value = stdData(
     stdId: current.stdId,
     stdFirstname: newName,
     stdPicture: current.stdPicture,
@@ -71,7 +72,7 @@ Future<void> updateStudentName(String newName, {bool persist = true}) async {
 Future<void> updateStudentPhoto(String newPhoto, {bool persist = true}) async {
   final current = studentNotifier.value;
 
-  studentNotifier.value = StdData(
+  studentNotifier.value = stdData(
     stdId: current.stdId,
     stdFirstname: current.stdFirstname,
     stdPicture: newPhoto,
@@ -86,7 +87,7 @@ Future<void> updateStudentPhoto(String newPhoto, {bool persist = true}) async {
 Future<void> updateStudentGrade(num newGrade, {bool persist = true}) async {
   final current = studentNotifier.value;
 
-  studentNotifier.value = StdData(
+  studentNotifier.value = stdData(
     stdId: current.stdId,
     stdFirstname: current.stdFirstname,
     stdPicture: current.stdPicture,
@@ -99,7 +100,7 @@ Future<void> updateStudentGrade(num newGrade, {bool persist = true}) async {
 
 /// Reset student to placeholder
 Future<void> resetStudent({bool persist = true}) async {
-  studentNotifier.value = StdData(
+  studentNotifier.value = stdData(
     stdId: 0,
     stdFirstname: "Unknown",
     stdPicture: "",
@@ -108,4 +109,12 @@ Future<void> resetStudent({bool persist = true}) async {
   );
 
   if (persist) await saveStudentToPrefs();
+}
+
+
+final ValueNotifier<StdFullData?> studentFullNotifier =
+ValueNotifier<StdFullData?>(null);
+
+void updateFullStudent(StdFullData data) {
+  studentFullNotifier.value = data;
 }

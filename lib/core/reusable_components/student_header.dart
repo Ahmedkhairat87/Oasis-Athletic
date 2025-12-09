@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../colors_Manager.dart';
 import '../model/regStdModels/stdData.dart';
+import '../model/stdLinks/StdFullData.dart';
 import 'student_notifier.dart';
 
 /// Compact header showing avatar, name, and grade only.
@@ -168,7 +169,7 @@ class _StudentHeaderFromNotifier extends StudentHeader {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<StdData>(
+    return ValueListenableBuilder<stdData>(
       valueListenable: studentNotifier,
       builder: (context, student, _) {
         // Prepare avatar safely
@@ -184,8 +185,53 @@ class _StudentHeaderFromNotifier extends StudentHeader {
 
         return StudentHeader(
           avatar: avatar,
-          name: student.stdFirstname ?? "Unknown",
-          grade: student.currentGrade?.toString() ?? "",
+          name: student.stdFirstname ?? "",
+          grade: student.currentClasse?.toString() ?? "",
+        );
+      },
+    );
+  }
+}
+
+/// NEW — Reads from Full Student Notifier
+
+String fixImageUrl(String? raw) {
+  if (raw == null || raw.isEmpty) return "";
+
+  // Replace \ with /
+  String clean = raw.replaceAll("\\", "/");
+
+  // If already URL
+  if (clean.startsWith("http")) return clean;
+
+  // Otherwise assume server root
+  return "https://staff.oasisdemaadi.com/$clean";
+}
+
+class StudentHeaderFromFull extends StatelessWidget {
+  const StudentHeaderFromFull({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<StdFullData?>(
+      valueListenable: studentFullNotifier,
+      builder: (context, student, _) {
+        if (student == null) return const SizedBox();
+
+        final imageUrl = fixImageUrl(student.stdPicture);
+
+        ImageProvider? avatar =
+        imageUrl.isNotEmpty && imageUrl.startsWith("http")
+            ? NetworkImage(imageUrl)
+            : const AssetImage("assets/images/logo.png");
+
+        final gradeText =
+            "${student.gradeDesc ?? ''} - ${student.className ?? ''}";
+
+        return StudentHeader(
+          avatar: avatar,
+          name: student.stdFirstname ?? "",
+          grade: gradeText,
         );
       },
     );

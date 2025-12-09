@@ -1,6 +1,7 @@
 // lib/ui/student_inside_tabs/profile_tab.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:oasisathletic/core/model/stdLinks/StdFullData.dart';
 import '../../../../core/colors_Manager.dart';
 
 // reusable imports
@@ -9,10 +10,13 @@ import '../../../../core/reusable_components/profile_tab_emergency_contact_field
 import '../../../../core/reusable_components/profile_tab_golden_card.dart';
 import '../../../../core/reusable_components/profile_tab_labeled_text_field.dart';
 import '../../../../core/reusable_components/profile_tab_section_title.dart';
-import '../../../../core/reusable_components/profile_tab_read_only_field.dart'; // ReadOnlyField
+import '../../../../core/reusable_components/profile_tab_read_only_field.dart';
+import '../../../../core/reusable_components/student_header.dart'; // ReadOnlyField
 
 class ProfileTab extends StatefulWidget {
-  const ProfileTab({super.key});
+  final StdFullData student; // 👈 البيانات الجاية من API
+
+  const ProfileTab({super.key, required this.student});
 
   @override
   State<ProfileTab> createState() => _ProfileTabState();
@@ -20,61 +24,86 @@ class ProfileTab extends StatefulWidget {
 
 class _ProfileTabState extends State<ProfileTab> {
   // Student info (kept as controllers as a data source; not used as editable inside student info)
-  final TextEditingController _nameController =
-  TextEditingController(text: 'Malek Mahmoud Khairat');
-  final TextEditingController _gradeController =
-  TextEditingController(text: 'P4D');
-  final TextEditingController _ageController =
-  TextEditingController(text: '9 Years Old');
-  final TextEditingController _weightController =
-  TextEditingController(text: '45 kg');
-  final TextEditingController _heightController =
-  TextEditingController(text: '100 cm');
-  final TextEditingController _schoolYearController =
-  TextEditingController(text: '2025/2026');
-  final TextEditingController _birthDateController =
-  TextEditingController(text: '06/10/2016');
+  final _nameController = TextEditingController();
+  final _gradeController = TextEditingController();
+  final _ageController = TextEditingController();
+  final _weightController = TextEditingController();
+  final _heightController = TextEditingController();
+  final _schoolYearController = TextEditingController();
+  final _birthDateController = TextEditingController();
 
   // Contact info controllers (editable)
-  final TextEditingController _emailController = TextEditingController(text: '');
-  final TextEditingController _fatherMobileController =
-  TextEditingController(text: '');
-  final TextEditingController _motherMobileController =
-  TextEditingController(text: '');
-  final TextEditingController _contactMobileController =
-  TextEditingController(text: '');
-  final TextEditingController _fatherAddressController =
-  TextEditingController(text: '');
-  final TextEditingController _motherAddressController =
-  TextEditingController(text: '');
+  final _emailController = TextEditingController();
+  final _fatherMobileController = TextEditingController();
+  final _motherMobileController = TextEditingController();
+  final _contactMobileController = TextEditingController();
+  final _fatherAddressController = TextEditingController();
+  final _motherAddressController = TextEditingController();
 
   // Emergency contacts (3)
-  final List<TextEditingController> _emergencyName =
-  List.generate(3, (_) => TextEditingController());
-  final List<TextEditingController> _emergencyMobile =
-  List.generate(3, (_) => TextEditingController());
-  final List<TextEditingController> _emergencyRelation =
-  List.generate(3, (_) => TextEditingController());
+  final _emergencyName = TextEditingController();
+  final _emergencyMobile = TextEditingController();
+  final _emergencyRelation = TextEditingController();
 
   // Medical
-  String _bloodGroup = 'O+';
+  String _bloodGroup = "";
   bool _hasAllergies = false;
-  final TextEditingController _allergyDetailsController =
-  TextEditingController();
+  final _allergyDetailsController = TextEditingController();
   bool _pastInjuries = false;
   bool _anySurgery = false;
-  final TextEditingController _surgeryDetailsController =
-  TextEditingController();
+  final _surgeryDetailsController = TextEditingController();
 
   // Sports & plan
-  final TextEditingController _subscriptionPlanController =
-  TextEditingController(text: 'Staff');
-  final TextEditingController _athleticProgramController =
-  TextEditingController(text: 'PYP Football');
-  final TextEditingController _primarySportController =
-  TextEditingController(text: 'Football');
-  final TextEditingController _secondarySportController =
-  TextEditingController(text: 'Swimming');
+  final _subscriptionPlanController = TextEditingController();
+  final _athleticProgramController = TextEditingController();
+  final _primarySportController = TextEditingController();
+  final _secondarySportController = TextEditingController();
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Fill read-only info
+    _nameController.text = widget.student.stdFirstname ?? '';
+    _gradeController.text = widget.student.gradeDesc ?? '';
+    _ageController.text = widget.student.ageYears.toString() ?? '';
+    _weightController.text = widget.student.weightKG.toString() ?? '';
+    _heightController.text = widget.student.heightCM.toString() ?? '';
+    _schoolYearController.text = widget.student.schoolYear ?? '';
+    _birthDateController.text = widget.student.stdBirthdate ?? '';
+
+    // Contact info
+    _emailController.text = widget.student.stdEmail ?? '';
+    _fatherMobileController.text = widget.student.fatherMobile ?? '';
+    _motherMobileController.text = widget.student.motherMobile ?? '';
+    _contactMobileController.text = widget.student.contactMobile ?? '';
+    _fatherAddressController.text = widget.student.fatherAddress ?? '';
+    _motherAddressController.text = widget.student.motherAddress ?? '';
+
+    // Emergency contacts (assuming list of 3)
+    // if (widget.student.urgentM1!= null &&
+    //     widget.student.ur.length >= 3) {
+    //   _emergencyName.text = widget.student.emergencyContacts![0].name ?? '';
+    //   _emergencyMobile.text = widget.student.emergencyContacts![0].mobile ?? '';
+    //   _emergencyRelation.text = widget.student.emergencyContacts![0].relation ?? '';
+    // }
+
+    // Medical
+    _bloodGroup = widget.student.groupeblood?? '';
+    _hasAllergies = widget.student.allergies ?? false;
+    _pastInjuries = widget.student.allergies ?? false;
+    _anySurgery = widget.student.allergies ?? false;
+    _allergyDetailsController.text = widget.student.allergies?? '';
+    _surgeryDetailsController.text = widget.student.allergies ?? '';
+
+    // Sports
+    // _subscriptionPlanController.text = widget.student. ?? '';
+    // _athleticProgramController.text = widget.student.athleticProgram ?? '';
+    // _primarySportController.text = widget.student.primarySport ?? '';
+    // _secondarySportController.text = widget.student.secondarySport ?? '';
+
+  }
 
   @override
   void dispose() {
@@ -93,15 +122,15 @@ class _ProfileTabState extends State<ProfileTab> {
     _fatherAddressController.dispose();
     _motherAddressController.dispose();
 
-    for (final c in _emergencyName) {
-      c.dispose();
-    }
-    for (final c in _emergencyMobile) {
-      c.dispose();
-    }
-    for (final c in _emergencyRelation) {
-      c.dispose();
-    }
+    // for (final c in _emergencyName) {
+    //   c.dispose();
+    // }
+    // for (final c in _emergencyMobile) {
+    //   c.dispose();
+    // }
+    // for (final c in _emergencyRelation) {
+    //   c.dispose();
+    // }
 
     _allergyDetailsController.dispose();
     _surgeryDetailsController.dispose();
@@ -178,7 +207,6 @@ class _ProfileTabState extends State<ProfileTab> {
   @override
   Widget build(BuildContext context) {
     final isLight = Theme.of(context).brightness == Brightness.light;
-
     final Color primaryBlue = isLight
         ? ColorsManager.primaryGradientStart
         : ColorsManager.primaryGradientStartDark;
@@ -187,6 +215,7 @@ class _ProfileTabState extends State<ProfileTab> {
     final Color accentSky = ColorsManager.accentSky;
     final Color accentPurple = ColorsManager.accentPurple;
     final Color accentCoral = ColorsManager.accentCoral;
+
 
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(vertical: 12.h),
@@ -210,7 +239,7 @@ class _ProfileTabState extends State<ProfileTab> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 1. Student information (READ-ONLY)
-            const SectionTitle('Student information'),
+            const SectionTitle('Student Information'),
             _animatedSection(
               delayMs: 0,
               child: GoldCard(
@@ -222,41 +251,40 @@ class _ProfileTabState extends State<ProfileTab> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Avatar with joyful multicolor ring
-                        Container(
-                          width: 92.w,
-                          height: 92.w,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: SweepGradient(
-                              colors: [
-                                primaryBlue,
-                                accentSky,
-                                accentMint,
-                                accentSun,
-                                accentCoral,
-                                primaryBlue,
-                              ],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: primaryBlue.withOpacity(0.25),
-                                blurRadius: 12,
-                                offset: const Offset(0, 6),
-                              )
-                            ],
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(3.w),
-                            child: ClipOval(
-                              child: Image.asset(
-                                'assets/images/Lucka.jpg',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        SizedBox(width: 12.w),
+                        // Container(
+                        //   width: 92.w,
+                        //   height: 92.w,
+                        //   decoration: BoxDecoration(
+                        //     shape: BoxShape.circle,
+                        //     gradient: SweepGradient(
+                        //       colors: [
+                        //         primaryBlue,
+                        //         accentSky,
+                        //         accentMint,
+                        //         accentSun,
+                        //         accentCoral,
+                        //         primaryBlue,
+                        //       ],
+                        //     ),
+                        //     boxShadow: [
+                        //       BoxShadow(
+                        //         color: primaryBlue.withOpacity(0.25),
+                        //         blurRadius: 12,
+                        //         offset: const Offset(0, 6),
+                        //       )
+                        //     ],
+                        //   ),
+                        //   // child: Padding(
+                        //   //   padding: EdgeInsets.all(3.w),
+                        //   //   child: ClipOval(
+                        //   //     child: Image(
+                        //   //       image: avatar,
+                        //   //     )
+                        //   //   ),
+                        //   // ),
+                        // ),
+                        //
+                        // SizedBox(width: 12.w),
 
                         // name and small meta
                         Expanded(
@@ -371,14 +399,14 @@ class _ProfileTabState extends State<ProfileTab> {
                     SizedBox(height: 12.h),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: List.generate(3, (i) {
-                        return EmergencyContactField(
-                          index: i,
-                          nameController: _emergencyName[i],
-                          mobileController: _emergencyMobile[i],
-                          relationController: _emergencyRelation[i],
-                        );
-                      }),
+                      // children: List.generate(3, (i) {
+                      //   return EmergencyContactField(
+                      //     index: i,
+                      //     // nameController: _emergencyName[i],
+                      //     // mobileController: _emergencyMobile[i],
+                      //     // relationController: _emergencyRelation[i],
+                      //   );
+                      // }),
                     ),
                     SizedBox(height: 6.h),
                     LabeledTextField(
@@ -433,7 +461,7 @@ class _ProfileTabState extends State<ProfileTab> {
                           ),
                           child: DropdownButtonHideUnderline(
                             child: DropdownButton<String>(
-                              value: _bloodGroup,
+                              value: widget.student.groupeblood,
                               icon: Icon(
                                 Icons.keyboard_arrow_down_rounded,
                                 color: primaryBlue,

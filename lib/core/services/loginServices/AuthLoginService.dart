@@ -11,7 +11,7 @@ class AuthLoginService {
     required String username,
     required String password,
     required String deviceId,
-    required int DeviceType,
+    required String DeviceType,
     required String fcmToken,
   }) async {
     final params = {

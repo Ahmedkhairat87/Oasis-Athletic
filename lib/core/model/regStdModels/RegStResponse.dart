@@ -1,4 +1,4 @@
-import 'StdData.dart';
+import 'stdData.dart';
 import 'SideMenu.dart';
 
 class RegStdResponse {
@@ -23,7 +23,7 @@ class RegStdResponse {
     if (json['Data'] != null) {
       data = [];
       json['Data'].forEach((v) {
-        data?.add(StdData.fromJson(v));
+        data?.add(stdData.fromJson(v));
       });
     }
     unReadedCount = json['UnReadedCount'];
@@ -46,7 +46,7 @@ class RegStdResponse {
     requiredFlag = json['requiredFlag'];
     requiredURL = json['requiredURL'];
   }
-  List<StdData>? data;
+  List<stdData>? data;
   num? unReadedCount;
   num? urgentUpdateIOS;
   num? urgentUpdateAndroid;
