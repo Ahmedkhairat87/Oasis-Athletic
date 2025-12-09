@@ -1,45 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../../../core/model/msgsModels/BaseMessage.dart';
 
 class MessagesWidget extends StatelessWidget {
   final BaseMessage msg;
-  final String? studentFirstName;
-  const MessagesWidget({super.key, required this.msg, this.studentFirstName});
+  final String studentFirstName;
+  final VoidCallback? onTap;
+
+  const MessagesWidget({
+    super.key,
+    required this.msg,
+    required this.studentFirstName,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Container(
-      margin: EdgeInsets.only(bottom: 10.h),
-      padding: EdgeInsets.all(12.w),
-      decoration: BoxDecoration(
-        color: isDark
-            ? Colors.grey.shade900.withOpacity(0.9)
-            : Colors.white.withOpacity(0.9),
-        borderRadius: BorderRadius.circular(12.r),
-        boxShadow: [
-          BoxShadow(
-            color: isDark
-                ? Colors.black.withOpacity(0.2)
-                : Colors.black12.withOpacity(0.05),
-            blurRadius: 4,
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildHeader(isDark),
-          SizedBox(height: 4.h),
-          _buildSenderName(isDark),
-          SizedBox(height: 4.h),
-          _buildMessageText(isDark),
-          SizedBox(height: 6.h),
-          _buildChildTag(isDark),
-        ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: EdgeInsets.only(bottom: 10.h),
+        padding: EdgeInsets.all(12.w),
+        decoration: BoxDecoration(
+          color: isDark
+              ? Colors.grey.shade900.withOpacity(0.9)
+              : Colors.white.withOpacity(0.9),
+          borderRadius: BorderRadius.circular(12.r),
+          boxShadow: [
+            BoxShadow(
+              color: isDark
+                  ? Colors.black.withOpacity(0.2)
+                  : Colors.black12.withOpacity(0.05),
+              blurRadius: 4,
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(isDark),
+            SizedBox(height: 4.h),
+            _buildSenderName(isDark),
+            SizedBox(height: 4.h),
+            _buildMessageText(isDark),
+            SizedBox(height: 6.h),
+            _buildChildTag(isDark),
+          ],
+        ),
       ),
     );
   }
@@ -51,7 +60,7 @@ class MessagesWidget extends StatelessWidget {
     return Row(
       children: [
         Text(
-          msg.enDesc as String,
+          msg.enDesc.toString(),
           style: TextStyle(
             fontWeight: FontWeight.w600,
             color: isDark ? Colors.white70 : Colors.black,
@@ -59,7 +68,7 @@ class MessagesWidget extends StatelessWidget {
         ),
         const Spacer(),
         Text(
-          msg.actualEditdate as String,
+          msg.actualEditdate.toString(),
           style: TextStyle(
             color: isDark ? Colors.white38 : Colors.grey,
             fontSize: 12,
@@ -74,7 +83,7 @@ class MessagesWidget extends StatelessWidget {
   // -------------------------------
   Widget _buildSenderName(bool isDark) {
     return Text(
-      msg.empName as String,
+      msg.empName.toString(),
       style: TextStyle(
         fontWeight: FontWeight.w500,
         color: isDark ? Colors.white : Colors.black,
@@ -87,7 +96,9 @@ class MessagesWidget extends StatelessWidget {
   // -------------------------------
   Widget _buildMessageText(bool isDark) {
     return Text(
-      msg.noteSubject as String,
+      msg.noteSubject.toString(),
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
       style: TextStyle(
         color: isDark ? Colors.white70 : Colors.grey,
       ),
@@ -107,8 +118,10 @@ class MessagesWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(12.r),
         ),
         child: Text(
-          studentFirstName ?? msg.studentNom,
-          style: TextStyle(
+          studentFirstName.isNotEmpty
+              ? studentFirstName
+              : msg.studentNom.toString(),
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 12,
           ),

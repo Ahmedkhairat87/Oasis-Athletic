@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:oasisathletic/ui/home_screen/MSGScreens/sendMessagesScreen.dart';
 import 'package:oasisathletic/ui/home_screen/MSGScreens/widgets/messages_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,8 +10,8 @@ import '../../../core/model/msgsModels/Inbox.dart';
 import '../../../core/model/msgsModels/Sent.dart';
 import '../../../core/model/msgsModels/message-mapper.dart';
 import '../../../core/reusable_components/app_background.dart';
-import '../../../core/services/loginServices/getMessagesInboxService.dart';
-import 'compose_message_screen.dart';
+import '../../../core/services/messagesServices/getMessagesInboxService.dart';
+import 'MessageDetailsScreen.dart';
 
 
 
@@ -131,7 +132,7 @@ class _MessagesState extends State<Messages> {
           padding: const EdgeInsets.only(left: 10,bottom: 10,right: 30,top: 10),
           child: InkWell(
             onTap: () {
-              Navigator.pushReplacementNamed(context, ComposeMessageScreen.routeName);
+              Navigator.pushReplacementNamed(context, sendMessagesScreen.routeName);
             },
             child: Image.asset("assets/images/compose.png"
                 , width: 30.w, height: 30.h),
@@ -276,7 +277,15 @@ class _MessagesState extends State<Messages> {
 
           return MessagesWidget(
             msg: msg,
-            studentFirstName: firstName, // ← مرره للـ widget
+            studentFirstName: firstName,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MessageDetailsScreen(message: msg),
+                ),
+              );
+            },
           );
         },
       ),

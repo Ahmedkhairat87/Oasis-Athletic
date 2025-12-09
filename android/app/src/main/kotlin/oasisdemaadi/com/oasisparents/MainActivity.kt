@@ -1,4 +1,4 @@
-package oasisdemaadi.com.oasisparents
+package oasisdemaadi.com.oasisathletic
 
 import io.flutter.embedding.android.FlutterActivity
 

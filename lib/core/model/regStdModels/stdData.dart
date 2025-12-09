@@ -1,5 +1,5 @@
-class StdData {
-  StdData({
+class stdData {
+  stdData({
       this.stdId, 
       this.stdFirstname, 
       this.stdPicture, 
@@ -22,7 +22,7 @@ class StdData {
       this.oasisAthleticPlan, 
       this.oasisAthleticPrgPlan,});
 
-  StdData.fromJson(dynamic json) {
+  stdData.fromJson(dynamic json) {
     stdId = json['std_id'];
     stdFirstname = json['std_firstname'];
     stdPicture = json['std_picture'];

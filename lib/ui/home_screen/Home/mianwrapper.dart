@@ -3,15 +3,15 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:oasisathletic/core/reusable_components/app_background.dart';
-import '../ui/home_screen/Home/students_screen.dart';
-import '../ui/home_screen/widgets/home_drawer.dart';
-import 'model/regStdModels/SideMenu.dart';
-import 'model/regStdModels/StdData.dart';
+import '../../../core/model/regStdModels/stdData.dart';
+import 'students_screen.dart';
+import '../widgets/home_drawer.dart';
+import '../../../core/model/regStdModels/SideMenu.dart';
 
 
 class MainWrapper extends StatefulWidget {
   final List<SideMenu> sideMenuList;
-  final List<StdData> students;
+  final List<stdData> students;
 
   const MainWrapper({
     super.key,

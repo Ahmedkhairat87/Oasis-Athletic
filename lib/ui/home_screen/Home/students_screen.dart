@@ -1,19 +1,17 @@
-import 'dart:ui';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/colors_Manager.dart';
-import '../../../core/model/regStdModels/StdData.dart';
+import '../../../core/model/regStdModels/stdData.dart';
 import '../../../core/reusable_components/app_background.dart';
 import '../../../core/reusable_components/app_colors_extension.dart';
 import '../../../core/reusable_components/student_card.dart';
+import '../../../core/reusable_components/student_notifier.dart';
 import '../widgets/student_inside.dart';
 
-
-
 class StudentsScreen extends StatelessWidget {
-  final List<StdData> students;
+  final List<stdData> students;
 
   const StudentsScreen({super.key, required this.students});
 
@@ -165,7 +163,7 @@ class StudentsScreen extends StatelessWidget {
   /// نفس أنيميشن الكروت في HomeScreen
   Widget _buildAnimatedStudentCard(
       BuildContext context, {
-        required StdData student,
+        required stdData student,
         required int index,
       }) {
     final name = student.stdFirstname ?? 'No Name';
@@ -189,116 +187,19 @@ class StudentsScreen extends StatelessWidget {
         child: StudentCard(
           name: name,
           photo: photo,
-          onTap: () => Navigator.pushNamed(
-            context,
-            StudentInside.routeName,
-            arguments: {"student": student},
-          ),
+          onTap: () {
+            // 1. Update the global notifier
+            studentNotifier.value = student; // student is StdData
+
+            // 2. Navigate to StudentInside and pass the stdId
+            Navigator.pushNamed(
+              context,
+              StudentInside.routeName,
+              arguments: student.stdId.toString(),
+            );
+          },
         ),
       ),
     );
   }
 }
-// class StudentsScreen extends StatelessWidget {
-//   final List<StdData> students;
-//
-//   const StudentsScreen({super.key, required this.students});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//
-//     return Padding(
-//       padding: const EdgeInsets.all(16.0),
-//       child: GridView.builder(
-//         itemCount: students.length,
-//         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-//           crossAxisCount: 2,
-//           crossAxisSpacing: 16,
-//           mainAxisSpacing: 16,
-//           childAspectRatio: 0.85,
-//         ),
-//         itemBuilder: (_, index) {
-//           final student = students[index];
-//
-//           return buildAnimatedStudentCard(
-//             context,
-//             index: index,
-//             name: student.stdFirstname ?? '',
-//             photo: student.stdPicture ?? '',
-//             student: student,
-//           );
-//         },
-//       ),
-//     );
-//   }
-//
-//   /// --------------------------------------------------------
-//   /// OLD ANIMATION (restored)
-//   /// --------------------------------------------------------
-//   Widget buildAnimatedStudentCard(
-//       BuildContext context, {
-//         required int index,
-//         required String name,
-//         required String photo,
-//         required StdData student,
-//       }) {
-//     return TweenAnimationBuilder<double>(
-//       tween: Tween(begin: 0.0, end: 1.0),
-//       duration: Duration(milliseconds: 260 + index * 40),
-//       curve: Curves.easeOutBack,
-//       builder: (context, value, child) {
-//         final double safe = value.clamp(0.0, 1.0);
-//         return Opacity(
-//           opacity: safe,
-//           child: Transform.translate(
-//             offset: Offset(0, (1 - safe) * 14),
-//             child: child,
-//           ),
-//         );
-//       },
-//
-//       child: Center(
-//         child: StudentCard(
-//           name: name,
-//           photo: photo,
-//           onTap: () => Navigator.pushNamed(
-//             context,
-//             StudentInside.routeName,
-//             arguments: {"student": student},
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-//}
-//******************************
-//
-// class StudentsScreen extends StatelessWidget {
-//   final List<StdData> students;
-//
-//   const StudentsScreen({super.key, required this.students});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Padding(
-//       padding: const EdgeInsets.all(16.0),
-//       child: GridView.builder(
-//         itemCount: students.length,
-//         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-//           crossAxisCount: 2,
-//           crossAxisSpacing: 16,
-//           mainAxisSpacing: 16,
-//           childAspectRatio: 0.85,
-//         ),
-//         itemBuilder: (_, index) {
-//           final student = students[index];
-//           return StudentCard(
-//             name: student.stdFirstname ?? '',
-//             photo: student.stdPicture ?? '',
-//             onTap: () {},
-//           );
-//         },
-//       ),
-//     );
-//   }
-// }

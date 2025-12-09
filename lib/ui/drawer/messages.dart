@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:oasisathletic/ui/drawer/sendMessagesScreen.dart';
+import 'package:oasisathletic/ui/home_screen/MSGScreens/sendMessagesScreen.dart';
 
 import '../../core/colors_Manager.dart';
 import '../../core/reusable_components/app_background.dart';

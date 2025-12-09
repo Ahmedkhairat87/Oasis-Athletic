@@ -1,8 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../../core/mianwrapper.dart';
-import '../../../core/services/loginServices/getRegStd.dart';
 
+
+
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:oasisathletic/ui/home_screen/Home/mianwrapper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../core/services/regStudentsServices/getRegStd.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
@@ -33,6 +39,16 @@ class _HomeScreenState extends State<HomeScreen> {
         deviceId: "1",
         DeviceType: 1,
       );
+
+      if (result.data != null && result.data!.isNotEmpty) {
+        final studentsJson =
+        result.data!.map((e) => e.toJson()).toList();
+
+
+        prefs.setString("students", jsonEncode(studentsJson));
+        print(studentsJson);
+        print("Students saved to SharedPreferences");
+      }
 
       Navigator.pushReplacement(
         context,
