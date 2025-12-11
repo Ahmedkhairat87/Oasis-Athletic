@@ -11,5 +11,6 @@ class APIManager {
 
   //Student Profile Data
   static String getStdLinks = "${fixedURL}stdLinks";
+  static String getAcademicSupport = "${fixedURL}stdLinksAcademic";
 
 }
