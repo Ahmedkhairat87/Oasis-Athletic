@@ -4,8 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/model/msgsModels/BaseMessage.dart';
 import '../../webView-attachmentopener/AttachmentViewerScreen.dart';
-import '../../webView-attachmentopener/WebViewScreen.dart';
-import '../../webView-attachmentopener/openAttachment.dart';
 
 class MessageDetailsScreen extends StatelessWidget {
   static const routeName = '/message-details';
@@ -319,7 +317,7 @@ class MessageDetailsScreen extends StatelessWidget {
                       print(file);
                     },
                   );
-                }).toList(),
+                }),
 
                 SizedBox(height: 10.h),
 

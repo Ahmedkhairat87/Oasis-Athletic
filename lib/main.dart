@@ -20,19 +20,24 @@ import 'core/app_style.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // initialize easy_localization
   await EasyLocalization.ensureInitialized();
-  await ScreenUtil.ensureScreenSize();
 
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? token = prefs.getString("token");
+  // get shared preferences
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-  String startRoute = (token == null || token.isEmpty) ? LoginScreen.routeName : HomeScreen.routeName;
+  // Get token and make it a non-nullable string (empty if null)
+  final String token = prefs.getString('token') ?? '';
+
+  // decide start route safely
+  final String startRoute = token.isEmpty ? LoginScreen.routeName : HomeScreen.routeName;
 
   runApp(
     EasyLocalization(
-      supportedLocales: [Locale('en'), Locale('fr')],
+      supportedLocales: const [Locale('en'), Locale('fr')],
       path: 'assets/translations',
-      fallbackLocale: Locale('en'),
+      fallbackLocale: const Locale('en'),
       child: MyApp(initialRoute: startRoute),
     ),
   );
@@ -50,6 +55,8 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
+        // If you want to ensure ScreenUtil has a valid screen size, you can call:
+        // ScreenUtil.init(context);
         return MaterialApp(
           title: 'Oasis Parents',
           debugShowCheckedModeBanner: false,
@@ -70,7 +77,7 @@ class MyApp extends StatelessWidget {
             PaymentInformation.routeName: (_) => PaymentInformation(),
             Newsletter.routeName: (_) => Newsletter(),
             sendMessagesScreen.routeName: (_) => const sendMessagesScreen(),
-            MessagesScreen.routeName: (_) =>  MessagesScreen(),
+            MessagesScreen.routeName: (_) => MessagesScreen(),
             StudentInside.routeName: (_) => StudentInside(),
           },
           localizationsDelegates: context.localizationDelegates,

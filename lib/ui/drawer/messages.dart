@@ -307,7 +307,7 @@ class MessageTile extends StatelessWidget {
   final String date;
   final String childName;
 
-  const MessageTile({
+  const MessageTile({super.key, 
     required this.senderType,
     required this.senderName,
     required this.message,

@@ -1,8 +1,8 @@
 // lib/ui/home_screen/widgets/student_inside.dart
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:oasisathletic/ui/home_screen/widgets/student_inside_tabs/academic_support_tab.dart';
 import 'package:oasisathletic/ui/home_screen/widgets/student_inside_tabs/academic_tab.dart';
 import 'package:oasisathletic/ui/home_screen/widgets/student_inside_tabs/athletics_tab.dart';
 import 'package:oasisathletic/ui/home_screen/widgets/student_inside_tabs/forms_tab.dart';
@@ -124,7 +124,7 @@ class _StudentInsideState extends State<StudentInside> with TickerProviderStateM
         case "profile":
           return ProfileTab(student: student!);
         case "academic support":
-          return AcademicTab();
+          return AcademicSupportTab();
         case "academic":
           return AcademicTab();
         case "athletics":
@@ -203,7 +203,7 @@ class _StudentInsideState extends State<StudentInside> with TickerProviderStateM
   }
 
   Widget _buildTopHeader(BuildContext context, double statusBar, double total) {
-    return Container(
+    return SizedBox(
       height: total,
       child: SafeArea(
         child: Row(
