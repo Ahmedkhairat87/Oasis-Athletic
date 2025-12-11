@@ -33,13 +33,6 @@ class StudentLinksService {
   }) async {
     try {
       final url = APIManager.getStdLinks;
-
-      print("🚀 Fetching Student Links...");
-      print("URL: $url");
-      print("PARAMS:");
-      print("token = $token");
-      print("stdId = $stdId");
-
       final response = await _dio.post(
         url,
         data: {
@@ -48,26 +41,18 @@ class StudentLinksService {
         },
       );
 
-      print("📥 RAW RESPONSE:");
       print(response.data);
 
-      // تأكد إنه JSON Map
       if (response.data == null || response.data is! Map) {
-        print("❌ ERROR: Response is null or not JSON object");
         return null;
       }
 
-      // حوّل للـ model
       final data = StdLinks.fromJson(response.data);
 
-      print("✅ Parsing Done!");
-      print("➡ Main Links Count: ${data.stdMainLinks?.length}");
-      print("➡ Full Data Count: ${data.stdFullData?.length}");
-      print("➡ Sports Count: ${data.stdSports?.length}");
 
       return data;
     } catch (e, st) {
-      print("❌ EXCEPTION IN API:");
+      print("EXCEPTION IN API:");
       print(e);
       print(st);
       return null;

@@ -3,8 +3,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/colors_Manager.dart';
-import '../../../../core/reusable_components/app_background.dart';
+
+import '../../../../../core/colors_Manager.dart';
+import '../../../../../core/reusable_components/app_background.dart';
+
 
 enum TaskType { school, extra }
 

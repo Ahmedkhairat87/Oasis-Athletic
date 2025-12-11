@@ -6,7 +6,7 @@ import '../colors_Manager.dart';
 /// Lightweight Tab item model used by StudentInside screen tabbar.
 class TabItem {
   final String title;
-  final IconData icon;
+  final Widget icon;
   final ImageProvider? image;
   const TabItem({required this.title, required this.icon, this.image});
 }
@@ -266,7 +266,12 @@ class _GoldenTabBarState extends State<GoldenTabBar> {
     if (item.image != null) {
       return ClipOval(child: Image(image: item.image!, width: widget.iconSize.r, height: widget.iconSize.r, fit: BoxFit.cover));
     } else {
-      return Icon(item.icon, size: widget.iconSize.r, color: selected ? selectedColor : unselectedColor);
+      return SizedBox(
+        width: widget.iconSize.r,
+        height: widget.iconSize.r,
+        child: Center(child: item.icon),
+      );
+      //return Icon(item.icon, size: widget.iconSize.r, color: selected ? selectedColor : unselectedColor);
     }
   }
 }
