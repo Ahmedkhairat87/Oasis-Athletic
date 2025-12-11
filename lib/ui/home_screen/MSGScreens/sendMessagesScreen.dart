@@ -1,5 +1,7 @@
+// lib/ui/messages/send_messages_screen.dart
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -9,18 +11,13 @@ import 'package:oasisathletic/core/apiControl/apiManager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/colors_Manager.dart';
-import '../../../core/model/newMessageModels/Departments/Department.dart';
 import '../../../core/model/newMessageModels/Departments/DepartmentEmployee.dart';
-import '../../../core/model/newMessageModels/mainCategories/Categories.dart';
 import '../../../core/model/newMessageModels/mainCategories/ToTypes.dart';
 import '../../../core/model/regStdModels/stdData.dart';
 import '../../../core/reusable_components/app_background.dart';
 import '../../../core/services/messagesServices/getDepartmentsServices.dart';
 import '../../../core/services/messagesServices/getEmpsServices.dart';
 import '../../../core/services/messagesServices/sendMessageServices/sendMessageServices.dart';
-
-
-
 
 /// Messages screen: choose child -> recipient type -> recipient -> subject -> message -> send
 class sendMessagesScreen extends StatefulWidget {
@@ -30,8 +27,6 @@ class sendMessagesScreen extends StatefulWidget {
   @override
   State<sendMessagesScreen> createState() => _sendMessagesScreenState();
 }
-
-
 
 class _sendMessagesScreenState extends State<sendMessagesScreen> {
   // ✅ بيانات من SharedPreferences / API
@@ -55,7 +50,7 @@ class _sendMessagesScreenState extends State<sendMessagesScreen> {
   String token = "";
 
   // === UI state ===
- // RecipientType selectedRecipientType = RecipientType.teacher;
+  // RecipientType selectedRecipientType = RecipientType.teacher;
 
   final TextEditingController _subjectController = TextEditingController();
   final TextEditingController _messageController = TextEditingController();
@@ -64,7 +59,6 @@ class _sendMessagesScreenState extends State<sendMessagesScreen> {
   void initState() {
     super.initState();
     initScreen();
-
   }
 
   Future<void> initScreen() async {
@@ -101,8 +95,6 @@ class _sendMessagesScreenState extends State<sendMessagesScreen> {
     super.dispose();
   }
 
-
-
   Future<List<stdData>> getStudentsFromPrefs() async {
     final prefs = await SharedPreferences.getInstance();
     final data = prefs.getString("students");
@@ -126,8 +118,7 @@ class _sendMessagesScreenState extends State<sendMessagesScreen> {
     try {
       final response = await GetDepartmentsService.GetDepartmentsResponse(
         token: token,
-        selectedStd: student.stdId.toString() + "|" + student.oasisAthleticFlag.toString(),
-
+        selectedStd: "${student.stdId}|${student.oasisAthleticFlag}",
       );
 
       setState(() {
@@ -152,7 +143,7 @@ class _sendMessagesScreenState extends State<sendMessagesScreen> {
       print(APIManager.getDepartmentsEmps);
       final response = await GetEmpsService.GetEmployeeResponse(
         token: token,
-        selectedStd: selectedStudent!.stdId.toString() + "|" + selectedStudent!.oasisAthleticFlag.toString(),
+        selectedStd: "${selectedStudent!.stdId}|${selectedStudent!.oasisAthleticFlag}",
         toCategNo: category.msgCategNo.toString(),
       );
 
@@ -207,11 +198,7 @@ class _sendMessagesScreenState extends State<sendMessagesScreen> {
     }
   }
 
-
-
   Future<void> _onSend() async {
-
-
     try {
       final response = await SendMessageService.sendMessageWithAttachments(
         token: token,
@@ -255,7 +242,6 @@ class _sendMessagesScreenState extends State<sendMessagesScreen> {
         Future.delayed(const Duration(milliseconds: 500), () {
           Navigator.pop(context);
         });
-
       } else {
         print("❌ API Returned Failure Code: ${response.data}");
 
@@ -276,28 +262,6 @@ class _sendMessagesScreenState extends State<sendMessagesScreen> {
         ),
       );
     }
-
-    // final child = selectedStudent?.stdFirstname ?? "(no child)";
-    // final to = selectedEmployee?.matDesc ?? "(none)";
-    // final subject = _subjectController.text.trim();
-    // final message = _messageController.text.trim();
-    //
-    // if (message.isEmpty) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     const SnackBar(
-    //       content: Text('Message body cannot be empty'),
-    //       behavior: SnackBarBehavior.floating,
-    //     ),
-    //   );
-    //   return;
-    // }
-    //
-    // ScaffoldMessenger.of(context).showSnackBar(
-    //   SnackBar(
-    //     content: Text('Sending message to $to for $child'),
-    //     behavior: SnackBarBehavior.floating,
-    //   ),
-    // );
   }
 
   @override
@@ -389,7 +353,7 @@ class _sendMessagesScreenState extends State<sendMessagesScreen> {
                     ? const CircularProgressIndicator()
                     : DropdownButtonFormField<ToCategory>(
                   isExpanded: true,
-                  value: selectedCategory,
+                  initialValue: selectedCategory,
                   hint: const Text("Select Department"),
                   items: categories.map((e) {
                     return DropdownMenuItem(
@@ -419,7 +383,7 @@ class _sendMessagesScreenState extends State<sendMessagesScreen> {
                 SizedBox(height: 8.h),
                 DropdownButtonFormField<DepartmentEmployee>(
                   isExpanded: true, // ✅ أهم سطر يمنع الـ overflow
-                  value: selectedEmployee,
+                  initialValue: selectedEmployee,
                   hint: const Text("Select Employee"),
                   items: employees.map((e) {
                     return DropdownMenuItem(
@@ -441,19 +405,31 @@ class _sendMessagesScreenState extends State<sendMessagesScreen> {
 
                 // --- Subject ---
                 _sectionTitle('Subject'),
-                TextField(controller: _subjectController, decoration: InputDecoration(hintText: 'Subject (optional)')),
+                SizedBox(height: 8.h),
+
+                // -> Glass Subject field
+                _GlassTextField(
+                  controller: _subjectController,
+                  hintText: 'Subject (optional)',
+                  minLines: 1,
+                  maxLines: 3,
+                ),
 
                 SizedBox(height: 12.h),
 
                 // --- Message ---
                 _sectionTitle('Message'),
+                SizedBox(height: 8.h),
+
+                // -> Glass Message field (expands)
                 Expanded(
-                  child: TextField(
+                  child: _GlassTextField(
                     controller: _messageController,
-                    maxLines: null,
+                    hintText: 'Write your message here...',
                     expands: true,
+                    maxLines: null,
+                    minLines: null,
                     keyboardType: TextInputType.multiline,
-                    decoration: InputDecoration(hintText: 'Write your message here...'),
                   ),
                 ),
 
@@ -513,13 +489,10 @@ class _sendMessagesScreenState extends State<sendMessagesScreen> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  file.path.endsWith(".jpg") ||
-                                      file.path.endsWith(".png")
+                                  file.path.endsWith(".jpg") || file.path.endsWith(".png")
                                       ? Image.file(file, height: 40, fit: BoxFit.cover)
                                       : const Icon(Icons.insert_drive_file, size: 35),
-
                                   const SizedBox(height: 6),
-
                                   Text(
                                     fileName,
                                     maxLines: 1,
@@ -566,513 +539,85 @@ class _sendMessagesScreenState extends State<sendMessagesScreen> {
     alignment: Alignment.centerLeft,
     child: Text(title, style: TextStyle(fontWeight: FontWeight.w700)),
   );
-
-  // String _labelForType(RecipientType t) {
-  //   switch (t) {
-  //     case RecipientType.teacher:
-  //       return 'Teacher';
-  //     case RecipientType.coach:
-  //       return 'Coach';
-  //     case RecipientType.admin:
-  //       return 'Administration';
-  //   }
-  // }
 }
 
-// enum RecipientType { teacher, coach, admin }
+/// Reusable frosted / liquid glass text field wrapper.
+///
+/// It uses ClipRRect + BackdropFilter for true frosted glass over the animated AppBackground,
+/// and adds a semi-transparent gradient, faint border and soft shadow to increase readability.
+class _GlassTextField extends StatelessWidget {
+  final TextEditingController controller;
+  final String hintText;
+  final bool expands;
+  final int? maxLines;
+  final int? minLines;
+  final int? maxLength;
+  final TextInputType? keyboardType;
 
+  const _GlassTextField({
+    required this.controller,
+    required this.hintText,
+    this.expands = false,
+    this.maxLines = 1,
+    this.minLines,
+    this.maxLength,
+    this.keyboardType,
+  });
 
+  @override
+  Widget build(BuildContext context) {
+    // tweak these to taste
+    final double blurSigma = 10.0;
+    final Color overlayStart = Colors.white.withOpacity(0.08);
+    final Color overlayEnd = Colors.white.withOpacity(0.04);
+    final BorderRadius borderRadius = BorderRadius.circular(12.r);
 
-
-//
-// class _sendMessagesScreenState extends State<sendMessagesScreen> {
-//   // === sample data (replace with real data from your APIs) ===
-//   final String sampleChildImage =
-//       '/mnt/data/WhatsApp Image 2025-11-24 at 09.18.47.jpeg';
-//
-//   final List<_Child> children = [
-//     _Child(
-//       name: 'Malek',
-//       avatarPath: '/mnt/data/WhatsApp Image 2025-11-24 at 09.18.47.jpeg',
-//     ),
-//     _Child(name: 'Mazen', avatarPath: ''),
-//   ];
-//
-//   final List<String> teachers = ['Teacher 1', 'Teacher 2', 'Teacher 3'];
-//   final List<String> coaches = ['Coach 1', 'Coach 2'];
-//   final List<String> admins = ['Admin 1', 'Admin 2'];
-//
-//   // === UI state ===
-//   int selectedChildIndex = 0;
-//   RecipientType selectedRecipientType = RecipientType.teacher;
-//   String? selectedRecipient; // teacher/coach/admin
-//   final TextEditingController _subjectController = TextEditingController();
-//   final TextEditingController _messageController = TextEditingController();
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     // default recipient from teachers list
-//     selectedRecipient = teachers.isNotEmpty ? teachers.first : null;
-//   }
-//
-//   @override
-//   void dispose() {
-//     _subjectController.dispose();
-//     _messageController.dispose();
-//     super.dispose();
-//   }
-//
-//   List<String> get currentRecipientList {
-//     switch (selectedRecipientType) {
-//       case RecipientType.teacher:
-//         return teachers;
-//       case RecipientType.coach:
-//         return coaches;
-//       case RecipientType.admin:
-//         return admins;
-//     }
-//   }
-//
-//   void _onSend() {
-//     // Replace this with your actual send logic / API call
-//     final child = children[selectedChildIndex].name;
-//     final to = selectedRecipient ?? '(none)';
-//     final subject = _subjectController.text.trim();
-//     final message = _messageController.text.trim();
-//
-//     if (message.isEmpty) {
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         const SnackBar(
-//           content: Text('Message body cannot be empty'),
-//           behavior: SnackBarBehavior.floating,
-//         ),
-//       );
-//       return;
-//     }
-//
-//     // demo toast
-//     ScaffoldMessenger.of(context).showSnackBar(
-//       SnackBar(
-//         content: Text('Sending message to $to for $child'),
-//         behavior: SnackBarBehavior.floating,
-//       ),
-//     );
-//
-//     // clear inputs on success (optional)
-//     // _subjectController.clear();
-//     // _messageController.clear();
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final theme = Theme.of(context);
-//     final isLight = theme.brightness == Brightness.light;
-//
-//     final Color primaryBlue =
-//     isLight
-//         ? ColorsManager.primaryGradientStart
-//         : ColorsManager.primaryGradientStartDark;
-//     final Color accentMint = ColorsManager.accentMint;
-//     final Color accentSky = ColorsManager.accentSky;
-//
-//     return Scaffold(
-//       // App background component used in your app — keeps theme consistent
-//       body: AppBackground(
-//         useAppBarBlur: false,
-//         child: SafeArea(
-//           top: true,
-//           bottom: true,
-//           child: Padding(
-//             padding: EdgeInsets.symmetric(horizontal: 12.w),
-//             child: Column(
-//               children: [
-//                 // ---- top app-style row with back button ----
-//                 SizedBox(height: 6.h),
-//                 Row(
-//                   children: [
-//                     SizedBox(
-//                       width: 44.w,
-//                       height: 44.h,
-//                       child: IconButton(
-//                         padding: EdgeInsets.zero,
-//                         icon: Icon(Icons.arrow_back, size: 22.r, color: theme.iconTheme.color),
-//                         onPressed: () {
-//                           Navigator.maybePop(context);
-//                         },
-//                       ),
-//                     ),
-//                     SizedBox(width: 8.w),
-//                     Expanded(
-//                       child: Text(
-//                         'New Message',
-//                         style: TextStyle(
-//                           fontSize: 18.sp,
-//                           fontWeight: FontWeight.w700,
-//                           color: theme.textTheme.titleLarge?.color,
-//                         ),
-//                       ),
-//                     ),
-//                     SizedBox(width: 12.w), // keep spacing similar to other screens
-//                   ],
-//                 ),
-//
-//                 // ---------- top row: pick child ----------
-//                 SizedBox(height: 8.h),
-//                 _sectionTitle('Select child'),
-//                 SizedBox(height: 8.h),
-//                 SizedBox(
-//                   height: 120.h,
-//                   child: LayoutBuilder(
-//                     builder: (context, constraints) {
-//                       final double viewportWidth = constraints.maxWidth;
-//                       return SingleChildScrollView(
-//                         scrollDirection: Axis.horizontal,
-//                         child: ConstrainedBox(
-//                           constraints: BoxConstraints(minWidth: viewportWidth),
-//                           child: Row(
-//                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                             children: children.asMap().entries.map((entry) {
-//                               final idx = entry.key;
-//                               final c = entry.value;
-//                               final bool selected = idx == selectedChildIndex;
-//
-//                               return Padding(
-//                                 padding: EdgeInsets.symmetric(horizontal: 6.w),
-//                                 child: GestureDetector(
-//                                   onTap: () => setState(() => selectedChildIndex = idx),
-//                                   child: AnimatedContainer(
-//                                     duration: const Duration(milliseconds: 220),
-//                                     width: 120.w,
-//                                     padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
-//                                     decoration: BoxDecoration(
-//                                       color: selected ? primaryBlue.withOpacity(0.12) : theme.colorScheme.surface,
-//                                       borderRadius: BorderRadius.circular(14.r),
-//                                       border: Border.all(
-//                                         color: selected ? primaryBlue : Colors.transparent,
-//                                         width: selected ? 1.4 : 0,
-//                                       ),
-//                                     ),
-//                                     child: Column(
-//                                       mainAxisAlignment: MainAxisAlignment.center,
-//                                       children: [
-//                                         _buildAvatar(
-//                                           c.avatarPath,
-//                                           radius: 32.r,
-//                                           borderColor: selected ? primaryBlue : Colors.transparent,
-//                                         ),
-//                                         SizedBox(height: 8.h),
-//                                         Text(
-//                                           c.name,
-//                                           maxLines: 1,
-//                                           overflow: TextOverflow.ellipsis,
-//                                           style: const TextStyle(fontWeight: FontWeight.w700),
-//                                         ),
-//                                       ],
-//                                     ),
-//                                   ),
-//                                 ),
-//                               );
-//                             }).toList(),
-//                           ),
-//                         ),
-//                       );
-//                     },
-//                   ),
-//                 ),
-//
-//                 SizedBox(height: 18.h),
-//
-//                 // ---------- recipient type row: teacher / coach / admin ----------
-//                 _sectionTitle('Send to'),
-//                 SizedBox(height: 8.h),
-//                 Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                   children:
-//                   RecipientType.values.map((type) {
-//                     final bool isSel = type == selectedRecipientType;
-//                     final label = _labelForType(type);
-//                     return Expanded(
-//                       child: Padding(
-//                         padding: EdgeInsets.symmetric(horizontal: 4.w),
-//                         child: ElevatedButton(
-//                           style: ElevatedButton.styleFrom(
-//                             backgroundColor:
-//                             isSel
-//                                 ? primaryBlue
-//                                 : theme.colorScheme.surface,
-//                             foregroundColor:
-//                             isSel
-//                                 ? Colors.white
-//                                 : theme.colorScheme.onSurface,
-//                             shape: RoundedRectangleBorder(
-//                               borderRadius: BorderRadius.circular(12.r),
-//                             ),
-//                             elevation: isSel ? 6 : 0,
-//                             padding: EdgeInsets.symmetric(vertical: 12.h),
-//                           ),
-//                           onPressed: () {
-//                             setState(() {
-//                               selectedRecipientType = type;
-//                               final list = currentRecipientList;
-//                               selectedRecipient =
-//                               list.isNotEmpty ? list.first : null;
-//                             });
-//                           },
-//                           child: Text(label, textAlign: TextAlign.center),
-//                         ),
-//                       ),
-//                     );
-//                   }).toList(),
-//                 ),
-//
-//                 SizedBox(height: 14.h),
-//
-//                 // ---------- recipient selector (depends on selected type) ----------
-//                 _sectionTitle('Choose recipient'),
-//                 SizedBox(height: 8.h),
-//                 SizedBox(
-//                   height: 110.h,
-//                   child: LayoutBuilder(
-//                     builder: (context, constraints) {
-//                       final double viewportWidth = constraints.maxWidth;
-//                       final list = currentRecipientList; // teachers / coaches / admins
-//                       return SingleChildScrollView(
-//                         scrollDirection: Axis.horizontal,
-//                         child: ConstrainedBox(
-//                           constraints: BoxConstraints(minWidth: viewportWidth),
-//                           child: Row(
-//                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                             // 🔑 change to start, center, end, spaceBetween, etc.
-//                             children: list.map((name) {
-//                               final bool isSel = name == selectedRecipient;
-//                               return Padding(
-//                                 padding: EdgeInsets.symmetric(horizontal: 6.w),
-//                                 child: GestureDetector(
-//                                   onTap: () => setState(() => selectedRecipient = name),
-//                                   child: AnimatedContainer(
-//                                     duration: const Duration(milliseconds: 200),
-//                                     width: 140.w,
-//                                     padding: EdgeInsets.all(8.w),
-//                                     decoration: BoxDecoration(
-//                                       color: isSel ? primaryBlue.withOpacity(0.12) : theme.colorScheme.surface,
-//                                       borderRadius: BorderRadius.circular(14.r),
-//                                       border: Border.all(
-//                                         color: isSel ? primaryBlue : Colors.transparent,
-//                                         width: isSel ? 1.4 : 0,
-//                                       ),
-//                                     ),
-//                                     child: Column(
-//                                       mainAxisAlignment: MainAxisAlignment.center,
-//                                       children: [
-//                                         CircleAvatar(
-//                                           radius: 28.r,
-//                                           backgroundColor: theme.colorScheme.surface,
-//                                           child: Text(
-//                                             _initialsOf(name),
-//                                             style: TextStyle(
-//                                               fontWeight: FontWeight.bold,
-//                                               color: primaryBlue,
-//                                             ),
-//                                           ),
-//                                         ),
-//                                         SizedBox(height: 8.h),
-//                                         Text(
-//                                           name,
-//                                           maxLines: 1,
-//                                           overflow: TextOverflow.ellipsis,
-//                                           textAlign: TextAlign.center,
-//                                           style: const TextStyle(fontWeight: FontWeight.w600),
-//                                         ),
-//                                       ],
-//                                     ),
-//                                   ),
-//                                 ),
-//                               );
-//                             }).toList(),
-//                           ),
-//                         ),
-//                       );
-//                     },
-//                   ),
-//                 ),
-//
-//                 SizedBox(height: 12.h),
-//
-//                 // ---------- Subject ----------
-//                 Align(
-//                   alignment: Alignment.centerLeft,
-//                   child: Padding(
-//                     padding: EdgeInsets.only(left: 6.w),
-//                     child: Text(
-//                       'Subject',
-//                       style: TextStyle(
-//                         fontWeight: FontWeight.w700,
-//                         color: primaryBlue,
-//                       ),
-//                     ),
-//                   ),
-//                 ),
-//                 SizedBox(height: 6.h),
-//                 TextField(
-//                   controller: _subjectController,
-//                   decoration: InputDecoration(
-//                     hintText: 'Subject (optional)',
-//                     filled: true,
-//                     fillColor: theme.colorScheme.surface,
-//                     border: OutlineInputBorder(
-//                       borderRadius: BorderRadius.circular(12.r),
-//                       borderSide: BorderSide.none,
-//                     ),
-//                     contentPadding: EdgeInsets.symmetric(
-//                       horizontal: 12.w,
-//                       vertical: 14.h,
-//                     ),
-//                   ),
-//                 ),
-//
-//                 SizedBox(height: 12.h),
-//
-//                 // ---------- Message (expandable) ----------
-//                 Align(
-//                   alignment: Alignment.centerLeft,
-//                   child: Padding(
-//                     padding: EdgeInsets.only(left: 6.w),
-//                     child: Text(
-//                       'Message',
-//                       style: TextStyle(
-//                         fontWeight: FontWeight.w700,
-//                         color: primaryBlue,
-//                       ),
-//                     ),
-//                   ),
-//                 ),
-//                 SizedBox(height: 6.h),
-//                 Expanded(
-//                   child: TextField(
-//                     controller: _messageController,
-//                     maxLines: null,
-//                     expands: true,
-//                     keyboardType: TextInputType.multiline,
-//                     decoration: InputDecoration(
-//                       hintText: 'Write your message here...',
-//                       filled: true,
-//                       fillColor: theme.colorScheme.surface,
-//                       border: OutlineInputBorder(
-//                         borderRadius: BorderRadius.circular(12.r),
-//                         borderSide: BorderSide.none,
-//                       ),
-//                       contentPadding: EdgeInsets.symmetric(
-//                         horizontal: 12.w,
-//                         vertical: 16.h,
-//                       ),
-//                     ),
-//                   ),
-//                 ),
-//
-//                 SizedBox(height: 12.h),
-//
-//                 // ---------- Send button ----------
-//                 Row(
-//                   children: [
-//                     Expanded(
-//                       child: ElevatedButton.icon(
-//                         onPressed: _onSend,
-//                         icon: const Icon(Icons.send),
-//                         label: const Text('Send'),
-//                         style: ElevatedButton.styleFrom(
-//                           padding: EdgeInsets.symmetric(vertical: 14.h),
-//                           backgroundColor: primaryBlue,
-//                           foregroundColor: Colors.white,
-//                           shape: RoundedRectangleBorder(
-//                             borderRadius: BorderRadius.circular(12.r),
-//                           ),
-//                         ),
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//
-//                 SizedBox(height: 12.h),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-//
-//   Widget _sectionTitle(String title) {
-//     return Align(
-//       alignment: Alignment.centerLeft,
-//       child: Padding(
-//         padding: EdgeInsets.only(left: 6.w),
-//         child: Text(
-//           title,
-//           style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14.sp),
-//         ),
-//       ),
-//     );
-//   }
-//
-//   Widget _buildAvatar(
-//       String path, {
-//         required double radius,
-//         Color borderColor = Colors.transparent,
-//       }) {
-//     final Widget avatarChild;
-//     if (path.isNotEmpty && File(path).existsSync()) {
-//       avatarChild = ClipOval(
-//         child: Image.file(
-//           File(path),
-//           width: radius * 2,
-//           height: radius * 2,
-//           fit: BoxFit.cover,
-//         ),
-//       );
-//     } else {
-//       avatarChild = CircleAvatar(
-//         radius: radius,
-//         child: Icon(Icons.person, size: radius),
-//       );
-//     }
-//
-//     return Container(
-//       padding: EdgeInsets.all(3.w),
-//       decoration: BoxDecoration(
-//         shape: BoxShape.circle,
-//         border: Border.all(
-//           color: borderColor,
-//           width: borderColor == Colors.transparent ? 0 : 2,
-//         ),
-//       ),
-//       child: avatarChild,
-//     );
-//   }
-//
-//   String _initialsOf(String name) {
-//     final parts = name.split(' ');
-//     if (parts.isEmpty) return '?';
-//     if (parts.length == 1) return parts.first.characters.first.toUpperCase();
-//     return '${parts.first.characters.first.toUpperCase()}${parts[1].characters.first.toUpperCase()}';
-//   }
-//
-//   String _labelForType(RecipientType t) {
-//     switch (t) {
-//       case RecipientType.teacher:
-//         return 'Teacher';
-//       case RecipientType.coach:
-//         return 'Coach';
-//       case RecipientType.admin:
-//         return 'Administration';
-//     }
-//   }
-// }
-//
-// enum RecipientType { teacher, coach, admin }
-//
-// class _Child {
-//   final String name;
-//   final String avatarPath;
-//   _Child({required this.name, required this.avatarPath});
-// }
+    return ClipRRect(
+      borderRadius: borderRadius,
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: blurSigma, sigmaY: blurSigma),
+        child: Container(
+          // the core glass layer
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [overlayStart, overlayEnd],
+            ),
+            borderRadius: borderRadius,
+            border: Border.all(color: Colors.white.withOpacity(0.10)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.08),
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          padding: EdgeInsets.all(6.w),
+          child: Material(
+            // use Material to ensure text selection/keyboard overlay looks native
+            color: Colors.transparent,
+            child: TextField(
+              controller: controller,
+              keyboardType: keyboardType,
+              expands: expands,
+              maxLines: expands ? null : maxLines,
+              minLines: minLines,
+              maxLength: maxLength,
+              style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
+              decoration: InputDecoration(
+                hintText: hintText,
+                hintStyle: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7)),
+                border: InputBorder.none,
+                isDense: true,
+                contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+                counterText: '',
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

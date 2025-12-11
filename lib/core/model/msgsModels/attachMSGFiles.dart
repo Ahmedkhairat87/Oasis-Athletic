@@ -7,7 +7,7 @@ List<String> getOriginalAttachments(BaseMessage msg) {
     msg.noteFile3,
     msg.noteFile4,
     msg.noteFile5,
-  ].where((file) => file != null && file!.isNotEmpty).cast<String>().toList();
+  ].where((file) => file != null && file.isNotEmpty).cast<String>().toList();
 }
 
 List<String> getReplyAttachments(BaseMessage msg) {
@@ -17,5 +17,5 @@ List<String> getReplyAttachments(BaseMessage msg) {
     msg.noteFile3Reply,
     msg.noteFile4Reply,
     msg.noteFile5Reply,
-  ].where((file) => file != null && file!.isNotEmpty).cast<String>().toList();
+  ].where((file) => file != null && file.isNotEmpty).cast<String>().toList();
 }
