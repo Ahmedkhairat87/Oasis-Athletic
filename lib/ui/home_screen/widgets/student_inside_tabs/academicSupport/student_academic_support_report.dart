@@ -1,12 +1,14 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:oasisathletic/core/model/stdLinks/academicSupport/StdSubjectDetailsData.dart';
 
-import '../../../../core/reusable_components/academic_support_bottom_sheet.dart';
-import '../../../../core/reusable_components/academic_support_report_summary_widget.dart';
-import '../../../../core/reusable_components/app_background.dart';
-import '../../../../core/reusable_components/academic_support_report_card.dart';
-import '../../../../core/colors_Manager.dart';
+import '../../../../../core/Utilities/dateHelper.dart';
+import '../../../../../core/reusable_components/academic_support_bottom_sheet.dart';
+import '../../../../../core/reusable_components/academic_support_report_summary_widget.dart';
+import '../../../../../core/reusable_components/app_background.dart';
+import '../../../../../core/reusable_components/academic_support_report_card.dart';
+import '../../../../../core/colors_Manager.dart';
 
 class AcademicReportItem {
   final String id;
@@ -27,9 +29,12 @@ class AcademicReportItem {
 }
 
 class StudentAcademicSupportReport extends StatelessWidget {
-  const StudentAcademicSupportReport({super.key});
+  final List<StdSubjectDetailsData> reports;
+  final int schoolTasks = 0;
+  final int extraTasks = 0;
 
-  List<AcademicReportItem> _mockItems() {
+  const StudentAcademicSupportReport({super.key , required this.reports, required int extraTasks, required int schoolTasks});
+  /*List<AcademicReportItem> _mockItems() {
     final now = DateTime.now();
     return [
       AcademicReportItem(
@@ -69,7 +74,7 @@ class StudentAcademicSupportReport extends StatelessWidget {
         'Attended and performed well; increase endurance exercises.',
       ),
     ];
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +88,16 @@ class StudentAcademicSupportReport extends StatelessWidget {
         ? ColorsManager.primaryGradientEnd
         : ColorsManager.primaryGradientEndDark;
 
-    final items = _mockItems();
+   // final items = _mockItems();
+    final items = reports.map((r) => AcademicReportItem(
+      id: r.attendanceId.toString(),
+      subject: r.subjectNameFR ?? 'Unknown',
+      sessionDate: parseApiDate(r.attendanceDate) ?? DateTime(2000),
+      isSchoolTask: (r.devoir?.trim().toLowerCase() == 'yes'),
+      teacherName: r.empName ?? '',
+      teacherComment: r.comment ?? '',
+    )).toList();
+
 
     return Scaffold(
       extendBodyBehindAppBar: true,

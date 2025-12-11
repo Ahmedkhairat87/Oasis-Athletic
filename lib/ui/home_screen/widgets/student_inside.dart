@@ -3,7 +3,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:oasisathletic/ui/home_screen/widgets/student_inside_tabs/academic_tab.dart';
+import 'package:oasisathletic/ui/home_screen/widgets/student_inside_tabs/academicSupport/academic_support_main_tab.dart';
+import 'package:oasisathletic/ui/home_screen/widgets/student_inside_tabs/academicSupport/academic_tab.dart';
 import 'package:oasisathletic/ui/home_screen/widgets/student_inside_tabs/athletics_tab.dart';
 import 'package:oasisathletic/ui/home_screen/widgets/student_inside_tabs/forms_tab.dart';
 import 'package:oasisathletic/ui/home_screen/widgets/student_inside_tabs/meals_tab.dart';
@@ -43,6 +44,8 @@ class _StudentInsideState extends State<StudentInside> with TickerProviderStateM
   late stdData basicStudent;
   StdLinks? stdLinks;
   StdFullData? student;
+  StdSports? studentSports;
+
 
   List<StdMainLinks> mainLinks = [];
   List<StdSports> sports = [];
@@ -89,13 +92,23 @@ class _StudentInsideState extends State<StudentInside> with TickerProviderStateM
       setState(() {
         student = stdLinks!.stdFullData!.first;
         updateFullStudent(student!);
+        studentSports = stdLinks!.stdSports!.first;
 
         mainLinks = stdLinks!.stdMainLinks ?? [];
         sports = stdLinks!.stdSports ?? [];
-        dynamicTabs = mainLinks.map((e) => TabItem(
-          title: e.linkName ?? "Untitled",
-          icon: Icons.circle,
-        )).toList();
+        dynamicTabs = mainLinks.map((e) {
+          final emoji = (e.linkIcon ?? "").trim();
+
+          return TabItem(
+            title: e.linkName ?? "Untitled",
+            icon: Text(
+              emoji.isNotEmpty ? emoji : "❓",
+              style: const TextStyle(
+                fontSize: 22,
+              ),
+            ),
+          );
+        }).toList();
         loading = false;
 
       });
@@ -122,9 +135,9 @@ class _StudentInsideState extends State<StudentInside> with TickerProviderStateM
     final pages = mainLinks.map((e) {
       switch (e.linkName?.toLowerCase()) {
         case "profile":
-          return ProfileTab(student: student!);
+          return ProfileTab(student: student!, stdSports: studentSports!);
         case "academic support":
-          return AcademicTab();
+          return AcademicSupportMainTab();
         case "academic":
           return AcademicTab();
         case "athletics":
