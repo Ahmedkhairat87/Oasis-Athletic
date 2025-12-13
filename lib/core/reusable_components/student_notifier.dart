@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/regStdModels/stdData.dart';
-import '../model/regStdModels/stdData.dart';
 import '../model/stdLinks/StdFullData.dart';
 
 const String _kStudentPrefsKey = 'oasis_student_profile_v1';

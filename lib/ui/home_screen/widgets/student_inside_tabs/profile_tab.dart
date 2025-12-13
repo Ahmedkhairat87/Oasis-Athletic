@@ -5,7 +5,6 @@ import 'package:oasisathletic/core/model/stdLinks/StdFullData.dart';
 import '../../../../core/colors_Manager.dart';
 
 // reusable imports
-import '../../../../core/model/stdLinks/StdSports.dart';
 import '../../../../core/reusable_components/profile_tab_conditional_switch.dart';
 import '../../../../core/reusable_components/profile_tab_emergency_contact_field.dart';
 import '../../../../core/reusable_components/profile_tab_golden_card.dart';
@@ -15,10 +14,9 @@ import '../../../../core/reusable_components/profile_tab_read_only_field.dart';
 import '../../../../core/reusable_components/student_header.dart'; // ReadOnlyField
 
 class ProfileTab extends StatefulWidget {
-  final StdFullData student; //From API
-  final StdSports stdSports;
+  final StdFullData student; // 👈 البيانات الجاية من API
 
-  const ProfileTab({super.key, required this.student, required this.stdSports});
+  const ProfileTab({super.key, required this.student});
 
   @override
   State<ProfileTab> createState() => _ProfileTabState();
@@ -100,10 +98,10 @@ class _ProfileTabState extends State<ProfileTab> {
     _surgeryDetailsController.text = widget.student.allergies ?? '';
 
     // Sports
-    _subscriptionPlanController.text = widget.stdSports.sport ?? '';
-    _athleticProgramController.text = widget.stdSports.studentSport ?? '';
-    _primarySportController.text = widget.stdSports.sport ?? '';
-    _secondarySportController.text = widget.stdSports.studentSport ?? '';
+    // _subscriptionPlanController.text = widget.student. ?? '';
+    // _athleticProgramController.text = widget.student.athleticProgram ?? '';
+    // _primarySportController.text = widget.student.primarySport ?? '';
+    // _secondarySportController.text = widget.student.secondarySport ?? '';
 
   }
 

@@ -27,6 +27,10 @@ class _NutritionFormState extends State<NutritionForm> {
 
   DateTime? _lastUpdate;
 
+  // Edit mode flag + backup map
+  bool _isEditing = false;
+  final Map<String, dynamic> _backup = {};
+
   // Text controllers
   final TextEditingController _favoriteSnackController = TextEditingController();
   final TextEditingController _dislikedFoodsController = TextEditingController();
@@ -129,6 +133,78 @@ class _NutritionFormState extends State<NutritionForm> {
     );
   }
 
+  // ------------------- BACKUP / RESTORE -------------------
+  void _backupValues() {
+    _backup.clear();
+    _backup['lastUpdate'] = _lastUpdate?.toIso8601String();
+    _backup['favoriteSnack'] = _favoriteSnackController.text;
+    _backup['dislikedFoods'] = _dislikedFoodsController.text;
+    _backup['cupsPerDay'] = _cupsPerDayController.text;
+    _backup['breakfastFreq'] = _breakfastFreq?.index;
+    _backup['toastType'] = _toastTypeController.text;
+    _backup['sugarTeaspoons'] = _sugarTeaspoonsController.text;
+    _backup['riceAmount'] = _riceAmount?.index;
+    _backup['eatBeforeSleep'] = _eatBeforeSleep?.index;
+    _backup['isNightEater'] = _isNightEater?.index;
+    _backup['nightHungerOrSnack'] = _nightHungerOrSnack?.index;
+    _backup['whenSnack'] = _whenSnack;
+    _backup['avgSleepHours'] = _avgSleepHoursController.text;
+    _backup['eatingSpeed'] = _eatingSpeed?.index;
+    _backup['vegFreq'] = _vegFreqController.text;
+    _backup['vegList'] = _vegListController.text;
+    _backup['fruitFreq'] = _fruitFreqController.text;
+    _backup['fruitList'] = _fruitListController.text;
+    _backup['eatOrDrinkFruit'] = _eatOrDrinkFruit?.index;
+    _backup['candy'] = _candyController.text;
+    _backup['usesOil'] = _usesOil;
+    _backup['usesButter'] = _usesButter;
+    _backup['usesMargarine'] = _usesMargarine;
+  }
+
+  void _restoreBackup() {
+    setState(() {
+      _lastUpdate = _backup['lastUpdate'] != null ? DateTime.tryParse(_backup['lastUpdate']) : _lastUpdate;
+      _favoriteSnackController.text = _backup['favoriteSnack'] ?? '';
+      _dislikedFoodsController.text = _backup['dislikedFoods'] ?? '';
+      _cupsPerDayController.text = _backup['cupsPerDay'] ?? '0';
+      _breakfastFreq = _backup['breakfastFreq'] != null ? BreakfastFreq.values[_backup['breakfastFreq'] as int] : _breakfastFreq;
+      _toastTypeController.text = _backup['toastType'] ?? '';
+      _sugarTeaspoonsController.text = _backup['sugarTeaspoons'] ?? '0';
+      _riceAmount = _backup['riceAmount'] != null ? RiceAmount.values[_backup['riceAmount'] as int] : _riceAmount;
+      _eatBeforeSleep = _backup['eatBeforeSleep'] != null ? YesNo.values[_backup['eatBeforeSleep'] as int] : _eatBeforeSleep;
+      _isNightEater = _backup['isNightEater'] != null ? YesNo.values[_backup['isNightEater'] as int] : _isNightEater;
+      _nightHungerOrSnack = _backup['nightHungerOrSnack'] != null ? SnackFeeling.values[_backup['nightHungerOrSnack'] as int] : _nightHungerOrSnack;
+      _whenSnack = _backup['whenSnack'] ?? _whenSnack;
+      _avgSleepHoursController.text = _backup['avgSleepHours'] ?? _avgSleepHoursController.text;
+      _eatingSpeed = _backup['eatingSpeed'] != null ? EatingSpeed.values[_backup['eatingSpeed'] as int] : _eatingSpeed;
+      _vegFreqController.text = _backup['vegFreq'] ?? '';
+      _vegListController.text = _backup['vegList'] ?? '';
+      _fruitFreqController.text = _backup['fruitFreq'] ?? '';
+      _fruitListController.text = _backup['fruitList'] ?? '';
+      _eatOrDrinkFruit = _backup['eatOrDrinkFruit'] != null ? EatFruitDrink.values[_backup['eatOrDrinkFruit'] as int] : _eatOrDrinkFruit;
+      _candyController.text = _backup['candy'] ?? '';
+      _usesOil = _backup['usesOil'] ?? false;
+      _usesButter = _backup['usesButter'] ?? false;
+      _usesMargarine = _backup['usesMargarine'] ?? false;
+    });
+  }
+
+  // Enter/Cancel/Save helpers
+  void _enterEditMode() {
+    _backupValues();
+    setState(() => _isEditing = true);
+  }
+
+  void _cancelEditMode() {
+    _restoreBackup();
+    setState(() => _isEditing = false);
+  }
+
+  void _saveAndExit() {
+    _saveForm();
+    setState(() => _isEditing = false);
+  }
+
   void _saveForm() {
     if (!_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -138,7 +214,7 @@ class _NutritionFormState extends State<NutritionForm> {
     }
 
     final payload = {
-      'lastUpdate': _lastUpdate?.toIso8601String(),
+      'lastUpdate': DateTime.now().toIso8601String(),
       'favoriteSnack': _favoriteSnackController.text.trim(),
       'dislikedFoods': _dislikedFoodsController.text.trim(),
       'drinksWater': (_cupsPerDayController.text.trim().isNotEmpty && int.tryParse(_cupsPerDayController.text.trim()) != null),
@@ -177,6 +253,17 @@ class _NutritionFormState extends State<NutritionForm> {
     );
   }
 
+  // wrapper to disable interaction when not editing
+  Widget _editableWrapper({required Widget child}) {
+    return AbsorbPointer(
+      absorbing: !_isEditing,
+      child: Opacity(
+        opacity: _isEditing ? 1.0 : 0.98,
+        child: child,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final lastUpdateDisplay = _lastUpdate != null ? DateFormat.yMd().add_jms().format(_lastUpdate!) : '—';
@@ -192,7 +279,8 @@ class _NutritionFormState extends State<NutritionForm> {
           child: BackdropFilter(filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10), child: Container(color: Colors.white.withOpacity(0.85))),
         ),
         actions: [
-          IconButton(icon: const Icon(Icons.save, color: Colors.black87), onPressed: _saveForm),
+          // keep save icon but active only when editing
+          IconButton(icon: const Icon(Icons.save, color: Colors.black87), onPressed: _isEditing ? _saveAndExit : null),
         ],
       ),
       body: AppBackground(
@@ -217,12 +305,19 @@ class _NutritionFormState extends State<NutritionForm> {
                     key: _formKey,
                     child: Column(
                       children: [
-                        // header
+                        // header with last update and edit controls
                         Row(children: [
                           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
                             Text('Last update :', style: TextStyle(fontSize: 11.sp)),
                             Text(lastUpdateDisplay, style: TextStyle(fontSize: 11.sp, color: Colors.grey.shade700)),
                           ])),
+                          SizedBox(width: 8.w),
+                          if (!_isEditing)
+                            IconButton(icon: Icon(Icons.edit, color: ColorsManager.accentPurple), tooltip: 'Edit', onPressed: _enterEditMode)
+                          else ...[
+                            IconButton(icon: const Icon(Icons.close, color: Colors.redAccent), tooltip: 'Cancel', onPressed: _cancelEditMode),
+                            IconButton(icon: Icon(Icons.check, color: ColorsManager.accentMint), tooltip: 'Save', onPressed: _saveAndExit),
+                          ]
                         ]),
                         SizedBox(height: 12.h),
 
@@ -232,210 +327,229 @@ class _NutritionFormState extends State<NutritionForm> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 _sectionHeader('Food Preferences'),
-                                _sectionCard(Column(children: [
-                                  TextFormField(controller: _favoriteSnackController, decoration: _inputDecoration('Favorite snack the child loves')),
-                                  SizedBox(height: 8.h),
-                                  TextFormField(controller: _dislikedFoodsController, decoration: _inputDecoration('Food they don’t like or refuse')),
-                                ])),
+                                _editableWrapper(
+                                  child: _sectionCard(Column(children: [
+                                    TextFormField(controller: _favoriteSnackController, decoration: _inputDecoration('Favorite snack the child loves')),
+                                    SizedBox(height: 8.h),
+                                    TextFormField(controller: _dislikedFoodsController, decoration: _inputDecoration('Food they don’t like or refuse')),
+                                  ])),
+                                ),
 
                                 _sectionHeader('Water & Breakfast'),
-                                _sectionCard(Column(children: [
-                                  Row(
-                                    children: [
+                                _editableWrapper(
+                                  child: _sectionCard(Column(children: [
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 4,
+                                          child: TextFormField(
+                                            controller: _cupsPerDayController,
+                                            decoration: _inputDecoration('How many cups per day?'),
+                                            keyboardType: TextInputType.number,
+                                          ),
+                                        ),
+                                        SizedBox(width: 10.w),
+                                        Expanded(
+                                          flex: 5,
+                                          child: DropdownButtonFormField<BreakfastFreq>(
+                                            isExpanded: true,
+                                            initialValue: _breakfastFreq,
+                                            decoration: _inputDecoration('Do you have breakfast?'),
+                                            items: BreakfastFreq.values.map((f) {
+                                              final label = {
+                                                BreakfastFreq.always: 'Always',
+                                                BreakfastFreq.sometimes: 'Sometimes',
+                                                BreakfastFreq.never: 'Never',
+                                              }[f]!;
+                                              return DropdownMenuItem(value: f, child: Text(label));
+                                            }).toList(),
+                                            onChanged: _isEditing ? (BreakfastFreq? v) => setState(() => _breakfastFreq = v) : null,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ])),
+                                ),
+
+                                _sectionHeader('Snacking & Night Eating'),
+                                _editableWrapper(
+                                  child: _sectionCard(Column(children: [
+                                    TextFormField(controller: _toastTypeController, decoration: _inputDecoration('Toasts / Balady bread (what kind?)')),
+                                    SizedBox(height: 8.h),
+                                    Row(children: [
                                       Expanded(
-                                        flex: 4,
                                         child: TextFormField(
-                                          controller: _cupsPerDayController,
-                                          decoration: _inputDecoration('How many cups per day?'),
+                                          controller: _sugarTeaspoonsController,
+                                          decoration: _inputDecoration('Teaspoons of sugar per day'),
                                           keyboardType: TextInputType.number,
+                                        ),
+                                      ),
+                                      SizedBox(width: 8.w),
+                                      Expanded(
+                                        child: DropdownButtonFormField<RiceAmount>(
+                                          isExpanded: true,
+                                          initialValue: _riceAmount,
+                                          decoration: _inputDecoration('How many rice for lunch?'),
+                                          items: RiceAmount.values.map((r) {
+                                            final label = {
+                                              RiceAmount.same: 'Same',
+                                              RiceAmount.less: 'Less',
+                                              RiceAmount.more: 'More',
+                                            }[r]!;
+                                            return DropdownMenuItem(value: r, child: Text(label));
+                                          }).toList(),
+                                          onChanged: _isEditing ? (RiceAmount? v) => setState(() => _riceAmount = v) : null,
+                                        ),
+                                      ),
+                                    ]),
+                                    SizedBox(height: 8.h),
+                                    Row(children: [
+                                      Expanded(
+                                        child: DropdownButtonFormField<YesNo>(
+                                          isExpanded: true,
+                                          initialValue: _eatBeforeSleep,
+                                          decoration: _inputDecoration('Do you eat before sleep every day?'),
+                                          items: YesNo.values.map((y) => DropdownMenuItem(value: y, child: Text(y == YesNo.yes ? 'Yes' : 'No'))).toList(),
+                                          onChanged: _isEditing ? (YesNo? v) => setState(() => _eatBeforeSleep = v) : null,
+                                        ),
+                                      ),
+                                      SizedBox(width: 8.w),
+                                      Expanded(
+                                        child: DropdownButtonFormField<YesNo>(
+                                          isExpanded: true,
+                                          initialValue: _isNightEater,
+                                          decoration: _inputDecoration('Are you a night eater?'),
+                                          items: YesNo.values.map((y) => DropdownMenuItem(value: y, child: Text(y == YesNo.yes ? 'Yes' : 'No'))).toList(),
+                                          onChanged: _isEditing ? (YesNo? v) => setState(() => _isNightEater = v) : null,
+                                        ),
+                                      ),
+                                    ]),
+                                    SizedBox(height: 8.h),
+                                    Row(children: [
+                                      Expanded(
+                                        child: DropdownButtonFormField<SnackFeeling>(
+                                          isExpanded: true,
+                                          initialValue: _nightHungerOrSnack,
+                                          decoration: _inputDecoration('Do you feel hungry at night or just snack?'),
+                                          items: SnackFeeling.values.map((s) => DropdownMenuItem(value: s, child: Text(s == SnackFeeling.snack ? 'Snack' : 'Hungry'))).toList(),
+                                          onChanged: _isEditing ? (SnackFeeling? v) => setState(() => _nightHungerOrSnack = v) : null,
+                                        ),
+                                      ),
+                                      SizedBox(width: 8.w),
+                                      Expanded(
+                                        child: DropdownButtonFormField<String>(
+                                          isExpanded: true,
+                                          initialValue: _whenSnack,
+                                          decoration: _inputDecoration('When do you have snack?'),
+                                          items: ['After breakfast', 'After lunch', 'Between both'].map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
+                                          onChanged: _isEditing ? (String? v) => setState(() => _whenSnack = v) : null,
+                                        ),
+                                      ),
+                                    ]),
+                                  ])),
+                                ),
+
+                                _sectionHeader('Sleep & Eating'),
+                                _editableWrapper(
+                                  child: _sectionCard(Column(children: [
+                                    Row(children: [
+                                      Expanded(
+                                        flex: 5,
+                                        child: TextFormField(
+                                          controller: _avgSleepHoursController,
+                                          decoration: _inputDecoration('Average sleep hours'),
+                                          keyboardType: TextInputType.numberWithOptions(decimal: true),
                                         ),
                                       ),
                                       SizedBox(width: 10.w),
                                       Expanded(
-                                        flex: 5,
-                                        child: DropdownButtonFormField<BreakfastFreq>(
+                                        flex: 4,
+                                        child: DropdownButtonFormField<EatingSpeed>(
                                           isExpanded: true,
-                                          initialValue: _breakfastFreq,
-                                          decoration: _inputDecoration('Do you have breakfast?'),
-                                          items: BreakfastFreq.values.map((f) {
+                                          initialValue: _eatingSpeed,
+                                          decoration: _inputDecoration('Eating speed'),
+                                          items: EatingSpeed.values.map((e) {
                                             final label = {
-                                              BreakfastFreq.always: 'Always',
-                                              BreakfastFreq.sometimes: 'Sometimes',
-                                              BreakfastFreq.never: 'Never',
-                                            }[f]!;
-                                            return DropdownMenuItem(value: f, child: Text(label));
+                                              EatingSpeed.fast: 'Fast',
+                                              EatingSpeed.moderate: 'Moderate',
+                                              EatingSpeed.slow: 'Slow',
+                                            }[e]!;
+                                            return DropdownMenuItem(value: e, child: Text(label));
                                           }).toList(),
-                                          onChanged: (BreakfastFreq? v) => setState(() => _breakfastFreq = v),
+                                          onChanged: _isEditing ? (EatingSpeed? v) => setState(() => _eatingSpeed = v) : null,
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ])),
-
-                                _sectionHeader('Snacking & Night Eating'),
-                                _sectionCard(Column(children: [
-                                  TextFormField(controller: _toastTypeController, decoration: _inputDecoration('Toasts / Balady bread (what kind?)')),
-                                  SizedBox(height: 8.h),
-                                  Row(children: [
-                                    Expanded(
-                                      child: TextFormField(
-                                        controller: _sugarTeaspoonsController,
-                                        decoration: _inputDecoration('Teaspoons of sugar per day'),
-                                        keyboardType: TextInputType.number,
-                                      ),
-                                    ),
-                                    SizedBox(width: 8.w),
-                                    Expanded(
-                                      child: DropdownButtonFormField<RiceAmount>(
-                                        isExpanded: true,
-                                        initialValue: _riceAmount,
-                                        decoration: _inputDecoration('How many rice for lunch?'),
-                                        items: RiceAmount.values.map((r) {
-                                          final label = {
-                                            RiceAmount.same: 'Same',
-                                            RiceAmount.less: 'Less',
-                                            RiceAmount.more: 'More',
-                                          }[r]!;
-                                          return DropdownMenuItem(value: r, child: Text(label));
-                                        }).toList(),
-                                        onChanged: (RiceAmount? v) => setState(() => _riceAmount = v),
-                                      ),
-                                    ),
-                                  ]),
-                                  SizedBox(height: 8.h),
-                                  Row(children: [
-                                    Expanded(
-                                      child: DropdownButtonFormField<YesNo>(
-                                        isExpanded: true,
-                                        initialValue: _eatBeforeSleep,
-                                        decoration: _inputDecoration('Do you eat before sleep every day?'),
-                                        items: YesNo.values.map((y) => DropdownMenuItem(value: y, child: Text(y == YesNo.yes ? 'Yes' : 'No'))).toList(),
-                                        onChanged: (YesNo? v) => setState(() => _eatBeforeSleep = v),
-                                      ),
-                                    ),
-                                    SizedBox(width: 8.w),
-                                    Expanded(
-                                      child: DropdownButtonFormField<YesNo>(
-                                        isExpanded: true,
-                                        initialValue: _isNightEater,
-                                        decoration: _inputDecoration('Are you a night eater?'),
-                                        items: YesNo.values.map((y) => DropdownMenuItem(value: y, child: Text(y == YesNo.yes ? 'Yes' : 'No'))).toList(),
-                                        onChanged: (YesNo? v) => setState(() => _isNightEater = v),
-                                      ),
-                                    ),
-                                  ]),
-                                  SizedBox(height: 8.h),
-                                  Row(children: [
-                                    Expanded(
-                                      child: DropdownButtonFormField<SnackFeeling>(
-                                        isExpanded: true,
-                                        initialValue: _nightHungerOrSnack,
-                                        decoration: _inputDecoration('Do you feel hungry at night or just snack?'),
-                                        items: SnackFeeling.values.map((s) => DropdownMenuItem(value: s, child: Text(s == SnackFeeling.snack ? 'Snack' : 'Hungry'))).toList(),
-                                        onChanged: (SnackFeeling? v) => setState(() => _nightHungerOrSnack = v),
-                                      ),
-                                    ),
-                                    SizedBox(width: 8.w),
-                                    Expanded(
-                                      child: DropdownButtonFormField<String>(
-                                        isExpanded: true,
-                                        initialValue: _whenSnack,
-                                        decoration: _inputDecoration('When do you have snack?'),
-                                        items: ['After breakfast', 'After lunch', 'Between both'].map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
-                                        onChanged: (String? v) => setState(() => _whenSnack = v),
-                                      ),
-                                    ),
-                                  ]),
-                                ])),
-
-                                _sectionHeader('Sleep & Eating'),
-                                _sectionCard(Column(children: [
-                                  Row(children: [
-                                    Expanded(
-                                      flex: 5,
-                                      child: TextFormField(
-                                        controller: _avgSleepHoursController,
-                                        decoration: _inputDecoration('Average sleep hours'),
-                                        keyboardType: TextInputType.numberWithOptions(decimal: true),
-                                      ),
-                                    ),
-                                    SizedBox(width: 10.w),
-                                    Expanded(
-                                      flex: 4,
-                                      child: DropdownButtonFormField<EatingSpeed>(
-                                        isExpanded: true,
-                                        initialValue: _eatingSpeed,
-                                        decoration: _inputDecoration('Eating speed'),
-                                        items: EatingSpeed.values.map((e) {
-                                          final label = {
-                                            EatingSpeed.fast: 'Fast',
-                                            EatingSpeed.moderate: 'Moderate',
-                                            EatingSpeed.slow: 'Slow',
-                                          }[e]!;
-                                          return DropdownMenuItem(value: e, child: Text(label));
-                                        }).toList(),
-                                        onChanged: (EatingSpeed? v) => setState(() => _eatingSpeed = v),
-                                      ),
-                                    ),
-                                  ]),
-                                ])),
+                                    ]),
+                                  ])),
+                                ),
 
                                 _sectionHeader('Vegetables & Fruits'),
-                                _sectionCard(Column(children: [
-                                  TextFormField(controller: _vegFreqController, decoration: _inputDecoration('How often do you eat vegetables? (Cooked / Raw)')),
-                                  SizedBox(height: 8.h),
-                                  TextFormField(controller: _vegListController, decoration: _inputDecoration('Which vegetables does your kid eat?')),
-                                  SizedBox(height: 8.h),
-                                  TextFormField(controller: _fruitFreqController, decoration: _inputDecoration('How often do you eat fruits?')),
-                                  SizedBox(height: 8.h),
-                                  TextFormField(controller: _fruitListController, decoration: _inputDecoration('Which fruits does your kid eat?')),
-                                  SizedBox(height: 8.h),
-                                  DropdownButtonFormField<EatFruitDrink>(
-                                    isExpanded: true,
-                                    initialValue: _eatOrDrinkFruit,
-                                    decoration: _inputDecoration('Do you eat the fruits or drink them?'),
-                                    items: EatFruitDrink.values.map((v) {
-                                      final label = v == EatFruitDrink.eat ? 'Eat' : 'Drink';
-                                      return DropdownMenuItem(value: v, child: Text(label));
-                                    }).toList(),
-                                    onChanged: (EatFruitDrink? v) => setState(() => _eatOrDrinkFruit = v),
-                                  ),
-                                  SizedBox(height: 8.h),
-                                  TextFormField(controller: _candyController, decoration: _inputDecoration('How often do they eat candy? What is it?')),
-                                  SizedBox(height: 8.h),
+                                _editableWrapper(
+                                  child: _sectionCard(Column(children: [
+                                    TextFormField(controller: _vegFreqController, decoration: _inputDecoration('How often do you eat vegetables? (Cooked / Raw)')),
+                                    SizedBox(height: 8.h),
+                                    TextFormField(controller: _vegListController, decoration: _inputDecoration('Which vegetables does your kid eat?')),
+                                    SizedBox(height: 8.h),
+                                    TextFormField(controller: _fruitFreqController, decoration: _inputDecoration('How often do you eat fruits?')),
+                                    SizedBox(height: 8.h),
+                                    TextFormField(controller: _fruitListController, decoration: _inputDecoration('Which fruits does your kid eat?')),
+                                    SizedBox(height: 8.h),
+                                    DropdownButtonFormField<EatFruitDrink>(
+                                      isExpanded: true,
+                                      initialValue: _eatOrDrinkFruit,
+                                      decoration: _inputDecoration('Do you eat the fruits or drink them?'),
+                                      items: EatFruitDrink.values.map((v) {
+                                        final label = v == EatFruitDrink.eat ? 'Eat' : 'Drink';
+                                        return DropdownMenuItem(value: v, child: Text(label));
+                                      }).toList(),
+                                      onChanged: _isEditing ? (EatFruitDrink? v) => setState(() => _eatOrDrinkFruit = v) : null,
+                                    ),
+                                    SizedBox(height: 8.h),
+                                    TextFormField(controller: _candyController, decoration: _inputDecoration('How often do they eat candy? What is it?')),
+                                    SizedBox(height: 8.h),
 
-                                  // <-- CHANGED BLOCK: horizontal compact checkboxes for cooking fat
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 4.h),
-                                      child: Wrap(
-                                        spacing: 12.w,
-                                        runSpacing: 6.h,
-                                        children: [
-                                          _smallCheckboxLabel(
-                                            label: 'Oil',
-                                            value: _usesOil,
-                                            onChanged: (v) => setState(() => _usesOil = v),
-                                          ),
-                                          _smallCheckboxLabel(
-                                            label: 'Butter',
-                                            value: _usesButter,
-                                            onChanged: (v) => setState(() => _usesButter = v),
-                                          ),
-                                          _smallCheckboxLabel(
-                                            label: 'Margarine',
-                                            value: _usesMargarine,
-                                            onChanged: (v) => setState(() => _usesMargarine = v),
-                                          ),
-                                        ],
+                                    // cooking fat checkboxes (respect edit mode)
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(vertical: 4.h),
+                                        child: Wrap(
+                                          spacing: 12.w,
+                                          runSpacing: 6.h,
+                                          children: [
+                                            _smallCheckboxLabel(
+                                              label: 'Oil',
+                                              value: _usesOil,
+                                              onChanged: (v) {
+                                                if (!_isEditing) return;
+                                                setState(() => _usesOil = v);
+                                              },
+                                            ),
+                                            _smallCheckboxLabel(
+                                              label: 'Butter',
+                                              value: _usesButter,
+                                              onChanged: (v) {
+                                                if (!_isEditing) return;
+                                                setState(() => _usesButter = v);
+                                              },
+                                            ),
+                                            _smallCheckboxLabel(
+                                              label: 'Margarine',
+                                              value: _usesMargarine,
+                                              onChanged: (v) {
+                                                if (!_isEditing) return;
+                                                setState(() => _usesMargarine = v);
+                                              },
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ])),
+                                  ])),
+                                ),
 
                                 SizedBox(height: 16.h),
-                                // Save / Cancel
+                                // Save / Cancel at bottom — active only while editing
                                 Row(children: [
                                   Expanded(
                                     child: OutlinedButton(
@@ -454,12 +568,12 @@ class _NutritionFormState extends State<NutritionForm> {
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                         padding: EdgeInsets.symmetric(vertical: 14.h),
-                                        backgroundColor: ColorsManager.accentMint,
+                                        backgroundColor: _isEditing ? ColorsManager.accentMint : Colors.grey.shade400,
                                         foregroundColor: Colors.white,
                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
                                         elevation: 2,
                                       ),
-                                      onPressed: _saveForm,
+                                      onPressed: _isEditing ? _saveAndExit : null,
                                       child: Text('Save', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600)),
                                     ),
                                   ),
@@ -489,7 +603,7 @@ class _NutritionFormState extends State<NutritionForm> {
     required ValueChanged<bool> onChanged,
   }) {
     return GestureDetector(
-      onTap: () => onChanged(!value),
+      onTap: () => onChanged(!_isEditing ? value : !value),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -498,7 +612,7 @@ class _NutritionFormState extends State<NutritionForm> {
             height: 20.w,
             child: Checkbox(
               value: value,
-              onChanged: (v) => onChanged(v ?? false),
+              onChanged: _isEditing ? (v) => onChanged(v ?? false) : null,
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
           ),

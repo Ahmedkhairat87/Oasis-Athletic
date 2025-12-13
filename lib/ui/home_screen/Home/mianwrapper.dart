@@ -1,8 +1,6 @@
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:oasisathletic/core/reusable_components/app_background.dart';
 import '../../../core/model/regStdModels/stdData.dart';
 import 'students_screen.dart';
 import '../widgets/home_drawer.dart';
@@ -45,7 +43,7 @@ class MainWrapperState extends State<MainWrapper> {
       title: Text(
         'Students',
         style: TextStyle(
-          color: scheme.onBackground,
+          color: scheme.onSurface,
           fontSize: 18,
           fontWeight: FontWeight.w700,
         ),
