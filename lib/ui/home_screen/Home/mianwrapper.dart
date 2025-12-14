@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../core/model/regStdModels/stdData.dart';
 import 'students_screen.dart';
-import '../widgets/home_drawer.dart';
+import 'widget/home_drawer.dart';
 import '../../../core/model/regStdModels/SideMenu.dart';
 
 

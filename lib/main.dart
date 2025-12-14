@@ -13,6 +13,7 @@ import 'package:oasisathletic/ui/drawer/policies.dart';
 import 'package:oasisathletic/ui/home_screen/MSGScreens/sendMessagesScreen.dart';
 import 'package:oasisathletic/ui/drawer/settings.dart';
 import 'package:oasisathletic/ui/home_screen/Home/home_screen.dart';
+import 'package:oasisathletic/ui/home_screen/sideMenu/newsLetter/NewsLetterScreen.dart';
 import 'package:oasisathletic/ui/home_screen/widgets/student_inside.dart';
 import 'package:oasisathletic/ui/login_screen/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -75,7 +76,7 @@ class MyApp extends StatelessWidget {
             Appointments.routeName: (_) => Appointments(),
             CanteenCharge.routeName: (_) => CanteenCharge(),
             PaymentInformation.routeName: (_) => PaymentInformation(),
-            Newsletter.routeName: (_) => Newsletter(),
+            NewsLetterScreen.routeName: (_) => NewsLetterScreen(),
             sendMessagesScreen.routeName: (_) => const sendMessagesScreen(),
             MessagesScreen.routeName: (_) => MessagesScreen(),
             StudentInside.routeName: (_) => StudentInside(),
