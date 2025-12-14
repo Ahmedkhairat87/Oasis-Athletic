@@ -1,5 +1,4 @@
 // lib/ui/home_screen/widgets/student_inside.dart
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -215,7 +214,7 @@ class _StudentInsideState extends State<StudentInside> with TickerProviderStateM
   }
 
   Widget _buildTopHeader(BuildContext context, double statusBar, double total) {
-    return Container(
+    return SizedBox(
       height: total,
       child: SafeArea(
         child: Row(

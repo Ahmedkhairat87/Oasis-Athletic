@@ -560,8 +560,7 @@ class _GlassTextField extends StatelessWidget {
     this.expands = false,
     this.maxLines = 1,
     this.minLines,
-    this.maxLength,
-    this.keyboardType,
+    this.keyboardType, this.maxLength,
   });
 
   @override

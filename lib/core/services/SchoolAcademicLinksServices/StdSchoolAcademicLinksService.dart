@@ -33,11 +33,6 @@ class StdSchoolAcademicLinksService {
         params,
       );
 
-      if (response == null || response is! Map) {
-        print("❌ Academic Links invalid response");
-        return null;
-      }
-
       return StdSchoolAcademicLinks.fromJson(response["data"]);
     } catch (e, st) {
       print("❌ EXCEPTION in StdSchoolAcademicLinksService:");

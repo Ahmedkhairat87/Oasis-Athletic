@@ -6,12 +6,11 @@ import '../../../../core/colors_Manager.dart';
 
 // reusable imports
 import '../../../../core/reusable_components/profile_tab_conditional_switch.dart';
-import '../../../../core/reusable_components/profile_tab_emergency_contact_field.dart';
 import '../../../../core/reusable_components/profile_tab_golden_card.dart';
 import '../../../../core/reusable_components/profile_tab_labeled_text_field.dart';
 import '../../../../core/reusable_components/profile_tab_section_title.dart';
 import '../../../../core/reusable_components/profile_tab_read_only_field.dart';
-import '../../../../core/reusable_components/student_header.dart'; // ReadOnlyField
+// ReadOnlyField
 
 class ProfileTab extends StatefulWidget {
   final StdFullData student; // 👈 البيانات الجاية من API
