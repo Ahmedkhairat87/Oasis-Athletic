@@ -34,11 +34,6 @@ class AcademicSupportService {
         params,
       );
 
-      if (response == null || response is! Map) {
-        print("❌ Academic Support API invalid response");
-        return null;
-      }
-
       return StdAcademicSupportResponse.fromJson(response["data"]);
     } catch (e, st) {
       print("❌ EXCEPTION in AcademicSupportService:");

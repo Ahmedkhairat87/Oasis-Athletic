@@ -13,30 +13,24 @@ class StdNewsLetterService {
   static Future<NewsLetter?> getNewsLetter() async {
     try {
       final token = await _getToken();
-
-      if (token == null || token.isEmpty) {
-        print("ERROR: Token not found!");
-        return null;
-      }
-
-      final params = {
-        "token": token,
-        "Flag": 0,
-      };
+      if (token == null || token.isEmpty) return null;
 
       final response = await APIServices().apiRequest(
         APIManager.getNewsLetter,
-        params,
+        {
+          "token": token,
+          "Flag": 0,
+        },
       );
 
-      if (response == null || response is! Map<String, dynamic>) {
-        return null;
-      }
+      final parsed = NewsLetter.fromJson(response);
 
-      return NewsLetter.fromJson(response);
+      // 🔍 DEBUG — YOU WILL SEE COUNT > 0
+      print("📰 Parsed newsletters count: ${parsed.data.length}");
 
+      return parsed;
     } catch (e, st) {
-      print("EXCEPTION in StdNewsLetterService:");
+      print("❌ Newsletter service error");
       print(e);
       print(st);
       return null;

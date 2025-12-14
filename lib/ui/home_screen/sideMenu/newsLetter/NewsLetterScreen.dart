@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../../core/colors_Manager.dart';
-import '../../../../../core/reusable_components/profile_tab_section_title.dart';
+
+import '../../../../core/colors_Manager.dart';
+import '../../../../core/reusable_components/app_background.dart';
 import '../../../../core/model/sideMenu/NewsLetterItem.dart';
 import '../../../../core/services/sideMenu/StdNewsLetterService.dart';
 import '../../../webView-attachmentopener/openAttachment.dart';
+
 
 class NewsLetterScreen extends StatefulWidget {
   const NewsLetterScreen({super.key});
@@ -28,10 +30,9 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
     setState(() => loading = true);
 
     final data = await StdNewsLetterService.getNewsLetter();
-
     if (!mounted) return;
 
-    if (data == null) {
+    if (data == null || data.data.isEmpty) {
       setState(() {
         loading = false;
         _items = [];
@@ -41,107 +42,124 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
 
     setState(() {
       loading = false;
-      _items = [];
-
-      if (data?.data != null && data!.data!.isNotEmpty) {
-        _items = data.data!.map((e) {
-          return NewsLetterItem(
-            date: e.newsDate ?? '',
-            url: e.fullPathE ?? '',
-          );
-        }).toList();
-      }
+      _items = data.data.map((e) {
+        return NewsLetterItem(
+          date: e.newsDate,
+          url: e.fullPathE.isNotEmpty ? e.fullPathE : e.fullPathF,
+        );
+      }).toList();
     });
+
+    // 🔍 DEBUG
+    print("📰 Newsletters rendered: ${_items.length}");
   }
+
 
   @override
   Widget build(BuildContext context) {
     final isLight = Theme.of(context).brightness == Brightness.light;
+
     final Color primaryBlue = isLight
         ? ColorsManager.primaryGradientStart
         : ColorsManager.primaryGradientStartDark;
 
-    return Container(
-      // ✅ FIX 1: paint background
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // ✅ FIX 2: DO NOT use SectionTitle here
-            Text(
-              'Newsletter',
-              style: TextStyle(
-                fontSize: 20.sp,
-                fontWeight: FontWeight.w800,
-                color: Theme.of(context).textTheme.titleLarge?.color,
-              ),
-            ),
-            SizedBox(height: 12.h),
+    final Color accentSky = ColorsManager.accentSky;
+    final Color accentMint = ColorsManager.accentMint;
 
-            if (loading)
-              const Center(child: CircularProgressIndicator())
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: const Text('Newsletters'),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: AppBackground(
+        child: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 8.h),
 
-            // ✅ FIX 3a: explicit empty state
-            else if (_items.isEmpty)
-              _emptyState(context)
-
-            else
-              ..._items.map(
-                    (item) => Padding(
-                  padding: EdgeInsets.only(bottom: 14.h),
-                  child: _newsletterCard(context, item, primaryBlue),
+                /// HEADER
+                Text(
+                  'School Newsletters',
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.w800,
+                    color: Theme.of(context).textTheme.titleLarge?.color,
+                  ),
                 ),
-              ),
 
-            SizedBox(height: 18.h),
+                SizedBox(height: 14.h),
 
-            Text(
-              'Tap a newsletter card to open the full issue.',
-              style: TextStyle(
-                fontSize: 13.sp,
-                color: Theme.of(context)
-                    .textTheme
-                    .bodySmall
-                    ?.color
-                    ?.withOpacity(0.85),
-              ),
+                /// CONTENT
+                Expanded(
+                  child: loading
+                      ? const Center(child: CircularProgressIndicator())
+
+                      : _items.isEmpty
+                      ? _emptyState(context)
+
+                      : ListView.builder(
+                    padding: EdgeInsets.only(bottom: 20.h),
+                    itemCount: _items.length,
+                    itemBuilder: (context, index) {
+                      final item = _items[index];
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: 14.h),
+                        child: _newsletterCard(
+                          context: context,
+                          item: item,
+                          primaryBlue: primaryBlue,
+                          accentSky: accentSky,
+                          accentMint: accentMint,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
+                SizedBox(height: 8.h),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _newsletterCard(
-      BuildContext context,
-      NewsLetterItem item,
-      Color primaryBlue,
-      ) {
-    final Color accentSky = ColorsManager.accentSky;
-    final Color accentMint = ColorsManager.accentMint;
-
+  /// === NEWSLETTER CARD (Gamma-style) ===
+  Widget _newsletterCard({
+    required BuildContext context,
+    required NewsLetterItem item,
+    required Color primaryBlue,
+    required Color accentSky,
+    required Color accentMint,
+  }) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(14.r),
         onTap: () => openAttachment(context, item.url),
         child: Ink(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12.r),
+            borderRadius: BorderRadius.circular(14.r),
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
                 primaryBlue.withOpacity(0.95),
                 accentSky.withOpacity(0.85),
+                accentMint.withOpacity(0.75),
               ],
             ),
             boxShadow: [
               BoxShadow(
-                color: primaryBlue.withOpacity(0.18),
-                blurRadius: 10,
+                color: primaryBlue.withOpacity(0.20),
+                blurRadius: 14,
                 offset: const Offset(0, 6),
               ),
             ],
@@ -149,12 +167,13 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 18.h),
           child: Row(
             children: [
+              /// ICON BUBBLE
               Container(
                 width: 56.w,
                 height: 56.w,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.15),
+                  color: Colors.white.withOpacity(0.16),
                 ),
                 child: const Icon(
                   Icons.newspaper,
@@ -162,7 +181,10 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
                   size: 30,
                 ),
               ),
+
               SizedBox(width: 14.w),
+
+              /// TEXT
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -187,6 +209,7 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
                   ],
                 ),
               ),
+
               Icon(
                 Icons.chevron_right,
                 color: Colors.white.withOpacity(0.9),
@@ -199,33 +222,37 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
     );
   }
 
+  /// === EMPTY STATE ===
   Widget _emptyState(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: 40.h),
-      child: Column(
-        children: [
-          Icon(
-            Icons.newspaper_outlined,
-            size: 48.sp,
-            color: Theme.of(context)
-                .iconTheme
-                .color
-                ?.withOpacity(0.6),
-          ),
-          SizedBox(height: 12.h),
-          Text(
-            'No newsletters available',
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w600,
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.only(top: 40.h),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.newspaper_outlined,
+              size: 48.sp,
               color: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.color
-                  ?.withOpacity(0.85),
+                  .iconTheme
+                  .color
+                  ?.withOpacity(0.6),
             ),
-          ),
-        ],
+            SizedBox(height: 12.h),
+            Text(
+              'No newsletters available',
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.color
+                    ?.withOpacity(0.85),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

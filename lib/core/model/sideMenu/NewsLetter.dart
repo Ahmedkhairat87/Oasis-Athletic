@@ -1,25 +1,37 @@
-import 'Data.dart';
-
 class NewsLetter {
-  NewsLetter({
-      this.data,});
+  final List<NewsLetterRow> data;
 
-  NewsLetter.fromJson(Map<String, dynamic> json)  {
-    if (json['Data'] != null) {
-      data = [];
-      json['Data'].forEach((v) {
-        data?.add(Data.fromJson(v));
-      });
+  NewsLetter({required this.data});
+
+  factory NewsLetter.fromJson(Map<String, dynamic> json) {
+    final raw = json['Data'];
+
+    if (raw == null || raw is! List) {
+      return NewsLetter(data: []);
     }
-  }
-  List<Data>? data;
 
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    if (data != null) {
-      map['Data'] = data?.map((v) => v.toJson()).toList();
-    }
-    return map;
+    return NewsLetter(
+      data: raw.map((e) => NewsLetterRow.fromJson(e)).toList(),
+    );
   }
+}
 
+class NewsLetterRow {
+  final String newsDate;
+  final String fullPathE;
+  final String fullPathF;
+
+  NewsLetterRow({
+    required this.newsDate,
+    required this.fullPathE,
+    required this.fullPathF,
+  });
+
+  factory NewsLetterRow.fromJson(Map<String, dynamic> json) {
+    return NewsLetterRow(
+      newsDate: json['news_date']?.toString() ?? '',
+      fullPathE: json['full_path_e']?.toString() ?? '',
+      fullPathF: json['full_path_f']?.toString() ?? '',
+    );
+  }
 }

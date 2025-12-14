@@ -33,11 +33,6 @@ class StdAthleticLinksService {
         params,
       );
 
-      if (response == null || response is! Map) {
-        print("❌ Athletic Reports invalid response");
-        return null;
-      }
-
       return AthleticReports.fromJson(response["data"]);
     } catch (e, st) {
       print("❌ EXCEPTION in StdAthleticLinksService:");
