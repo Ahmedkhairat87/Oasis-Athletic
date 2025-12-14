@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
 class Newsletter extends StatelessWidget {
-  static const routeName = '/newsletter';
+  static const routeName = '/Newsletter';
   const Newsletter({super.key});
 
   @override

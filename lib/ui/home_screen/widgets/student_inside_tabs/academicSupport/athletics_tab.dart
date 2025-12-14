@@ -1,20 +1,24 @@
-// lib/ui/home_screen/widgets/student_inside_tabs/athletics_tab.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import '../../../../core/colors_Manager.dart';
+import '../../../../../core/colors_Manager.dart';
+import '../../../../../core/reusable_components/student_notifier.dart';
+import '../../../../../core/services/stdAthleticServices/StdAthleticLinksService.dart';
+import '../../../../webView-attachmentopener/openAttachment.dart';
 
 class AthleticsReport {
   final String id;
   final DateTime publishedAt;
   DateTime? readAt; // null => not read yet
   final String fileName; // pretend file
+  final String filePath;
 
   AthleticsReport({
     required this.id,
     required this.publishedAt,
     this.readAt,
     required this.fileName,
+    required this.filePath,
   });
 
   bool get isRead => readAt != null;
@@ -29,18 +33,57 @@ class AthleticsTab extends StatefulWidget {
 
 class _AthleticsTabState extends State<AthleticsTab> {
   // mock reports - replace with API data later
-  final List<AthleticsReport> _reports = List.generate(
-    6,
-        (i) => AthleticsReport(
-      id: 'R-${100 + i}',
-      publishedAt: DateTime.now().subtract(Duration(days: i * 3 + 1)),
-      readAt: i.isEven ? DateTime.now().subtract(Duration(days: i)) : null,
-      fileName: 'report_${100 + i}.pdf',
-    ),
-  );
 
+  bool loading = false;
+  List<AthleticsReport> _reports = [];
   // show date only
   final DateFormat _df = DateFormat.yMMMd();
+
+
+  @override
+  void initState() {
+    super.initState();
+    loadAthleticReports();
+  }
+
+  Future<void> loadAthleticReports() async {
+    setState(() => loading = true);
+
+    final stdId = studentNotifier.value.stdId.toString();
+
+    final data = await StdAthleticLinksService.getAthleticReports(
+      stdId: stdId,
+    );
+
+    if (!mounted) return;
+
+    setState(() {
+      loading = false;
+      _reports = [];
+
+      if (data?.stdAthleticsReports != null &&
+          data!.stdAthleticsReports!.isNotEmpty) {
+        _reports = data.stdAthleticsReports!.map((e) {
+          return AthleticsReport(
+            id: e.reportType ?? '',
+            publishedAt: DateTime.parse(e.uploadDate!),
+            readAt: e.parentRead == 1 && e.readedDate != null
+                ? DateTime.parse(e.readedDate!)
+                : null,
+            fileName: e.filePath?.split('/').last ?? '',
+            filePath: e.filePath ?? '',
+          );
+        }).toList();
+      }
+    });
+  }
+
+
+
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +100,11 @@ class _AthleticsTabState extends State<AthleticsTab> {
     // Outer padding: only horizontal and small bottom — no top padding so list is flush with parent
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 0),
-      child: reports.isEmpty
+      child: loading
+          ? const Center(
+        child: CircularProgressIndicator(),
+      )
+          : reports.isEmpty
           ? Center(
         child: Text(
           'No reports yet',
@@ -68,7 +115,6 @@ class _AthleticsTabState extends State<AthleticsTab> {
         ),
       )
           : TweenAnimationBuilder<double>(
-        // ✅ animate from 0 → 1 and clamp before Opacity
         tween: Tween(begin: 0.0, end: 1.0),
         duration: const Duration(milliseconds: 260),
         curve: Curves.easeOut,
@@ -483,8 +529,10 @@ class _AthleticsTabState extends State<AthleticsTab> {
                         children: [
                           Expanded(
                             child: ElevatedButton.icon(
-                              onPressed: () =>
-                                  _simulateDownload(context, r, accentCoral),
+                              onPressed: () {
+                                Navigator.pop(context); // close bottom sheet
+                                openAttachment(context, r.filePath); // open WebView
+                              },
                               icon: Icon(
                                 Icons.file_download,
                                 size: 18.r,
@@ -518,7 +566,10 @@ class _AthleticsTabState extends State<AthleticsTab> {
                         children: [
                           const Spacer(),
                           TextButton(
-                            onPressed: () => Navigator.pop(ctx),
+                            onPressed: () {
+                              Navigator.pop(context);
+                              openAttachment(context, r.filePath);
+                            },
                             child: Text(
                               'Close',
                               style: TextStyle(

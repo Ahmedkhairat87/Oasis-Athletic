@@ -169,8 +169,6 @@ class _AcademicTabState extends State<AcademicSupportMainTab> {
                             context,
                             MaterialPageRoute(
                               builder: (_) => StudentAcademicSupportReport(
-                                schoolTasks: schoolTasks,
-                                extraTasks: extraTasks,
                                 reports: responseData!.stdSubjectDetailsData!,
                               ),
                             ),

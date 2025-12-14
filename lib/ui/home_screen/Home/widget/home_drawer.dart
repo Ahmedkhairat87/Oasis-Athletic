@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:oasisathletic/ui/home_screen/sideMenu/newsLetter/NewsLetterScreen.dart';
+
 import '../../../../core/colors_Manager.dart';
 import '../../../../core/model/regStdModels/SideMenu.dart';
 import '../../../drawer/about_us.dart';
 import '../../../drawer/appointments.dart';
+import '../../../drawer/newsletter.dart';
 import '../../MSGScreens/messages.dart';
 
 class HomeDrawer extends StatefulWidget {
@@ -17,6 +20,8 @@ class HomeDrawer extends StatefulWidget {
 class _HomeDrawerState extends State<HomeDrawer>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+
+  int selectedIndex = -1;
 
   @override
   void initState() {
@@ -33,9 +38,13 @@ class _HomeDrawerState extends State<HomeDrawer>
     super.dispose();
   }
 
-  void _handleSideMenuTap(BuildContext context, SideMenu item) {
+  void _handleSideMenuTap(BuildContext context, SideMenu item, int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+
     final link = item.lnkNameEn ?? '';
-    Navigator.pop(context); // close drawer first
+    Navigator.pop(context);
 
     if (link.contains('about')) {
       Navigator.push(context, MaterialPageRoute(builder: (_) => AboutUs()));
@@ -43,8 +52,9 @@ class _HomeDrawerState extends State<HomeDrawer>
       Navigator.push(context, MaterialPageRoute(builder: (_) => Appointments()));
     } else if (link.contains('Messages')) {
       Navigator.push(context, MaterialPageRoute(builder: (_) => const Messages()));
+    }else if (link.contains('Newsletter')) {
+      Navigator.push(context, MaterialPageRoute(builder: (_) => const NewsLetterScreen()));
     }
-    // Add more navigation rules based on API links
   }
 
   @override
@@ -56,7 +66,6 @@ class _HomeDrawerState extends State<HomeDrawer>
     final Color accentMint = ColorsManager.accentMint;
     final Color accentSky = ColorsManager.accentSky;
     final Color accentSun = ColorsManager.accentSun;
-    final Color accentPurple = ColorsManager.accentPurple;
 
     return Drawer(
       child: Container(
@@ -73,12 +82,12 @@ class _HomeDrawerState extends State<HomeDrawer>
         ),
         child: Column(
           children: [
-            // HEADER
             _buildHeader(
-                context,
-                primaryBlue: primaryBlue,
-                secondaryBlue: secondaryBlue,
-                accentSky: accentSky),
+              context,
+              primaryBlue: primaryBlue,
+              secondaryBlue: secondaryBlue,
+              accentSky: accentSky,
+            ),
 
             // Home + Logout Row
             Padding(
@@ -136,7 +145,7 @@ class _HomeDrawerState extends State<HomeDrawer>
 
             const SizedBox(height: 4),
 
-            // Grid of API side menu items with design
+            // Grid of API side menu items
             Expanded(
               child: sideMenu.isEmpty
                   ? const Center(
@@ -146,20 +155,19 @@ class _HomeDrawerState extends State<HomeDrawer>
                 ),
               )
                   : GridView.builder(
-                padding:
-                EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                padding: EdgeInsets.symmetric(
+                    horizontal: 10.w, vertical: 6.h),
                 itemCount: sideMenu.length,
-                gridDelegate:
-                const SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  childAspectRatio: 1.2,
+                  mainAxisSpacing: 10.h,
+                  crossAxisSpacing: 10.w,
+                  childAspectRatio: 0.95,
                 ),
                 itemBuilder: (context, index) {
                   final item = sideMenu[index];
-                  final title = item.lnkNameEn ?? "No title";
                   final iconPath = item.lnkPhotoEn ?? "";
+                  final bool isSelected = selectedIndex == index;
 
                   return TweenAnimationBuilder<double>(
                     tween: Tween(begin: 0.96, end: 1.0),
@@ -177,47 +185,83 @@ class _HomeDrawerState extends State<HomeDrawer>
                       );
                     },
                     child: Card(
-                      elevation: 2,
+                      elevation: isSelected ? 6 : 2,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
+                      shadowColor: isSelected
+                          ? ColorsManager.accentMint.withOpacity(0.35)
+                          : Colors.transparent,
                       clipBehavior: Clip.antiAlias,
-                      child: InkWell(
-                        onTap: () =>
-                            _handleSideMenuTap(context, item),
-                        borderRadius: BorderRadius.circular(20),
-                        child: Column(
-                          mainAxisAlignment:
-                          MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 60,
-                              height: 60,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                image: iconPath.isNotEmpty
-                                    ? DecorationImage(
-                                  image:
-                                  NetworkImage(iconPath),
-                                  fit: BoxFit.cover,
-                                )
-                                    : null,
-                                color: iconPath.isEmpty
-                                    ? Colors.white12
-                                    : null,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 220),
+                        curve: Curves.easeOut,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          gradient: isSelected
+                              ? LinearGradient(
+                            colors: [
+                              Colors.white.withOpacity(0.92),
+                              ColorsManager.accentMint
+                                  .withOpacity(0.16),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          )
+                              : null,
+                          color: isSelected
+                              ? null
+                              : Colors.white.withOpacity(0.92),
+                          border: Border.all(
+                            color: isSelected
+                                ? ColorsManager.primaryGradientStart
+                                : Colors.black12.withOpacity(0.2),
+                            width: isSelected ? 1.8 : 1.0,
+                          ),
+                        ),
+                        child: InkWell(
+                          onTap: () =>
+                              _handleSideMenuTap(context, item, index),
+                          borderRadius: BorderRadius.circular(20),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Container(
+                              color: isSelected
+                                  ? Colors.white.withOpacity(0.92)
+                                  : Colors.white.withOpacity(0.92),
+                              child: Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.stretch,
+                                children: [
+                                  // Image/Icon fills available space
+                                  Expanded(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                        BorderRadius.circular(16),
+                                        image: iconPath.isNotEmpty
+                                            ? DecorationImage(
+                                          image:
+                                          NetworkImage(iconPath),
+                                          fit: BoxFit.cover,
+                                        )
+                                            : null,
+                                        color: iconPath.isEmpty
+                                            ? Colors.white12
+                                            : null,
+                                      ),
+                                      child: iconPath.isEmpty
+                                          ? const Center(
+                                        child: Icon(Icons.menu,
+                                            color: Colors.white,
+                                            size: 32),
+                                      )
+                                          : null,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              child: iconPath.isEmpty
-                                  ? const Icon(Icons.menu,
-                                  color: Colors.white, size: 32)
-                                  : null,
                             ),
-                            const SizedBox(height: 8),
-                            Text(
-                              title,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 12),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
@@ -245,7 +289,11 @@ class _HomeDrawerState extends State<HomeDrawer>
           final opacity = value.clamp(0.0, 1.0);
           return Opacity(
             opacity: opacity,
-            child: Transform.scale(scale: value, alignment: Alignment.bottomLeft, child: child),
+            child: Transform.scale(
+              scale: value,
+              alignment: Alignment.bottomLeft,
+              child: child,
+            ),
           );
         },
         child: Container(
@@ -256,7 +304,8 @@ class _HomeDrawerState extends State<HomeDrawer>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: BorderRadius.vertical(bottom: Radius.circular(24.r)),
+            borderRadius:
+            BorderRadius.vertical(bottom: Radius.circular(24.r)),
             boxShadow: [
               BoxShadow(
                 color: primaryBlue.withOpacity(0.35),
@@ -265,7 +314,8 @@ class _HomeDrawerState extends State<HomeDrawer>
               ),
             ],
           ),
-          padding: EdgeInsets.only(left: 18.w, right: 18.w, top: 32.h, bottom: 18.h),
+          padding:
+          EdgeInsets.only(left: 18.w, right: 18.w, top: 32.h, bottom: 18.h),
           child: Row(
             children: [
               Container(

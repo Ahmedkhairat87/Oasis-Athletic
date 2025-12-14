@@ -30,10 +30,8 @@ class AcademicReportItem {
 
 class StudentAcademicSupportReport extends StatelessWidget {
   final List<StdSubjectDetailsData> reports;
-  final int schoolTasks = 0;
-  final int extraTasks = 0;
 
-  const StudentAcademicSupportReport({super.key , required this.reports, required int extraTasks, required int schoolTasks});
+  const StudentAcademicSupportReport({super.key , required this.reports});
   /*List<AcademicReportItem> _mockItems() {
     final now = DateTime.now();
     return [

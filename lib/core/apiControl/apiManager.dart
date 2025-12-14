@@ -12,5 +12,24 @@ class APIManager {
   //Student Profile Data
   static String getStdLinks = "${fixedURL}stdLinks";
   static String getAcademicSupport = "${fixedURL}stdLinksAcademic";
+  static String getSchoolAcademicLinks = "${fixedURL}stdAcademicLinks";
+  static String getAthleticLinks = "${fixedURL}stdLinksAthletics";
 
+
+
+  //APIS from Parents app API.Oasis
+  static const fixedURL2 = "https://api1.oasisdemaadi.com/api/";
+
+  static String getNewsLetter = "${fixedURL2}IntNewsLetter";
+
+
+
+
+//    static let newsLetter = fixedURL + "IntNewsLetter"
+/* //Canteen Charge
+    static let getAmountList = fixedURL + "chargAmounts"
+    static let paymentLinkGeneration = fixedURL + "CreateNewVoucher"
+    static let paymentHistory = fixedURL + "stdCanteenHistory"
+
+ */
 }
