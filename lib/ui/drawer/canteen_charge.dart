@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../core/model/regStdModels/stdData.dart';
+import '../../core/model/sideMenu/canteenCharge/ChargsAmounts.dart';
+import '../../core/model/sideMenu/canteenCharge/StdChargs.dart';
+import '../../core/reusable_components/Notifiers/student_notifier.dart';
 import '../../core/reusable_components/app_background.dart';
-
+import '../../core/services/sideMenu/sideMenuServices/Canteen/CanteenServices.dart';
+import '../webView-attachmentopener/openAttachment.dart';
 class CanteenCharge extends StatefulWidget {
   static const routeName = '/canteenCharge';
   const CanteenCharge({super.key});
@@ -13,7 +18,36 @@ class CanteenCharge extends StatefulWidget {
 
 class _CanteenChargeState extends State<CanteenCharge> {
   bool isHistoryTab = false;
-  String selectedStudent = 'Mazen'; // 🔑 dynamic student selection
+  stdData? selectedStudent;
+  List<ChargsAmounts> chargeAmounts = [];
+  List<StdChargs> history = [];
+  bool loading = false;
+
+
+  void _selectStudent(stdData student) {
+    if (loading) return;
+    if (student.stdId == selectedStudent?.stdId) return;
+
+    setState(() => selectedStudent = student);
+    _loadCanteenData(student);
+  }
+
+
+  Future<void> _loadCanteenData(stdData student) async {
+    setState(() => loading = true);
+
+    final amounts = await CanteenService.getChargeAmounts();
+    final hist = await CanteenService.getHistory(student.stdId!.toInt());
+
+    if (!mounted) return;
+
+    setState(() {
+      chargeAmounts = amounts;
+      history = hist;
+      loading = false;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -35,28 +69,45 @@ class _CanteenChargeState extends State<CanteenCharge> {
                 SizedBox(height: 20.h),
 
                 /// Students avatars (dynamic selection)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _StudentAvatar(
-                      name: 'Malek',
-                      isSelected: selectedStudent == 'Malek',
-                      onTap: () => setState(() => selectedStudent = 'Malek'),
-                    ),
-                    SizedBox(width: 30.w),
-                    _StudentAvatar(
-                      name: 'Mazen',
-                      isSelected: selectedStudent == 'Mazen',
-                      onTap: () => setState(() => selectedStudent = 'Mazen'),
-                    ),
-                  ],
-                ),
+                ValueListenableBuilder<List<stdData>>(
+                  valueListenable: studentsNotifier,
+                  builder: (context, students, _) {
+                    if (students.isEmpty) {
+                      return const Center(child: Text('No students available'));
+                    }
 
-                SizedBox(height: 25.h),
+                    // 🔥 AUTO-SELECT FIRST STUDENT (runs once)
+                    if (selectedStudent == null) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (!mounted) return;
+                        final first = students.first;
+                          setState(() => selectedStudent = first);
+                          _loadCanteenData(first);
+
+                      });
+                    }
+
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: students.map((student) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12.w),
+                          child: _StudentAvatar(
+                            //name: student.stdFirstname ?? '',
+                            imageUrl: student.stdPicture,
+                            isSelected: selectedStudent?.stdId == student.stdId,
+                            onTap: () => _selectStudent(student),
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  },
+                ),
+                SizedBox(height: 5.h),
 
                 /// Selected student name
                 Text(
-                  selectedStudent,
+                  selectedStudent?.stdFirstname ?? '',
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w600,
@@ -68,7 +119,7 @@ class _CanteenChargeState extends State<CanteenCharge> {
 
                 /// Current balance (placeholder, could be dynamic)
                 Text(
-                  'Current Balance : 1.00 L.E',
+                  '${selectedStudent?.balance ?? '0.00'}',
                   style: TextStyle(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.w500,
@@ -76,11 +127,11 @@ class _CanteenChargeState extends State<CanteenCharge> {
                   ),
                 ),
 
-                SizedBox(height: 15.h),
+                SizedBox(height: 10.h),
 
                 /// Note
                 Container(
-                  padding: EdgeInsets.all(10.w),
+                  padding: EdgeInsets.all(5.w),
                   decoration: BoxDecoration(
                     color: Colors.red.shade50,
                     borderRadius: BorderRadius.circular(8.r),
@@ -96,7 +147,7 @@ class _CanteenChargeState extends State<CanteenCharge> {
                   ),
                 ),
 
-                SizedBox(height: 25.h),
+                SizedBox(height: 15.h),
 
                 /// Tabs (Charge / Charging history)
                 Container(
@@ -125,11 +176,15 @@ class _CanteenChargeState extends State<CanteenCharge> {
 
                 /// Tab content
                 Expanded(
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    child: isHistoryTab
-                        ? const _ChargingHistory()
-                        : const _ChargeOptions(),
+                  child: loading
+                      ? const Center(child: CircularProgressIndicator())
+                      : selectedStudent == null
+                      ? const SizedBox()
+                      : isHistoryTab
+                      ? _ChargingHistory(history: history)
+                      : _ChargeOptions(
+                    amounts: chargeAmounts,
+                    student: selectedStudent!,
                   ),
                 ),
               ],
@@ -145,15 +200,31 @@ class _CanteenChargeState extends State<CanteenCharge> {
 /// Charge tab content
 /// ======================
 class _ChargeOptions extends StatelessWidget {
-  const _ChargeOptions();
+  final List<ChargsAmounts> amounts;
+  final stdData student;
+
+  const _ChargeOptions({
+    required this.amounts,
+    required this.student,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final charges = ['500.0', '1000.0']; // 🔑 scalable list
+    if (amounts.isEmpty) {
+      return const Center(child: Text('No charge options'));
+    }
+
     return ListView.separated(
-      itemCount: charges.length,
+      itemCount: amounts.length,
       separatorBuilder: (_, __) => const Divider(),
-      itemBuilder: (context, index) => _ChargeRow(amount: charges[index]),
+      itemBuilder: (_, index) {
+        final item = amounts[index];
+        return _ChargeRow(
+          amount: item.amount!,
+          accNo: item.accNo!,
+          student: student,
+        );
+      },
     );
   }
 }
@@ -162,25 +233,29 @@ class _ChargeOptions extends StatelessWidget {
 /// Charging history tab content
 /// ======================
 class _ChargingHistory extends StatelessWidget {
-  const _ChargingHistory();
+  final List<StdChargs> history;
+
+  const _ChargingHistory({required this.history});
 
   @override
   Widget build(BuildContext context) {
-    final history = [
-      {'date': '10/12/2025', 'amount': '500 L.E'},
-      {'date': '02/12/2025', 'amount': '1000 L.E'},
-    ];
+    if (history.isEmpty) {
+      return const Center(child: Text('No charging history'));
+    }
+
     return ListView.separated(
       itemCount: history.length,
       separatorBuilder: (_, __) => const Divider(),
-      itemBuilder: (context, index) => _HistoryRow(
-        date: history[index]['date']!,
-        amount: history[index]['amount']!,
-      ),
+      itemBuilder: (_, index) {
+        final item = history[index];
+        return _HistoryRow(
+          date: item.chargeDate ?? '',
+          amount: '${item.amount} L.E',
+        );
+      },
     );
   }
 }
-
 /// ======================
 /// Widgets
 /// ======================
@@ -233,14 +308,16 @@ class _TabButton extends StatelessWidget {
 }
 
 class _StudentAvatar extends StatelessWidget {
-  final String name;
+  //final String name;
+  final String? imageUrl;
   final bool isSelected;
   final VoidCallback onTap;
 
   const _StudentAvatar({
-    required this.name,
+    //required this.name,
     required this.isSelected,
     required this.onTap,
+    required this.imageUrl,
   });
 
   @override
@@ -270,25 +347,29 @@ class _StudentAvatar extends StatelessWidget {
             ),
             child: CircleAvatar(
               radius: 28.r,
-              backgroundColor: isSelected
-                  ? Colors.green.shade100
-                  : Colors.blue.shade100,
-              child: Icon(
+              backgroundColor: Colors.grey.shade200,
+              backgroundImage: imageUrl != null && imageUrl!.isNotEmpty
+                  ? NetworkImage(imageUrl!)
+                  : null,
+              child: imageUrl == null || imageUrl!.isEmpty
+                  ? Icon(
                 Icons.person,
                 size: 30.sp,
                 color: isSelected ? Colors.green : Colors.blue,
-              ),
+              )
+                  : null,
             ),
+
           ),
           SizedBox(height: 6.h),
-          Text(
-            name,
-            style: TextStyle(
-              fontSize: 13.sp,
-              fontWeight: FontWeight.w500,
-              color: isSelected ? Colors.green : Colors.black,
-            ),
-          ),
+          // Text(
+          //   name,
+          //   style: TextStyle(
+          //     fontSize: 13.sp,
+          //     fontWeight: FontWeight.w500,
+          //     color: isSelected ? Colors.green : Colors.black,
+          //   ),
+          // ),
         ],
       ),
     );
@@ -296,9 +377,15 @@ class _StudentAvatar extends StatelessWidget {
 }
 
 class _ChargeRow extends StatelessWidget {
-  final String amount;
+  final num amount;
+  final num accNo;
+  final stdData student;
 
-  const _ChargeRow({required this.amount});
+  const _ChargeRow({
+    required this.amount,
+    required this.accNo,
+    required this.student,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -306,28 +393,23 @@ class _ChargeRow extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 14.h),
       child: Row(
         children: [
-          Text('Amount', style: TextStyle(fontSize: 14.sp)),
+          const Text('Amount'),
           const Spacer(),
-          Text(
-            amount,
-            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500),
-          ),
+          Text(amount.toString()),
           SizedBox(width: 20.w),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-            ),
-            onPressed: () {
-              // 🔑 integrate backend payment API here
+            onPressed: () async {
+              final url = await CanteenService.createPaymentLink(
+                stdId: student.stdId!.toInt(),
+                accNo: accNo,
+                amount: amount,
+              );
+
+              if (url != null && context.mounted) {
+                openAttachment(context, url);
+              }
             },
-            child: Text(
-              'Pay Now',
-              style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600),
-            ),
+            child: const Text('Pay Now'),
           ),
         ],
       ),

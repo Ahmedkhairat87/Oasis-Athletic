@@ -1,8 +1,9 @@
 
 import 'package:oasisathletic/core/model/newMessageModels/Departments/Department.dart';
+import '../../../apiControl/apiManager.dart';
+import '../../../apiControl/apiServiceProvider.dart';
 
-import '../../apiControl/apiManager.dart';
-import '../../apiControl/apiServiceProvider.dart';
+
 class GetEmpsService {
   static Future<Department> GetEmployeeResponse({
     required String token,

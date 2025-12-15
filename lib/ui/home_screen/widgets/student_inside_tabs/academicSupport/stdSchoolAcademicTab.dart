@@ -9,8 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../core/colors_Manager.dart';
 import '../../../../../core/reusable_components/profile_tab_golden_card.dart';
 import '../../../../../core/reusable_components/profile_tab_section_title.dart';
-import '../../../../../core/reusable_components/student_notifier.dart';
-import '../../../../../core/services/SchoolAcademicLinksServices/StdSchoolAcademicLinksService.dart';
+import '../../../../../core/reusable_components/Notifiers/student_notifier.dart';
+import '../../../../../core/services/stdProfile/SchoolAcademicLinksServices/StdSchoolAcademicLinksService.dart';
 import '../../../../webView-attachmentopener/openAttachment.dart'; // adjust path if needed
 
 class stdSchoolAcademicTab extends StatefulWidget {

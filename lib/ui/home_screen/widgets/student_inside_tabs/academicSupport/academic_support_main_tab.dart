@@ -4,9 +4,9 @@ import 'package:oasisathletic/core/model/stdLinks/academicSupport/StdAcademicSup
 import '../../../../../core/colors_Manager.dart';
 import '../../../../../core/reusable_components/profile_tab_golden_card.dart';
 import '../../../../../core/reusable_components/profile_tab_section_title.dart';
-import '../../../../../core/reusable_components/student_notifier.dart';
+import '../../../../../core/reusable_components/Notifiers/student_notifier.dart';
 
-import '../../../../../core/services/stdAcademicSupportServices/AcademicSupportService.dart';
+import '../../../../../core/services/stdProfile/stdAcademicSupportServices/AcademicSupportService.dart';
 import 'academic_tab_attendance_screen.dart';
 import 'student_academic_support_report.dart';
 
