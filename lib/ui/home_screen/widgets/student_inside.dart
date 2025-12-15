@@ -21,10 +21,10 @@ import '../../../core/model/stdLinks/StdMainLinks.dart';
 import '../../../core/model/stdLinks/StdSports.dart';
 import '../../../core/reusable_components/app_background.dart';
 import '../../../core/reusable_components/studentInside_tabbar.dart'; // GoldenTabBar + TabItem
-import '../../../core/reusable_components/student_notifier.dart';
+import '../../../core/reusable_components/Notifiers/student_notifier.dart';
 import '../../../core/reusable_components/students_inside_tabs.dart'; // StudentTabPages
 import '../../../core/reusable_components/student_header.dart';
-import '../../../core/services/stdLinksServices/stdLinksServices.dart'; // StudentHeader.fromNotifier
+import '../../../core/services/stdProfile/stdLinksServices/stdLinksServices.dart';
 
 class StudentInside extends StatefulWidget {
   const StudentInside({super.key});

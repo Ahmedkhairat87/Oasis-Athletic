@@ -1,5 +1,5 @@
-import '../../apiControl/apiManager.dart';
-import '../../model/stdLinks/StdLinks.dart';
+import '../../../apiControl/apiManager.dart';
+import '../../../apiControl/apiServiceProvider.dart';
 
 // class StudentLinksService {
 //   static Future<StdLinks> getStudentLinks({
@@ -21,6 +21,8 @@ import '../../model/stdLinks/StdLinks.dart';
 // }
 
 import 'package:dio/dio.dart';
+
+import '../../../model/stdLinks/StdLinks.dart';
 
 class StudentLinksService {
   static final Dio _dio = Dio();

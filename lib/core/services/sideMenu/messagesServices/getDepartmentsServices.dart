@@ -1,8 +1,8 @@
 
 import 'package:oasisathletic/core/model/newMessageModels/mainCategories/Categories.dart';
 
-import '../../apiControl/apiManager.dart';
-import '../../apiControl/apiServiceProvider.dart';
+import '../../../apiControl/apiManager.dart';
+import '../../../apiControl/apiServiceProvider.dart';
 
 class GetDepartmentsService {
   static Future<Categories> GetDepartmentsResponse({
