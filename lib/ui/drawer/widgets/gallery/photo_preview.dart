@@ -65,11 +65,11 @@ class PhotoPreview extends StatelessWidget {
                   backgroundColor: Colors.transparent, // 🔑 use transparent to allow gradient
                 ).copyWith(
                   // 🔑 Add gradient background via MaterialStateProperty
-                  backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                  backgroundColor: WidgetStateProperty.resolveWith<Color?>(
                         (states) {
-                      if (states.contains(MaterialState.pressed)) {
+                      if (states.contains(WidgetState.pressed)) {
                         return Colors.blue.shade700;
-                      } else if (states.contains(MaterialState.hovered)) {
+                      } else if (states.contains(WidgetState.hovered)) {
                         return Colors.blue.shade500;
                       }
                       return Colors.blue; // default

@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../colors_Manager.dart';
 import '../model/regStdModels/stdData.dart';
 import '../model/stdLinks/StdFullData.dart';
-import 'student_notifier.dart';
+import 'Notifiers/student_notifier.dart';
 
 /// Compact header showing avatar, name, and grade only.
 /// Use StudentHeader.fromNotifier() to listen automatically to studentNotifier.

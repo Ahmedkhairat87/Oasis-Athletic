@@ -32,47 +32,7 @@ class StudentAcademicSupportReport extends StatelessWidget {
   final List<StdSubjectDetailsData> reports;
 
   const StudentAcademicSupportReport({super.key , required this.reports});
-  /*List<AcademicReportItem> _mockItems() {
-    final now = DateTime.now();
-    return [
-      AcademicReportItem(
-        id: '1',
-        subject: 'Mathematics - Chapter 4',
-        sessionDate: now.subtract(const Duration(days: 1, hours: 3)),
-        isSchoolTask: true,
-        teacherName: 'Mrs. Elissar',
-        teacherComment:
-        'Good effort. Please revise exercise 4.2 and submit next class.',
-      ),
-      AcademicReportItem(
-        id: '2',
-        subject: 'Arabic - Reading',
-        sessionDate: now.subtract(const Duration(days: 2, hours: 2)),
-        isSchoolTask: false,
-        teacherName: 'Mo3allematy Faten',
-        teacherComment:
-        'Extra practice assigned — focus on comprehension and pronunciation.',
-      ),
-      AcademicReportItem(
-        id: '3',
-        subject: 'Science - Experiment writeup',
-        sessionDate: now.subtract(const Duration(days: 5)),
-        isSchoolTask: true,
-        teacherName: 'Ms. Rania Hamze',
-        teacherComment:
-        'Detailed report required. Add diagrams and observations.',
-      ),
-      AcademicReportItem(
-        id: '4',
-        subject: 'History',
-        sessionDate: now.subtract(const Duration(days: 6)),
-        isSchoolTask: false,
-        teacherName: 'Mohamed Ihab',
-        teacherComment:
-        'Attended and performed well; increase endurance exercises.',
-      ),
-    ];
-  }*/
+
 
   @override
   Widget build(BuildContext context) {
@@ -193,7 +153,7 @@ class StudentAcademicSupportReport extends StatelessWidget {
                                 label: 'Extra',
                                 count: items.length -
                                     items.where((e) => e.isSchoolTask).length,
-                                color: ColorsManager.accentCoral,
+                                color: ColorsManager.accentPurple,
                                 elevated: true,
                               ),
                             ),
@@ -230,7 +190,7 @@ class StudentAcademicSupportReport extends StatelessWidget {
                                   subject: it.subject,
                                   sessionDate: it.sessionDate,
                                   isSchool: it.isSchoolTask,
-                                  onTap: () => _onReportTap(context, it),
+                                  onTap: () => _onReportTap(context, it), fromTime: '12:00', toTime: '1:00', wasPresent: true,
                                 ),
                               );
                             },

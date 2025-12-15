@@ -6,7 +6,7 @@ import '../../../core/model/regStdModels/stdData.dart';
 import '../../../core/reusable_components/app_background.dart';
 import '../../../core/reusable_components/app_colors_extension.dart';
 import '../../../core/reusable_components/student_card.dart';
-import '../../../core/reusable_components/student_notifier.dart';
+import '../../../core/reusable_components/Notifiers/student_notifier.dart';
 import '../widgets/student_inside.dart';
 
 class StudentsScreen extends StatelessWidget {
@@ -29,47 +29,6 @@ class StudentsScreen extends StatelessWidget {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      // appBar: AppBar(
-      //   elevation: 0,
-      //   backgroundColor: Colors.white.withOpacity(0.65),
-      //   surfaceTintColor: Colors.transparent,
-      //   centerTitle: true,
-      //   title: Text(
-      //     'Students',
-      //     style: TextStyle(
-      //       color: scheme.textMainBlack,
-      //       fontSize: 18.sp,
-      //       fontWeight: FontWeight.w700,
-      //     ),
-      //   ),
-      //   flexibleSpace: ClipRect(
-      //     child: BackdropFilter(
-      //       filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-      //       child: Container(
-      //         decoration: BoxDecoration(
-      //           gradient: LinearGradient(
-      //             colors: [
-      //               Colors.white.withOpacity(0.96),
-      //               Colors.white.withOpacity(0.92),
-      //               Colors.white.withOpacity(0.88),
-      //             ],
-      //             begin: Alignment.topCenter,
-      //             end: Alignment.bottomCenter,
-      //           ),
-      //           border: Border(
-      //             bottom: BorderSide(
-      //               color: Colors.black.withOpacity(0.04),
-      //               width: 0.5,
-      //             ),
-      //           ),
-      //         ),
-      //       ),
-      //     ),
-      //   ),
-      //   iconTheme: IconThemeData(
-      //     color: scheme.textMainBlack,
-      //   ),
-      // ),
 
       body: AppBackground(
         //useAppBarBlur: true,
@@ -130,7 +89,6 @@ class StudentsScreen extends StatelessWidget {
 
               SizedBox(height: 20.h),
 
-              /// GRID (نفس الشكل 100%)
               Expanded(
                 child: GridView.builder(
                   physics: const BouncingScrollPhysics(),
@@ -159,7 +117,6 @@ class StudentsScreen extends StatelessWidget {
     );
   }
 
-  /// نفس أنيميشن الكروت في HomeScreen
   Widget _buildAnimatedStudentCard(
       BuildContext context, {
         required stdData student,

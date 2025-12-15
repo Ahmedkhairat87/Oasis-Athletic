@@ -17,7 +17,7 @@ class AlbumPhotos extends StatelessWidget {
       body: AppBackground(
         child: GridView.builder(
           padding: const EdgeInsets.all(16),
-          itemCount: 3,
+          itemCount: 10,
           gridDelegate:
           const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,

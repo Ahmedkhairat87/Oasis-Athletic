@@ -9,6 +9,13 @@ class AcademicSupportReportCard extends StatelessWidget {
   final String subject;
   final DateTime sessionDate;
   final bool isSchool;
+
+  final String fromTime;
+  final String toTime;
+
+  // ✅ ONLY ADDITION
+  final bool wasPresent;
+
   final VoidCallback onTap;
 
   const AcademicSupportReportCard({
@@ -16,6 +23,9 @@ class AcademicSupportReportCard extends StatelessWidget {
     required this.subject,
     required this.sessionDate,
     required this.isSchool,
+    required this.fromTime,
+    required this.toTime,
+    required this.wasPresent,
     required this.onTap,
   });
 
@@ -23,7 +33,7 @@ class AcademicSupportReportCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color primaryBlue = ColorsManager.primaryGradientStart;
     final Color accentMint = ColorsManager.accentMint;   // “School”
-    final Color accentCoral = ColorsManager.accentCoral; // “Extra”
+    final Color accentCoral = ColorsManager.accentPurple; // “Extra”
     final Color accentSun = ColorsManager.accentSun;
     final Color accentSky = ColorsManager.accentSky;
 
@@ -52,7 +62,6 @@ class AcademicSupportReportCard extends StatelessWidget {
           padding: EdgeInsets.all(12.w),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16.r),
-            // Joyful multicolor “wash” behind the card
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -77,7 +86,7 @@ class AcademicSupportReportCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // SUBJECT + DATE
+              // SUBJECT + DATE + TIME SLOT
               Row(
                 children: [
                   Expanded(
@@ -93,33 +102,98 @@ class AcademicSupportReportCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: 8.w),
-                  Row(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Icon(
-                        Icons.calendar_month_rounded,
-                        size: 14.r,
-                        color: accentSun.withOpacity(0.9),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.calendar_month_rounded,
+                            size: 14.r,
+                            color: accentSun.withOpacity(0.9),
+                          ),
+                          SizedBox(width: 4.w),
+                          Text(
+                            dateLabel,
+                            style: TextStyle(
+                              fontSize: 11.sp,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.color
+                                  ?.withOpacity(0.8),
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(width: 4.w),
-                      Text(
-                        dateLabel,
-                        style: TextStyle(
-                          fontSize: 11.sp,
-                          color: Theme.of(context)
-                              .textTheme
-                              .bodySmall
-                              ?.color
-                              ?.withOpacity(0.8),
-                        ),
+
+                      // TIME SLOT
+                      SizedBox(height: 2.h),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.access_time_rounded,
+                            size: 12.r,
+                            color: Theme.of(context)
+                                .textTheme
+                                .bodySmall
+                                ?.color
+                                ?.withOpacity(0.7),
+                          ),
+                          SizedBox(width: 4.w),
+                          Text(
+                            'Time Slot: $fromTime – $toTime',
+                            style: TextStyle(
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.color
+                                  ?.withOpacity(0.85),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ],
               ),
 
+              SizedBox(height: 10.h),
+
+              // ✅ ATTENDANCE STATUS (ONLY ADDITION)
+              Row(
+                children: [
+                  Icon(
+                    wasPresent
+                        ? Icons.check_circle_rounded
+                        : Icons.cancel_rounded,
+                    size: 14.r,
+                    color: wasPresent
+                        ? Colors.green
+                        : Colors.redAccent,
+                  ),
+                  SizedBox(width: 6.w),
+                  Text(
+                    wasPresent ? 'Attendance: Present' : 'Attendance: Absent',
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.color
+                          ?.withOpacity(0.9),
+                    ),
+                  ),
+                ],
+              ),
+
               SizedBox(height: 12.h),
 
-              // SCHOOL / EXTRA TOGGLE STYLE – joyful pills + animated underline
+              // SCHOOL / EXTRA TOGGLE
               Row(
                 children: [
                   Expanded(
@@ -179,15 +253,20 @@ class AcademicSupportReportCard extends StatelessWidget {
               Icon(
                 icon,
                 size: 16.r,
-                color: active ? activeColor : inactiveColor.withOpacity(0.4),
+                color: active
+                    ? activeColor
+                    : inactiveColor.withOpacity(0.4),
               ),
               SizedBox(width: 6.w),
               Text(
                 label,
                 style: TextStyle(
                   fontSize: 13.sp,
-                  fontWeight: active ? FontWeight.w700 : FontWeight.w500,
-                  color: active ? activeColor : inactiveColor.withOpacity(0.7),
+                  fontWeight:
+                  active ? FontWeight.w700 : FontWeight.w500,
+                  color: active
+                      ? activeColor
+                      : inactiveColor.withOpacity(0.7),
                 ),
               ),
             ],
