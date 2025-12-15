@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import '../../../../../core/colors_Manager.dart';
-import '../../../../../core/reusable_components/student_notifier.dart';
-import '../../../../../core/services/stdAthleticServices/StdAthleticLinksService.dart';
+import '../../../../../core/reusable_components/Notifiers/student_notifier.dart';
+import '../../../../../core/services/stdProfile/stdAthleticServices/StdAthleticLinksService.dart';
 import '../../../../webView-attachmentopener/openAttachment.dart';
 
 class AthleticsReport {

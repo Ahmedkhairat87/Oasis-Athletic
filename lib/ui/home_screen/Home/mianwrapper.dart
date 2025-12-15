@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import '../../../core/model/regStdModels/stdData.dart';
+import '../../../core/reusable_components/Notifiers/student_notifier.dart';
 import 'students_screen.dart';
 import 'widget/home_drawer.dart';
 import '../../../core/model/regStdModels/SideMenu.dart';
@@ -22,6 +23,15 @@ class MainWrapper extends StatefulWidget {
 }
 
 class MainWrapperState extends State<MainWrapper> {
+
+  void initState() {
+    super.initState();
+
+    // 🔑 Make ALL students globally available
+    if (studentsNotifier.value.isEmpty && widget.students.isNotEmpty) {
+      studentsNotifier.value = widget.students;
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,30 +85,3 @@ class MainWrapperState extends State<MainWrapper> {
     );
   }
 }
-//
-// class MainWrapper extends StatefulWidget {
-//   final List<SideMenu> sideMenuList;
-//   final List<StdData> students;
-//
-//   const MainWrapper({
-//     super.key,
-//     required this.sideMenuList,
-//     required this.students,
-//   });
-//
-//   @override
-//   MainWrapperState createState() => MainWrapperState();
-// }
-//
-// class MainWrapperState extends State<MainWrapper> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Students'),
-//       ),
-//       drawer: HomeDrawer(sideMenuList: widget.sideMenuList),
-//       body: StudentsScreen(students: widget.students),
-//     );
-//   }
-// }

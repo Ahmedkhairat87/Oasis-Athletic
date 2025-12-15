@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
-import '../../../apiControl/apiManager.dart';
+
+import '../../../../apiControl/apiManager.dart';
+
 
 class SendMessageService {
   static Future<Response> sendMessageWithAttachments({

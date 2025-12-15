@@ -4,8 +4,8 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../model/regStdModels/stdData.dart';
-import '../model/stdLinks/StdFullData.dart';
+import '../../model/regStdModels/stdData.dart';
+import '../../model/stdLinks/StdFullData.dart';
 
 const String _kStudentPrefsKey = 'oasis_student_profile_v1';
 
@@ -117,3 +117,8 @@ ValueNotifier<StdFullData?>(null);
 void updateFullStudent(StdFullData data) {
   studentFullNotifier.value = data;
 }
+
+
+/// Holds ALL students loaded from regStd API
+final ValueNotifier<List<stdData>> studentsNotifier =
+ValueNotifier<List<stdData>>([]);

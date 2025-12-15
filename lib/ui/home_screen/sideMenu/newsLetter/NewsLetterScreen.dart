@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/colors_Manager.dart';
+import '../../../../core/model/sideMenu/newsLetter/NewsLetterItem.dart';
 import '../../../../core/reusable_components/app_background.dart';
-import '../../../../core/model/sideMenu/NewsLetterItem.dart';
 import '../../../../core/services/sideMenu/StdNewsLetterService.dart';
 import '../../../webView-attachmentopener/openAttachment.dart';
 
@@ -39,7 +39,8 @@ class _NewsLetterScreenState extends State<NewsLetterScreen> {
       });
       return;
     }
-
+    print('SERVICE NewsLetter type: ${data.runtimeType}');
+    print('SERVICE data length: ${data.data.length}');
     setState(() {
       loading = false;
       _items = data.data.map((e) {

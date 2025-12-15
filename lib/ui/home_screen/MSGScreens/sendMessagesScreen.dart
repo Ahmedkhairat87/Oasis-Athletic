@@ -15,9 +15,9 @@ import '../../../core/model/newMessageModels/Departments/DepartmentEmployee.dart
 import '../../../core/model/newMessageModels/mainCategories/ToTypes.dart';
 import '../../../core/model/regStdModels/stdData.dart';
 import '../../../core/reusable_components/app_background.dart';
-import '../../../core/services/messagesServices/getDepartmentsServices.dart';
-import '../../../core/services/messagesServices/getEmpsServices.dart';
-import '../../../core/services/messagesServices/sendMessageServices/sendMessageServices.dart';
+import '../../../core/services/sideMenu/messagesServices/getDepartmentsServices.dart';
+import '../../../core/services/sideMenu/messagesServices/getEmpsServices.dart';
+import '../../../core/services/sideMenu/messagesServices/sendMessageServices/sendMessageServices.dart';
 
 /// Messages screen: choose child -> recipient type -> recipient -> subject -> message -> send
 class sendMessagesScreen extends StatefulWidget {

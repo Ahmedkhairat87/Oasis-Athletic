@@ -10,7 +10,7 @@ import '../../../core/model/msgsModels/Inbox.dart';
 import '../../../core/model/msgsModels/Sent.dart';
 import '../../../core/model/msgsModels/message-mapper.dart';
 import '../../../core/reusable_components/app_background.dart';
-import '../../../core/services/messagesServices/getMessagesInboxService.dart';
+import '../../../core/services/sideMenu/messagesServices/getMessagesInboxService.dart';
 import 'MessageDetailsScreen.dart';
 
 
