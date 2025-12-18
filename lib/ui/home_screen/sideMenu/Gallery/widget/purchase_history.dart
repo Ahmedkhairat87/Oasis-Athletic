@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:oasisathletic/ui/drawer/widgets/gallery/provider/cart_provider.dart';
+import 'package:oasisathletic/ui/home_screen/sideMenu/Gallery/widget/provider/cart_provider.dart';
 import 'package:provider/provider.dart';
 
 class PurchaseHistory extends StatelessWidget {

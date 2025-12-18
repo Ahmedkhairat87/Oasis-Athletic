@@ -494,7 +494,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
     try {
       final deviceData = await getDeviceData();
 
-      final deviceId = "1";//deviceData["deviceId"] ?? "unknown";
+      final deviceId = deviceData["deviceId"] ?? "unknown";
       final deviceType = deviceData["deviceType"]?? "0";
       LoginResponse response = await AuthLoginService.login(
         username: userController.text,
