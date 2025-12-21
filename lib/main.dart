@@ -1,9 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:oasisathletic/ui/home_screen/sideMenu/Gallery/galleryAlbums.dart';
-import 'package:oasisathletic/ui/home_screen/sideMenu/Gallery/widget/cart_screen.dart';
-import 'package:oasisathletic/ui/home_screen/sideMenu/Gallery/widget/provider/cart_provider.dart';
+import 'package:oasisathletic/ui/drawer/parentProfile.dart';
+import 'package:oasisathletic/ui/drawer/widgets/gallery/cart_screen.dart';
+import 'package:oasisathletic/ui/drawer/widgets/gallery/provider/cart_provider.dart';
+import 'package:oasisathletic/ui/home_screen/widgets/student_inside_tabs/academicSupport/stdReports.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,6 +14,7 @@ import 'ui/drawer/about_us.dart';
 import 'ui/drawer/appointments.dart';
 import 'ui/drawer/bus_registeration.dart';
 import 'ui/drawer/canteen_charge.dart';
+import 'ui/drawer/gallery.dart';
 import 'ui/drawer/messages.dart';
 import 'ui/drawer/payment_Information.dart';
 import 'ui/drawer/policies.dart';
@@ -101,6 +103,8 @@ class MyApp extends StatelessWidget {
             MessagesScreen.routeName: (_) => MessagesScreen(),
             StudentInside.routeName: (_) => StudentInside(),
             CartScreen.routeName: (_) => const CartScreen(),
+            Parentprofile.routeName: (_) => Parentprofile(),
+            StudentReports.routeName: (_) => StudentReports(),
           },
 
           localizationsDelegates: context.localizationDelegates,

@@ -1,28 +1,7 @@
-import '../../../apiControl/apiManager.dart';
-import '../../../apiControl/apiServiceProvider.dart';
-
-// class StudentLinksService {
-//   static Future<StdLinks> getStudentLinks({
-//     required String token,
-//     required String stdId,
-//   }) async {
-//     final params = {
-//       "token": token,
-//       "std_id": stdId,
-//     };
-//
-//     final response = await APIServices().apiRequest(
-//       APIManager.getStdLinks,
-//       params,
-//     );
-//
-//     return StdLinks.fromJson(response);
-//   }
-// }
+import '../../apiControl/apiManager.dart';
+import '../../model/stdLinks/StdLinks.dart';
 
 import 'package:dio/dio.dart';
-
-import '../../../model/stdLinks/StdLinks.dart';
 
 class StudentLinksService {
   static final Dio _dio = Dio();

@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:oasisathletic/core/model/stdLinks/academicSupport/StdAcademicSupportResponse.dart';
+import 'package:oasisathletic/ui/home_screen/widgets/student_inside_tabs/academicSupport/stdReports.dart';
 import '../../../../../core/colors_Manager.dart';
 import '../../../../../core/reusable_components/profile_tab_golden_card.dart';
 import '../../../../../core/reusable_components/profile_tab_section_title.dart';
 import '../../../../../core/reusable_components/Notifiers/student_notifier.dart';
 
 import '../../../../../core/services/stdProfile/stdAcademicSupportServices/AcademicSupportService.dart';
-import 'academic_tab_attendance_screen.dart';
 import 'student_academic_support_report.dart';
 
-class AcademicSupportMainTab  extends StatefulWidget {
+class AcademicSupportMainTab extends StatefulWidget {
   const AcademicSupportMainTab({super.key});
 
   @override
-  State<AcademicSupportMainTab > createState() => _AcademicTabState();
+  State<AcademicSupportMainTab> createState() => _AcademicTabState();
 }
 
 class _AcademicTabState extends State<AcademicSupportMainTab> {
@@ -38,7 +38,7 @@ class _AcademicTabState extends State<AcademicSupportMainTab> {
     final stdId = studentNotifier.value.stdId.toString();
 
     final data = await AcademicSupportService.getAcademicSupport(
-      stdId: studentNotifier.value.stdId.toString()
+      stdId: studentNotifier.value.stdId.toString(),
     );
 
     if (!mounted) return;
@@ -50,11 +50,8 @@ class _AcademicTabState extends State<AcademicSupportMainTab> {
       if (data?.stdReports != null && data!.stdReports!.isNotEmpty) {
         final r = data.stdReports!.first;
 
-        print(r);
-        print(r.schoolTask);
-
         schoolTasks = (r.schoolTask ?? 0).toInt();
-        extraTasks  = (r.extraTask ?? 0).toInt();
+        extraTasks = (r.extraTask ?? 0).toInt();
         attendanceCount = (r.presentCount ?? 0).toInt();
       }
     });
@@ -76,8 +73,6 @@ class _AcademicTabState extends State<AcademicSupportMainTab> {
   }
 
   Widget _buildUI(BuildContext context) {
-    final isLight = Theme.of(context).brightness == Brightness.light;
-
     final Color primaryBlue = ColorsManager.primaryGradientStart;
     final Color accentMint = ColorsManager.accentMint;
     final Color accentSun = ColorsManager.accentSun;
@@ -184,11 +179,81 @@ class _AcademicTabState extends State<AcademicSupportMainTab> {
                       ),
                     ),
 
-                    SizedBox(height: 14.h),
+                    /*SizedBox(height: 14.h),
 
                     _attendanceCard(
                       context,
                       attendanceCount,
+                      primaryBlue,
+                      accentMint,
+                      accentPurple,
+                    ),*/
+                  ],
+                ),
+              ),
+            ),
+
+            SizedBox(height: 14.h),
+
+            /// ================= SECOND GOLD CARD =================
+            /// Students’ Reports
+            GoldCard(
+              child: Padding(
+                padding: EdgeInsets.all(14.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(12.r),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: SweepGradient(
+                              colors: [
+                                accentPurple,
+                                accentSky,
+                                accentMint,
+                                accentSun,
+                                accentPurple,
+                              ],
+                            ),
+                          ),
+                          child: Icon(Icons.description_rounded,
+                              color: Colors.white, size: 28.r),
+                        ),
+                        SizedBox(width: 12.w),
+                        Expanded(
+                          child: Text(
+                            "Students’ Reports",
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w800,
+                              color: primaryBlue,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: 10.h),
+
+                    Text(
+                      "Detailed academic and behavioral reports for the student",
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        color: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.color
+                            ?.withOpacity(0.85),
+                      ),
+                    ),
+
+                    SizedBox(height: 14.h),
+
+                    _studentsReportsCard(
+                      context,
                       primaryBlue,
                       accentMint,
                       accentPurple,
@@ -202,6 +267,8 @@ class _AcademicTabState extends State<AcademicSupportMainTab> {
       ),
     );
   }
+
+  // ================= REST UNCHANGED =================
 
   Widget _assignmentsCard(
       BuildContext context,
@@ -237,7 +304,8 @@ class _AcademicTabState extends State<AcademicSupportMainTab> {
                   ),
                 ),
               ),
-              Icon(Icons.chevron_right, size: 20.r, color: ColorsManager.accentSun),
+              Icon(Icons.chevron_right,
+                  size: 20.r, color: ColorsManager.accentSun),
             ],
           ),
           SizedBox(height: 8.h),
@@ -257,7 +325,7 @@ class _AcademicTabState extends State<AcademicSupportMainTab> {
     );
   }
 
-  Widget _attendanceCard(
+  /*Widget _attendanceCard(
       BuildContext context,
       int count,
       Color primaryBlue,
@@ -269,8 +337,7 @@ class _AcademicTabState extends State<AcademicSupportMainTab> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) =>
-            const TasksListScreen(selectedType: null),
+            builder: (_) => const TasksListScreen(selectedType: null),
           ),
         );
       },
@@ -302,7 +369,8 @@ class _AcademicTabState extends State<AcademicSupportMainTab> {
               ),
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+              padding:
+              EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
               decoration: BoxDecoration(
                 color: accentPurple,
                 borderRadius: BorderRadius.circular(6.r),
@@ -315,6 +383,52 @@ class _AcademicTabState extends State<AcademicSupportMainTab> {
                 ),
               ),
             )
+          ],
+        ),
+      ),
+    );
+  }*/
+
+  Widget _studentsReportsCard(
+      BuildContext context,
+      Color primaryBlue,
+      Color accentMint,
+      Color accentPurple,
+      ) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 260),
+      padding: EdgeInsets.all(12.w),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: accentMint.withOpacity(0.9)),
+        gradient: LinearGradient(
+          colors: [
+            accentPurple.withOpacity(0.10),
+            accentMint.withOpacity(0.08),
+          ],
+        ),
+      ),
+      child: InkWell(
+        onTap: () {
+          Navigator.pushNamed(context, StudentReports.routeName);
+        },
+        child: Row(
+          children: [
+            Icon(Icons.description_rounded,
+                color: accentPurple, size: 18.r),
+            SizedBox(width: 10.w),
+            Expanded(
+              child: Text(
+                "Students’ Reports",
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w700,
+                  color: primaryBlue,
+                ),
+              ),
+            ),
+            Icon(Icons.chevron_right,
+                size: 20.r, color: ColorsManager.accentSun),
           ],
         ),
       ),
@@ -349,7 +463,7 @@ class _AcademicTabState extends State<AcademicSupportMainTab> {
             ),
             child: Text(
               "$count",
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
             ),
           ),
         ],

@@ -1,10 +1,8 @@
-import 'dart:convert';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../apiControl/apiManager.dart';
 import '../../apiControl/apiServiceProvider.dart';
-import '../../model/sideMenu/newsLetter/NewsLetter.dart';
+import '../../model/sideMenu/NewsLetter.dart';
 
 class StdNewsLetterService {
   static Future<String?> _getToken() async {

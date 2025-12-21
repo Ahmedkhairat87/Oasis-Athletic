@@ -58,6 +58,8 @@ dependencies:
   intl: any
   device_info_plus: ^12.2.0
   dio: ^5.9.0
+  provider: any
+  circular_menu: ^4.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

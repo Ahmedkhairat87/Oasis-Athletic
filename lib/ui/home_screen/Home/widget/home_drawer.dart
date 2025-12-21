@@ -130,16 +130,16 @@ class _HomeDrawerState extends State<HomeDrawer>
                     Expanded(
                       child: ListTile(
                         dense: true,
-                        leading: Icon(Icons.logout_rounded, color: accentSun),
+                        leading: Icon(Icons.person_rounded, color: accentSun),
                         title: Text(
-                          'Logout',
+                          'Profile',
                           style: TextStyle(
                               color: Colors.black87,
                               fontWeight: FontWeight.w600,
                               fontSize: 14.sp),
                         ),
                         onTap: () {
-                          Navigator.pop(context);
+                          Navigator.pushNamed(context, '/parentprofile');
                         },
                       ),
                     ),

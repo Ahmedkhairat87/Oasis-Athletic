@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../core/model/regStdModels/stdData.dart';
-import '../../core/model/sideMenu/canteenCharge/ChargsAmounts.dart';
-import '../../core/model/sideMenu/canteenCharge/StdChargs.dart';
-import '../../core/reusable_components/Notifiers/student_notifier.dart';
 import '../../core/reusable_components/app_background.dart';
 import '../../core/services/sideMenu/sideMenuServices/Canteen/CanteenServices.dart';
 import '../webView-attachmentopener/openAttachment.dart';
@@ -256,6 +252,7 @@ class _ChargingHistory extends StatelessWidget {
     );
   }
 }
+
 /// ======================
 /// Widgets
 /// ======================

@@ -35,6 +35,10 @@ class APIManager {
   static const requestNewPhoto = "${fixedURL}Parent/GalleriesRequest";
   static const cancelrequestedPhoto = "${fixedURL}Parent/GalleriesCancel";
 
+  //Canteen Charge
+  static const getAmountList = "${fixedURL2}chargAmounts";
+  static const paymentLinkGeneration = "${fixedURL2}CreateNewVoucher";
+  static const paymentHistory = "${fixedURL2}stdCanteenHistory";
 
 
 
