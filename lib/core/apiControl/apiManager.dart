@@ -20,7 +20,20 @@ class APIManager {
   //APIS from Parents app API.Oasis
   static const fixedURL2 = "https://api1.oasisdemaadi.com/api/";
 
-  static String getNewsLetter = "${fixedURL2}IntNewsLetter";
+  static String getNewsLetter = "${fixedURL}IntNewsLetter";
+
+  //Canteen Charge
+  static const getAmountList = "${fixedURL}chargAmounts";
+  static const paymentLinkGeneration = "${fixedURL}CreateNewVoucher";
+  static const paymentHistory = "${fixedURL}stdCanteenHistory";
+
+  //Gallery
+  static const getGalleryAlbums = "${fixedURL}Parent/GetGalleries";
+  static const getAlbumsPhotos = "${fixedURL}Parent/GetGalleriesDetails";
+  static const getCartPhotos = "${fixedURL}Parent/GetRequestedGalleries";
+
+  static const requestNewPhoto = "${fixedURL}Parent/GalleriesRequest";
+  static const cancelrequestedPhoto = "${fixedURL}Parent/GalleriesCancel";
 
   //Canteen Charge
   static const getAmountList = "${fixedURL2}chargAmounts";

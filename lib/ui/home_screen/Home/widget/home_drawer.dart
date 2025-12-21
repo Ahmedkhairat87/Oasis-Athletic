@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:oasisathletic/ui/drawer/canteen_charge.dart';
+import 'package:oasisathletic/ui/home_screen/sideMenu/Gallery/galleryAlbums.dart';
 import 'package:oasisathletic/ui/home_screen/sideMenu/newsLetter/NewsLetterScreen.dart';
-
 import '../../../../core/colors_Manager.dart';
 import '../../../../core/model/regStdModels/SideMenu.dart';
 import '../../../drawer/about_us.dart';
 import '../../../drawer/appointments.dart';
-import '../../../drawer/gallery.dart';
 import '../../MSGScreens/messages.dart';
 
 class HomeDrawer extends StatefulWidget {
@@ -59,7 +58,7 @@ class _HomeDrawerState extends State<HomeDrawer>
       Navigator.push(context, MaterialPageRoute(builder: (_) => const CanteenCharge()));
     }
     else if (link.contains('School Gallery')) {
-      Navigator.push(context, MaterialPageRoute(builder: (_) => const Gallery()));
+      Navigator.push(context, MaterialPageRoute(builder: (_) => const GalleryAlbums()));
     }
   }
 
