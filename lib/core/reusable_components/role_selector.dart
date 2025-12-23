@@ -1,5 +1,6 @@
 // lib/core/reusable_components/role_selector.dart
 import 'dart:math';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../core/colors_Manager.dart';
@@ -50,34 +51,34 @@ class _RoleSelectorState extends State<RoleSelector> {
   UserRole? _selectedRole;
 
   /// Role metadata: label, icon, color.
-  static const Map<UserRole, Map<String, dynamic>> _defaultMeta = {
+  static  Map<UserRole, Map<String, dynamic>> _defaultMeta = {
     UserRole.parent: {
-      'label': 'Parent',
+      'label': 'Parent'.tr(),
       'icon': Icons.family_restroom,
       'color': ColorsManager.accentSky,
     },
     UserRole.student: {
-      'label': 'Student',
+      'label': 'Student'.tr(),
       'icon': Icons.school,
       'color': ColorsManager.accentMint,
     },
     UserRole.teacher: {
-      'label': 'Teacher',
+      'label': 'Teacher'.tr(),
       'icon': Icons.menu_book,
       'color': ColorsManager.accentSun,
     },
     UserRole.coach: {
-      'label': 'Coach',
+      'label': 'Coach'.tr(),
       'icon': Icons.sports_handball,
       'color': ColorsManager.accentSky,
     },
     UserRole.admin: {
-      'label': 'Admin',
+      'label': 'Admin'.tr(),
       'icon': Icons.admin_panel_settings,
       'color': ColorsManager.accentCoral,
     },
     UserRole.coordinator: {
-      'label': 'Coordinator',
+      'label': 'Coordinator'.tr(),
       'icon': Icons.support_agent,
       'color': ColorsManager.accentPurple,
     },

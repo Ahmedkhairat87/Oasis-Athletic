@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:oasisathletic/ui/drawer/widgets/gallery/provider/cart_provider.dart';
 import 'package:provider/provider.dart';
@@ -17,10 +18,10 @@ class CartScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text('Cart'),
+        title:  Text('Cart'.tr()),
         actions: [
           TextButton(
-            child: const Text('History'),
+            child: Text('History'.tr()),
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(
@@ -35,7 +36,7 @@ class CartScreen extends StatelessWidget {
           children: [
             Expanded(
               child: cart.cart.isEmpty
-                  ? const Center(child: Text('Cart is empty'))
+                  ?  Center(child: Text('Cart_empty'.tr()))
                   : ListView.builder(
                 itemCount: cart.cart.length,
                 itemBuilder: (_, i) {
@@ -64,7 +65,7 @@ class CartScreen extends StatelessWidget {
                       cart.checkout();
                       Navigator.pop(context);
                     },
-                    child: const Text('Pay'),
+                    child: Text('Pay'.tr()),
                   ),
                 ],
               ),

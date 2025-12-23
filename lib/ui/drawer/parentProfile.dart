@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:circular_menu/circular_menu.dart';
@@ -29,7 +30,7 @@ class _ParentprofileState extends State<Parentprofile> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text('Parents Profile'),
+        title: Text('parents_profile'.tr()),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -79,39 +80,39 @@ class _ParentprofileState extends State<Parentprofile> {
 
     /// ---------- GENERAL ----------
       case ProfileSection.general:
-        return _section('General', [
-          const SectionTitle('Father Info.'),
+        return _section('general'.tr(), [
+          SectionTitle('father_info'.tr()),
           EditableField(
-            label: 'Father’s first & last name',
+            label: 'father_name'.tr(),
             initialValue: '',
             editMode: _editMode,
-            canEdit: false, // 🔒 LOCKED
+            canEdit: false,
           ),
           EditableField(
-            label: 'Tutor’s first & last name',
+            label: 'tutor_name'.tr(),
             initialValue: '',
             editMode: _editMode,
           ),
           EditableField(
-            label: 'Private Address',
+            label: 'private_address'.tr(),
             initialValue: '',
             editMode: _editMode,
           ),
 
-          const SectionTitle('Mother Info.'),
+          SectionTitle('mother_info'.tr()),
           EditableField(
-            label: 'Mother’s first & last name',
+            label: 'mother_name'.tr(),
             initialValue: '',
             editMode: _editMode,
-            canEdit: false, // 🔒 LOCKED
+            canEdit: false,
           ),
           EditableField(
-            label: 'Tutor’s first & last name',
+            label: 'tutor_name'.tr(),
             initialValue: '',
             editMode: _editMode,
           ),
           EditableField(
-            label: 'Private Address',
+            label: 'private_address'.tr(),
             initialValue: '',
             editMode: _editMode,
           ),
@@ -119,76 +120,76 @@ class _ParentprofileState extends State<Parentprofile> {
 
     /// ---------- EDUCATION ----------
       case ProfileSection.education:
-        return _section('Education', [
-          const SectionTitle('Father Info.'),
-          EditableField(label: 'School', initialValue: '', editMode: _editMode),
-          EditableField(label: 'Diploma', initialValue: '', editMode: _editMode),
-          EditableField(label: 'Mother Tongue', initialValue: '', editMode: _editMode),
-          EditableField(label: 'Second Language', initialValue: '', editMode: _editMode),
-          EditableField(label: 'Third Language', initialValue: '', editMode: _editMode),
-          EditableField(label: 'Other Language', initialValue: '', editMode: _editMode),
+        return _section('education'.tr(), [
+          SectionTitle('father_info'.tr()),
+          EditableField(label: 'school'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'diploma'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'mother_tongue'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'second_language'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'third_language'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'other_language'.tr(), initialValue: '', editMode: _editMode),
 
-          const SectionTitle('Mother Info.'),
-          EditableField(label: 'School', initialValue: '', editMode: _editMode),
-          EditableField(label: 'Diploma', initialValue: '', editMode: _editMode),
-          EditableField(label: 'Mother Tongue', initialValue: '', editMode: _editMode),
-          EditableField(label: 'Second Language', initialValue: '', editMode: _editMode),
-          EditableField(label: 'Third Language', initialValue: '', editMode: _editMode),
-          EditableField(label: 'Other', initialValue: '', editMode: _editMode),
+          SectionTitle('mother_info'.tr()),
+          EditableField(label: 'school'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'diploma'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'mother_tongue'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'second_language'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'third_language'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'other'.tr(), initialValue: '', editMode: _editMode),
         ]);
 
     /// ---------- WORK ----------
       case ProfileSection.work:
-        return _section('Work', [
-          const SectionTitle('Father Info.'),
-          EditableField(label: 'Area Of Work', initialValue: '', editMode: _editMode),
-          EditableField(label: 'The profession', initialValue: '', editMode: _editMode),
-          EditableField(label: 'Name of the company', initialValue: '', editMode: _editMode),
-          EditableField(label: 'Workplace', initialValue: '', editMode: _editMode),
+        return _section('work'.tr(), [
+          SectionTitle('father_info'.tr()),
+          EditableField(label: 'area_of_work'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'profession'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'company_name'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'workplace'.tr(), initialValue: '', editMode: _editMode),
 
-          const SectionTitle('Mother Info.'),
-          EditableField(label: 'Area Of Work', initialValue: '', editMode: _editMode),
-          EditableField(label: 'The profession', initialValue: '', editMode: _editMode),
-          EditableField(label: 'Name of the company', initialValue: '', editMode: _editMode),
-          EditableField(label: 'Workplace', initialValue: '', editMode: _editMode),
+          SectionTitle('mother_info'.tr()),
+          EditableField(label: 'area_of_work'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'profession'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'company_name'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'workplace'.tr(), initialValue: '', editMode: _editMode),
         ]);
 
     /// ---------- CONTACT ----------
       case ProfileSection.contact:
-        return _section('Contact', [
-          const SectionTitle('Father Info.'),
-          EditableField(label: 'Email', initialValue: '', editMode: _editMode),
-          EditableField(label: 'Home Tel.', initialValue: '', editMode: _editMode),
-          EditableField(label: 'Cell Phone', initialValue: '', editMode: _editMode),
+        return _section('contact'.tr(), [
+          SectionTitle('father_info'.tr()),
+          EditableField(label: 'email'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'home_tel'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'cell_phone'.tr(), initialValue: '', editMode: _editMode),
 
-          const SectionTitle('Mother Info.'),
-          EditableField(label: 'Email', initialValue: '', editMode: _editMode),
-          EditableField(label: 'Home Tel.', initialValue: '', editMode: _editMode),
-          EditableField(label: 'Cell Phone', initialValue: '', editMode: _editMode),
+          SectionTitle('mother_info'.tr()),
+          EditableField(label: 'email'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'home_tel'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'cell_phone'.tr(), initialValue: '', editMode: _editMode),
 
-          const SectionTitle('Responsable Info.'),
-          EditableField(label: 'Email', initialValue: '', editMode: _editMode),
-          EditableField(label: 'Cell Phone', initialValue: '', editMode: _editMode),
+          SectionTitle('responsable_info'.tr()),
+          EditableField(label: 'email'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'cell_phone'.tr(), initialValue: '', editMode: _editMode),
         ]);
 
     /// ---------- EMERGENCY ----------
       case ProfileSection.emergency:
-        return _section('Emergency', [
-          const SectionTitle('First Person'),
-          EditableField(label: 'Name', initialValue: '', editMode: _editMode),
-          EditableField(label: 'Relation', initialValue: '', editMode: _editMode),
-          EditableField(label: 'Home Tel.', initialValue: '', editMode: _editMode),
-          EditableField(label: 'Cell Phone', initialValue: '', editMode: _editMode),
+        return _section('emergency'.tr(), [
+          SectionTitle('first_person'.tr()),
+          EditableField(label: 'name'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'relation'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'home_tel'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'cell_phone'.tr(), initialValue: '', editMode: _editMode),
 
-          const SectionTitle('Second Person'),
-          EditableField(label: 'Name', initialValue: '', editMode: _editMode),
-          EditableField(label: 'Relation', initialValue: '', editMode: _editMode),
-          EditableField(label: 'Home Tel.', initialValue: '', editMode: _editMode),
-          EditableField(label: 'Cell Phone', initialValue: '', editMode: _editMode),
+          SectionTitle('second_person'.tr()),
+          EditableField(label: 'name'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'relation'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'home_tel'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'cell_phone'.tr(), initialValue: '', editMode: _editMode),
 
-          const SectionTitle('Third Person'),
-          EditableField(label: 'Name', initialValue: '', editMode: _editMode),
-          EditableField(label: 'Relation', initialValue: '', editMode: _editMode),
+          SectionTitle('third_person'.tr()),
+          EditableField(label: 'name'.tr(), initialValue: '', editMode: _editMode),
+          EditableField(label: 'relation'.tr(), initialValue: '', editMode: _editMode),
         ]);
     }
   }
@@ -206,7 +207,7 @@ class _ParentprofileState extends State<Parentprofile> {
           Center(
             child: ElevatedButton(
               onPressed: _editMode ? () {} : null,
-              child: const Text('Save'),
+              child: Text('save'.tr()),
             ),
           ),
         ],
@@ -221,7 +222,7 @@ class EditableField extends StatefulWidget {
   final String label;
   final String initialValue;
   final bool editMode;
-  final bool canEdit; // 👈 NEW
+  final bool canEdit;
 
   const EditableField({
     super.key,

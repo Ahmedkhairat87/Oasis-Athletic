@@ -1,4 +1,5 @@
 // lib/ui/home_screen/widgets/student_inside_tabs/medical_tab.dart
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -259,13 +260,13 @@ class _MedicalTabState extends State<MedicalTab> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // -------------------- DOCTOR SECTION --------------------
-            const SectionTitle('Doctor'),
+             SectionTitle('Doctor'.tr()),
             SizedBox(height: 10.h),
 
             // Psychologist
             _sectionHeader(
               icon: Icons.psychology,
-              title: 'Psychologist',
+              title: 'Psychologist'.tr(),
               color: accentPurple,
             ),
             SizedBox(height: 6.h),
@@ -293,7 +294,7 @@ class _MedicalTabState extends State<MedicalTab> {
             // Physiotherapist
             _sectionHeader(
               icon: Icons.accessibility_new_rounded,
-              title: 'Physiotherapist',
+              title: 'Physiotherapist'.tr(),
               color: accentMint,
             ),
             SizedBox(height: 6.h),
@@ -321,7 +322,7 @@ class _MedicalTabState extends State<MedicalTab> {
             // Clinic visits
             _sectionHeader(
               icon: Icons.local_hospital,
-              title: 'Clinic visits',
+              title: 'Clinic visits'.tr(),
               color: accentSky,
             ),
             SizedBox(height: 6.h),
@@ -347,13 +348,13 @@ class _MedicalTabState extends State<MedicalTab> {
             SizedBox(height: 18.h),
 
             // -------------------- NUTRITIONIST SECTION --------------------
-            const SectionTitle('Nutritionist'),
+             SectionTitle('Nutritionist'.tr()),
             SizedBox(height: 10.h),
 
             // Body follow-up (InBody)
             _sectionHeader(
               icon: Icons.monitor_weight,
-              title: 'Body follow-up',
+              title: 'body_follow_up'.tr(),
               color: accentSun,
             ),
             SizedBox(height: 6.h),
@@ -380,7 +381,7 @@ class _MedicalTabState extends State<MedicalTab> {
             // Weekly diet plan
             _sectionHeader(
               icon: Icons.restaurant_menu,
-              title: 'Weekly diet plan',
+              title: 'weekly_diet_plan'.tr(),
               color: accentMint,
             ),
             SizedBox(height: 6.h),
@@ -453,7 +454,7 @@ class _MedicalTabState extends State<MedicalTab> {
           ),
           SizedBox(width: 4.w),
           Text(
-            isRead ? 'Read' : 'Unread',
+            isRead ? 'Read'.tr() : 'Unread'.tr(),
             style: TextStyle(
               fontSize: 11.sp,
               fontWeight: FontWeight.w600,
@@ -513,7 +514,7 @@ class _MedicalTabState extends State<MedicalTab> {
                     size: 20.sp,
                     color: primaryBlue,
                   ),
-                  tooltip: 'Download report',
+                  tooltip: 'download_report'.tr(),
                 ),
               ],
             ),
@@ -580,7 +581,7 @@ class _MedicalTabState extends State<MedicalTab> {
               ),
               SizedBox(height: 10.h),
               Text(
-                'Psychologist report',
+                'psychologist_report'.tr(),
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w800,
@@ -617,7 +618,7 @@ class _MedicalTabState extends State<MedicalTab> {
                 child: TextButton.icon(
                   onPressed: () => _downloadFile(context, r.fileName),
                   icon: const Icon(Icons.file_download),
-                  label: const Text('Download full report'),
+                  label:  Text('download_full_report'.tr()),
                 ),
               ),
               SizedBox(height: 10.h),
@@ -656,7 +657,7 @@ class _MedicalTabState extends State<MedicalTab> {
               children: [
                 Expanded(
                   child: Text(
-                    'Visit: ${_formatDate(v.visitDate)}',
+                    'visit_date'.tr(args: [_formatDate(v.visitDate)]),
                     style: TextStyle(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w600,
@@ -678,7 +679,7 @@ class _MedicalTabState extends State<MedicalTab> {
             ),
             SizedBox(height: 4.h),
             Text(
-              'Complaint: ${v.complaint}',
+              'complaint'.tr(args: [v.complaint]),
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w600,
@@ -688,7 +689,7 @@ class _MedicalTabState extends State<MedicalTab> {
             ),
             SizedBox(height: 2.h),
             Text(
-              'Diagnosis: ${v.diagnosis}',
+              'diagnosis'.tr(args: [v.diagnosis]),
               style: TextStyle(
                 fontSize: 12.sp,
                 color: Colors.grey.shade700,
@@ -699,7 +700,7 @@ class _MedicalTabState extends State<MedicalTab> {
             if (v.neededScans.isNotEmpty) ...[
               SizedBox(height: 2.h),
               Text(
-                'Needed scans: ${v.neededScans}',
+                'needed_scans'.tr(args: [v.neededScans]),
                 style: TextStyle(
                   fontSize: 12.sp,
                   color: Colors.grey.shade700,
@@ -711,7 +712,7 @@ class _MedicalTabState extends State<MedicalTab> {
             if (v.followUpDate != null) ...[
               SizedBox(height: 2.h),
               Text(
-                'Follow-up: ${_formatDate(v.followUpDate!)}',
+                'follow_up'.tr(args: [_formatDate(v.followUpDate!)]),
                 style: TextStyle(
                   fontSize: 12.sp,
                   color: Colors.grey.shade800,
@@ -738,7 +739,7 @@ class _MedicalTabState extends State<MedicalTab> {
           borderRadius: BorderRadius.circular(16.r),
         ),
         title: Text(
-          'Physiotherapy visit',
+          'physiotherapy_visit'.tr(),
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w800,
@@ -749,23 +750,23 @@ class _MedicalTabState extends State<MedicalTab> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _detailRow('Visit date', _formatDate(v.visitDate)),
-              _detailRow('Complaint', v.complaint),
-              _detailRow('Diagnosis', v.diagnosis),
-              _detailRow('Needed scans', v.neededScans),
+              _detailRow('visit_date'.tr(), _formatDate(v.visitDate)),
+              _detailRow('complaint'.tr(), v.complaint),
+              _detailRow('diagnosis'.tr(), v.diagnosis),
+              _detailRow('needed_scans'.tr(), v.neededScans),
               if (v.followUpDate != null)
-                _detailRow('Follow-up', _formatDate(v.followUpDate!)),
+                _detailRow('follow_up'.tr(), _formatDate(v.followUpDate!)),
             ],
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => _downloadFile(context, v.fileName),
-            child: const Text('Download report'),
+            child: Text('Download report'.tr()),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Close'),
+            child:  Text('Close'.tr()),
           ),
         ],
       ),
@@ -800,7 +801,7 @@ class _MedicalTabState extends State<MedicalTab> {
               children: [
                 Expanded(
                   child: Text(
-                    'Visit: ${_formatDate(c.visitDate)}',
+                    '${'visit'.tr()}: ${_formatDate(c.visitDate)}',
                     style: TextStyle(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w600,
@@ -822,7 +823,7 @@ class _MedicalTabState extends State<MedicalTab> {
             ),
             SizedBox(height: 4.h),
             Text(
-              'Reason: ${c.reason}',
+              '${'reason'.tr()}: ${c.reason}',
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w600,
@@ -830,7 +831,7 @@ class _MedicalTabState extends State<MedicalTab> {
             ),
             SizedBox(height: 2.h),
             Text(
-              'Treatment: ${c.treatmentGiven}',
+              '${'treatment'.tr()}: ${c.treatmentGiven}',
               style: TextStyle(
                 fontSize: 12.sp,
                 color: Colors.grey.shade700,
@@ -840,7 +841,7 @@ class _MedicalTabState extends State<MedicalTab> {
             ),
             SizedBox(height: 2.h),
             Text(
-              'Medication: ${c.medication}',
+              '${'medication'.tr()}: ${c.medication}',
               style: TextStyle(
                 fontSize: 12.sp,
                 color: Colors.grey.shade700,
@@ -850,7 +851,7 @@ class _MedicalTabState extends State<MedicalTab> {
             ),
             SizedBox(height: 2.h),
             Text(
-              'Notes: ${c.notes}',
+              '${'notes'.tr()}: ${c.notes}',
               style: TextStyle(
                 fontSize: 12.sp,
                 color: Colors.grey.shade700,
@@ -877,7 +878,7 @@ class _MedicalTabState extends State<MedicalTab> {
           borderRadius: BorderRadius.circular(16.r),
         ),
         title: Text(
-          'Clinic visit',
+          'Clinic visit'.tr(),
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w800,
@@ -888,22 +889,22 @@ class _MedicalTabState extends State<MedicalTab> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _detailRow('Date', _formatDate(c.visitDate)),
-              _detailRow('Reason', c.reason),
-              _detailRow('Treatment', c.treatmentGiven),
-              _detailRow('Medication', c.medication),
-              _detailRow('Notes', c.notes),
+              _detailRow('Date'.tr(), _formatDate(c.visitDate)),
+              _detailRow('Reason'.tr(), c.reason),
+              _detailRow('Treatment'.tr(), c.treatmentGiven),
+              _detailRow('Medication'.tr(), c.medication),
+              _detailRow('Notes'.tr(), c.notes),
             ],
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => _downloadFile(context, c.fileName),
-            child: const Text('Download report'),
+            child: Text('Download report'.tr()),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Close'),
+            child: Text('Close'.tr()),
           ),
         ],
       ),
@@ -942,19 +943,19 @@ class _MedicalTabState extends State<MedicalTab> {
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  'Weight: ${r.weight.toStringAsFixed(1)} kg',
+                  '${'weight'.tr()}: ${r.weight.toStringAsFixed(1)} ${'kg'.tr()}',
                   style: TextStyle(fontSize: 12.sp),
                 ),
                 Text(
-                  'Body fat: ${r.bodyFat.toStringAsFixed(1)}%',
+                  '${'body_fat'.tr()}: ${r.bodyFat.toStringAsFixed(1)}%',
                   style: TextStyle(fontSize: 12.sp),
                 ),
                 Text(
-                  'Muscle: ${r.muscleMass.toStringAsFixed(1)} kg',
+                  '${'muscle'.tr()}: ${r.muscleMass.toStringAsFixed(1)} kg',
                   style: TextStyle(fontSize: 12.sp),
                 ),
                 Text(
-                  'BMI: ${r.bmi.toStringAsFixed(1)}',
+                  '${'bmi'.tr()}: ${r.bmi.toStringAsFixed(1)}',
                   style: TextStyle(fontSize: 12.sp),
                 ),
               ],
@@ -964,7 +965,7 @@ class _MedicalTabState extends State<MedicalTab> {
           TextButton.icon(
             onPressed: () => _downloadFile(context, r.fileName),
             icon: const Icon(Icons.file_download),
-            label: const Text('Report'),
+            label: Text('Report'.tr()),
           ),
         ],
       ),
@@ -999,7 +1000,7 @@ class _MedicalTabState extends State<MedicalTab> {
     // Placeholder – integrate with real download/preview later
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Downloading $fileName...'),
+        content: Text('${'downloading'.tr()} $fileName...'),
         behavior: SnackBarBehavior.floating,
       ),
     );

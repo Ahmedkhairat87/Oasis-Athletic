@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -24,7 +25,8 @@ class MessageDetailsScreen extends StatelessWidget {
       backgroundColor: isDark ? Colors.black : Colors.white,
 
       appBar: AppBar(
-        backgroundColor: isDark ? Colors.black54 : Colors.white.withOpacity(0.2),
+        backgroundColor:
+            isDark ? Colors.black54 : Colors.white.withOpacity(0.2),
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
@@ -35,7 +37,7 @@ class MessageDetailsScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Message Details',
+          'message_details'.tr(),
           style: TextStyle(
             color: isDark ? Colors.white : Colors.black,
             fontWeight: FontWeight.w600,
@@ -55,7 +57,6 @@ class MessageDetailsScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               // ✅ Sender Type
               Text(
                 message.enDesc,
@@ -83,10 +84,7 @@ class MessageDetailsScreen extends StatelessWidget {
               // ✅ Subject
               Text(
                 message.noteSubject,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18.sp,
-                ),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp),
               ),
 
               SizedBox(height: 12.h),
@@ -97,11 +95,7 @@ class MessageDetailsScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-
-                      Text(
-                        message.message,
-                        style: TextStyle(fontSize: 16.sp),
-                      ),
+                      Text(message.message, style: TextStyle(fontSize: 16.sp)),
 
                       SizedBox(height: 16.h),
 
@@ -111,15 +105,14 @@ class MessageDetailsScreen extends StatelessWidget {
                           width: double.infinity,
                           child: ElevatedButton.icon(
                             onPressed: () {
-
                               _showAttachmentsPopup(
                                 context,
                                 originalAttachments,
-                                title: "Original Attachments",
+                                title: "original_attachments".tr(),
                               );
                             },
                             icon: const Icon(Icons.attach_file),
-                            label: const Text("View Attachments"),
+                            label: Text("view_attachments".tr()),
                           ),
                         ),
 
@@ -139,7 +132,7 @@ class MessageDetailsScreen extends StatelessWidget {
                       // ✅ ✅ SHOW REPLY
                       if (message.replyStatus == 1) ...[
                         Text(
-                          "Reply:",
+                          "Reply:".tr(),
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16.sp,
@@ -163,11 +156,11 @@ class MessageDetailsScreen extends StatelessWidget {
                                 _showAttachmentsPopup(
                                   context,
                                   replyAttachments,
-                                  title: "Reply Attachments",
+                                  title: "reply_attachments".tr(),
                                 );
                               },
                               icon: const Icon(Icons.attach_file),
-                              label: const Text("Reply Attachments"),
+                              label: Text("reply_attachments".tr()),
                             ),
                           ),
                       ],
@@ -208,73 +201,11 @@ class MessageDetailsScreen extends StatelessWidget {
     return files.whereType<String>().where((e) => e.isNotEmpty).toList();
   }
 
-  // ✅ ✅ ATTACHMENTS POPUP
-  // void _showAttachmentsPopup(
-  //     BuildContext context,
-  //     List<String> files, {
-  //       required String title,
-  //     }) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       return Dialog(
-  //         shape: RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.circular(16),
-  //         ),
-  //         child: Padding(
-  //           padding: EdgeInsets.all(16.w),
-  //           child: Column(
-  //             mainAxisSize: MainAxisSize.min,
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             children: [
-  //               Text(
-  //                 title,
-  //                 style: TextStyle(
-  //                   fontWeight: FontWeight.bold,
-  //                   fontSize: 18.sp,
-  //                 ),
-  //               ),
-  //
-  //               SizedBox(height: 12.h),
-  //
-  //               ...files.map((file) {
-  //                 final fileName = file.split('/').last;
-  //
-  //                 return ListTile(
-  //                   leading: const Icon(Icons.insert_drive_file),
-  //                   title: Text(
-  //                     fileName,
-  //                     overflow: TextOverflow.ellipsis,
-  //                   ),
-  //                   onTap: () {
-  //                     // ✅ TODO: Open PDF / Image / Download
-  //                     Navigator.pop(context);
-  //                   },
-  //                 );
-  //               }).toList(),
-  //
-  //               SizedBox(height: 10.h),
-  //
-  //               Align(
-  //                 alignment: Alignment.centerRight,
-  //                 child: TextButton(
-  //                   onPressed: () => Navigator.pop(context),
-  //                   child: const Text("Close"),
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
   void _showAttachmentsPopup(
-      BuildContext context,
-      List<String> files, {
-        required String title,
-      }) {
+    BuildContext context,
+    List<String> files, {
+    required String title,
+  }) {
     showDialog(
       context: context,
       builder: (context) {
@@ -302,10 +233,7 @@ class MessageDetailsScreen extends StatelessWidget {
 
                   return ListTile(
                     leading: const Icon(Icons.insert_drive_file),
-                    title: Text(
-                      fileName,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    title: Text(fileName, overflow: TextOverflow.ellipsis),
                     onTap: () {
                       Navigator.push(
                         context,
@@ -325,7 +253,7 @@ class MessageDetailsScreen extends StatelessWidget {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text("Close"),
+                    child: Text("close".tr()),
                   ),
                 ),
               ],
@@ -336,56 +264,3 @@ class MessageDetailsScreen extends StatelessWidget {
     );
   }
 }
-
-// void _openAttachment(BuildContext context, String url) {
-//   final lowerUrl = url.toLowerCase();
-//
-//   // ✅ If link → open WebView
-//   if (lowerUrl.startsWith("http")) {
-//     Navigator.push(
-//       context,
-//       MaterialPageRoute(
-//         builder: (_) => WebViewScreen(
-//           url: url,
-//           title: "Attachment",
-//         ),
-//       ),
-//     );
-//   }
-//
-//   // ✅ If file inside server (PDF / Image / DOC)
-//   else {
-//     Navigator.push(
-//       context,
-//       MaterialPageRoute(
-//         builder: (_) => WebViewScreen(
-//           url: url,
-//           title: "Document",
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// Widget buildAttachmentButton(String title, String? fileUrl) {
-//   if (fileUrl == null || fileUrl.isEmpty) return const SizedBox();
-//
-//   return InkWell(
-//     onTap: () => openAttachment(context, fileUrl),
-//     child: Container(
-//       padding: const EdgeInsets.all(12),
-//       margin: const EdgeInsets.symmetric(vertical: 6),
-//       decoration: BoxDecoration(
-//         color: Colors.blue.withOpacity(0.1),
-//         borderRadius: BorderRadius.circular(12),
-//       ),
-//       child: Row(
-//         children: [
-//           const Icon(Icons.attachment),
-//           const SizedBox(width: 10),
-//           Expanded(child: Text(title)),
-//         ],
-//       ),
-//     ),
-//   );
-// }

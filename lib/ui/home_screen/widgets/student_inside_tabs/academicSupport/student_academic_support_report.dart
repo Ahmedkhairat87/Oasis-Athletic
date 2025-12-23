@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:oasisathletic/core/model/stdLinks/academicSupport/StdSubjectDetailsData.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../../../../core/Utilities/dateHelper.dart';
 import '../../../../../core/reusable_components/academic_support_bottom_sheet.dart';
@@ -31,8 +32,10 @@ class AcademicReportItem {
 class StudentAcademicSupportReport extends StatelessWidget {
   final List<StdSubjectDetailsData> reports;
 
-  const StudentAcademicSupportReport({super.key , required this.reports});
-
+  const StudentAcademicSupportReport({
+    super.key,
+    required this.reports,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -46,16 +49,14 @@ class StudentAcademicSupportReport extends StatelessWidget {
         ? ColorsManager.primaryGradientEnd
         : ColorsManager.primaryGradientEndDark;
 
-   // final items = _mockItems();
     final items = reports.map((r) => AcademicReportItem(
       id: r.attendanceId.toString(),
-      subject: r.subjectNameFR ?? 'Unknown',
+      subject: r.subjectNameFR ?? tr('unknown'),
       sessionDate: parseApiDate(r.attendanceDate) ?? DateTime(2000),
       isSchoolTask: (r.devoir?.trim().toLowerCase() == 'yes'),
       teacherName: r.empName ?? '',
       teacherComment: r.comment ?? '',
     )).toList();
-
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -65,7 +66,7 @@ class StudentAcademicSupportReport extends StatelessWidget {
         centerTitle: true,
         titleSpacing: 0,
         title: Text(
-          "Academic Support Report",
+          tr('academic_support_report'),
           style: TextStyle(
             color: Colors.white,
             fontSize: 18.sp,
@@ -101,7 +102,7 @@ class StudentAcademicSupportReport extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.all(12.w),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface, // OPAQUE
+                    color: Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(16.r),
                     border: Border.all(color: Colors.black.withOpacity(0.05)),
                     boxShadow: [
@@ -132,7 +133,7 @@ class StudentAcademicSupportReport extends StatelessWidget {
                           children: [
                             Expanded(
                               child: ReportSummaryTile(
-                                label: 'Total',
+                                label: tr('total'),
                                 count: items.length,
                                 color: ColorsManager.accentSky,
                                 elevated: true,
@@ -141,8 +142,9 @@ class StudentAcademicSupportReport extends StatelessWidget {
                             SizedBox(width: 10.w),
                             Expanded(
                               child: ReportSummaryTile(
-                                label: 'School',
-                                count: items.where((e) => e.isSchoolTask).length,
+                                label: tr('school'),
+                                count:
+                                items.where((e) => e.isSchoolTask).length,
                                 color: ColorsManager.accentMint,
                                 elevated: true,
                               ),
@@ -150,7 +152,7 @@ class StudentAcademicSupportReport extends StatelessWidget {
                             SizedBox(width: 10.w),
                             Expanded(
                               child: ReportSummaryTile(
-                                label: 'Extra',
+                                label: tr('extra'),
                                 count: items.length -
                                     items.where((e) => e.isSchoolTask).length,
                                 color: ColorsManager.accentPurple,
@@ -173,8 +175,8 @@ class StudentAcademicSupportReport extends StatelessWidget {
 
                               return TweenAnimationBuilder<double>(
                                 tween: Tween(begin: 0.0, end: 1.0),
-                                duration:
-                                Duration(milliseconds: 200 + index * 40),
+                                duration: Duration(
+                                    milliseconds: 200 + index * 40),
                                 curve: Curves.easeOutBack,
                                 builder: (context, value, child) {
                                   final t = value.clamp(0.0, 1.0);
@@ -190,7 +192,10 @@ class StudentAcademicSupportReport extends StatelessWidget {
                                   subject: it.subject,
                                   sessionDate: it.sessionDate,
                                   isSchool: it.isSchoolTask,
-                                  onTap: () => _onReportTap(context, it), fromTime: '12:00', toTime: '1:00', wasPresent: true,
+                                  fromTime: tr('from_time_placeholder'),
+                                  toTime: tr('to_time_placeholder'),
+                                  wasPresent: true,
+                                  onTap: () => _onReportTap(context, it),
                                 ),
                               );
                             },

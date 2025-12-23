@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:oasisathletic/ui/drawer/widgets/gallery/provider/cart_provider.dart';
 import 'package:provider/provider.dart';
@@ -10,16 +11,16 @@ class PurchaseHistory extends StatelessWidget {
     final history = context.watch<CartProvider>().history;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Purchase History')),
+      appBar: AppBar(title: Text('Purchase History'.tr())),
       body: history.isEmpty
-          ? const Center(child: Text('No purchases yet'))
+          ? Center(child: Text('No purchases yet'.tr()))
           : ListView.builder(
         itemCount: history.length,
         itemBuilder: (_, i) => ListTile(
           leading: const Icon(Icons.image),
           title: Text(history[i].album),
-          trailing: const Text(
-            'Paid',
+          trailing: Text(
+            'Paid'.tr(),
             style: TextStyle(color: Colors.green),
           ),
         ),

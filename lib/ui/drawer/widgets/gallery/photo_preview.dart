@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:oasisathletic/ui/drawer/widgets/gallery/provider/cart_provider.dart';
@@ -98,7 +99,7 @@ class PhotoPreview extends StatelessWidget {
                   child: Container(
                     alignment: Alignment.center,
                     child: Text(
-                      'Request this photo',
+                      'Request_this_photo'.tr(),
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,

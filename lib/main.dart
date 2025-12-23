@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/app_style.dart';
 
+import 'core/theme_mode_provider.dart';
 import 'ui/drawer/about_us.dart';
 import 'ui/drawer/appointments.dart';
 import 'ui/drawer/bus_registeration.dart';
@@ -49,6 +50,9 @@ Future<void> main() async {
         ChangeNotifierProvider<CartProvider>(
           create: (_) => CartProvider(),
         ),
+        ChangeNotifierProvider<ThemeModeProvider>(
+          create: (_) => ThemeModeProvider(),
+        ),
       ],
       child: EasyLocalization(
         supportedLocales: const [
@@ -73,16 +77,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ✅ DEFINE IT HERE
+    final themeProvider = context.watch<ThemeModeProvider>();
+
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
-          title: 'Oasis Parents',
+          title: 'Oasis Athletics',
           debugShowCheckedModeBanner: false,
 
-          themeMode: ThemeMode.light,
+          // ✅ NOW THIS WORKS
+          themeMode: themeProvider.themeMode,
           theme: AppStyle.lightMode,
           darkTheme: AppStyle.darkMode,
 
@@ -90,7 +98,7 @@ class MyApp extends StatelessWidget {
           routes: {
             HomeScreen.routeName: (_) => HomeScreen(),
             LoginScreen.routeName: (_) => LoginScreen(),
-            Settings.routeName: (_) => Settings(),
+            Settings.routeName: (_) => const Settings(),
             AboutUs.routeName: (_) => AboutUs(),
             Policies.routeName: (_) => Policies(),
             BusRegisteration.routeName: (_) => BusRegisteration(),

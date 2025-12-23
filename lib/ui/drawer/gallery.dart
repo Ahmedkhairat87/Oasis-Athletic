@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:oasisathletic/ui/drawer/widgets/gallery/album_photos.dart';
@@ -18,7 +19,7 @@ class Gallery extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text('Photos Gallery'),
+        title: Text('Photos Gallery'.tr()),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,

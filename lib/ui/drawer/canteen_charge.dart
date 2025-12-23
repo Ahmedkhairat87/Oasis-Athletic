@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -54,7 +55,7 @@ class _CanteenChargeState extends State<CanteenCharge> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text('Canteen Charge'),
+        title: Text('Canteen Charge'.tr()),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -73,7 +74,7 @@ class _CanteenChargeState extends State<CanteenCharge> {
                   valueListenable: studentsNotifier,
                   builder: (context, students, _) {
                     if (students.isEmpty) {
-                      return const Center(child: Text('No students available'));
+                      return Center(child: Text('No students available'.tr()));
                     }
 
                     // 🔥 AUTO-SELECT FIRST STUDENT (runs once)
@@ -138,7 +139,7 @@ class _CanteenChargeState extends State<CanteenCharge> {
                   ),
                   child: Text(
                     'Please note: The payment will be processed and the amount '
-                        'will appear on the student’s card within 4 working days.',
+                        'will appear on the student’s card within 4 working days.'.tr(),
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 13.sp,
@@ -159,12 +160,12 @@ class _CanteenChargeState extends State<CanteenCharge> {
                   child: Row(
                     children: [
                       _TabButton(
-                        title: 'Charge',
+                        title: 'Charge'.tr(),
                         isActive: !isHistoryTab,
                         onTap: () => setState(() => isHistoryTab = false),
                       ),
                       _TabButton(
-                        title: 'Charging history',
+                        title: 'Charging history'.tr(),
                         isActive: isHistoryTab,
                         onTap: () => setState(() => isHistoryTab = true),
                       ),
@@ -211,7 +212,7 @@ class _ChargeOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (amounts.isEmpty) {
-      return const Center(child: Text('No charge options'));
+      return Center(child: Text('No charge options'.tr()));
     }
 
     return ListView.separated(
@@ -240,7 +241,7 @@ class _ChargingHistory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (history.isEmpty) {
-      return const Center(child: Text('No charging history'));
+      return Center(child: Text('No charging history'.tr()));
     }
 
     return ListView.separated(
@@ -393,7 +394,7 @@ class _ChargeRow extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 14.h),
       child: Row(
         children: [
-          const Text('Amount'),
+           Text('Amount'.tr()),
           const Spacer(),
           Text(amount.toString()),
           SizedBox(width: 20.w),
@@ -409,7 +410,7 @@ class _ChargeRow extends StatelessWidget {
                 openAttachment(context, url);
               }
             },
-            child: const Text('Pay Now'),
+            child:  Text('Pay Now'.tr()),
           ),
         ],
       ),

@@ -1,25 +1,59 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../core/assets_manager.dart';
-import '../../core/reusable_components/app_colors_extension.dart';
-import '../../core/strings_manager.dart';
+import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-class Settings extends StatelessWidget {
+import '../../core/reusable_components/app_background.dart';
+
+import '../../core/reusable_components/language_dropdown.dart';
+import '../../core/reusable_components/setting_tile.dart';
+import '../../core/theme_mode_provider.dart';
+
+class Settings extends StatefulWidget {
   static const routeName = '/settings';
   const Settings({super.key});
 
   @override
+  State<Settings> createState() => _SettingsState();
+}
+
+class _SettingsState extends State<Settings> {
+  bool _notificationsEnabled = true;
+
+  Future<void> _contactSupport() async {
+    final Uri emailUri = Uri(
+      scheme: 'mailto',
+      path: 'support@oasisdemaadi.com',
+      query: 'subject=Support Request',
+    );
+
+    try {
+      final launched =
+      await launchUrl(emailUri, mode: LaunchMode.externalApplication);
+      if (!launched) throw Exception();
+    } catch (_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(tr('unable_to_open_email'))),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final themeProvider = context.watch<ThemeModeProvider>();
+    final isDarkMode = themeProvider.isDarkMode;
+    final textColor = isDarkMode ? Colors.white : Colors.black;
+
     return Scaffold(
-     // drawer: const HomeDrawer(),
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.white.withOpacity(0.2),
         elevation: 0,
-        title: const Text(
-          'Settings',
-          style: TextStyle(color: Colors.black),
+        title: Text(
+          tr('settings'),
+          style: TextStyle(color: textColor),
         ),
         centerTitle: true,
         flexibleSpace: ClipRect(
@@ -31,10 +65,8 @@ class Settings extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          // Fullscreen gradient background
+          /// Gradient background
           Container(
-            width: double.infinity,
-            height: double.infinity,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -47,143 +79,95 @@ class Settings extends StatelessWidget {
             ),
           ),
 
-          // Decorative bubble top-left
+          /// Decorative bubbles
           Positioned(
             top: -50,
             left: -50,
-            child: Container(
-              width: 150.w,
-              height: 150.w,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.blueAccent.withOpacity(0.3),
-                    Colors.white.withOpacity(0.1),
-                  ],
-                ),
-              ),
-            ),
+            child: _bubble(150.w),
           ),
-
-          // Decorative bubble bottom-right
           Positioned(
             bottom: -60,
             right: -60,
-            child: Container(
-              width: 200.w,
-              height: 200.w,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.lightBlue.withOpacity(0.3),
-                    Colors.white.withOpacity(0.05),
-                  ],
-                ),
-              ),
-            ),
+            child: _bubble(200.w),
           ),
 
-          // Main content (scrollable)
-          Padding(
-            padding: EdgeInsets.only(
-              top: kToolbarHeight + MediaQuery.of(context).padding.top + 20.h,
-              left: 20.w,
-              right: 20.w,
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          /// Main content
+          AppBackground(
+            child: Padding(
+              padding: EdgeInsets.only(
+                top: kToolbarHeight +
+                    MediaQuery.of(context).padding.top +
+                    20.h,
+                left: 20.w,
+                right: 20.w,
+              ),
+              child: ListView(
                 children: [
-                  /// Language setting
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12.h),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            const Icon(Icons.language, size: 20),
-                            SizedBox(width: 8.w),
-                            Text(
-                              StringsManager.language,
-                              style: TextStyle(fontSize: 14.sp),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            // French flag
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4.w),
-                                border: Border.all(
-                                  color: Theme.of(context).colorScheme.borders,
-                                ),
-                              ),
-                              height: 25.h,
-                              width: 25.w,
-                              child: Image.asset(
-                                AssetsManager.france,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            SizedBox(width: 8.w),
-                            // British flag
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4.w),
-                                border: Border.all(
-                                  color: Theme.of(context).colorScheme.borders,
-                                ),
-                              ),
-                              height: 25.h,
-                              width: 25.w,
-                              child: Image.asset(
-                                AssetsManager.britain,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                  /// Theme
+                  SettingTile(
+                    icon: Icons.dark_mode_rounded,
+                    title: tr('theme'),
+                    trailing: Switch(
+                      value: isDarkMode,
+                      activeThumbColor: Colors.blueAccent,
+                      onChanged: (value) =>
+                          themeProvider.toggleTheme(value),
                     ),
                   ),
+                  _divider(),
 
-                  const Divider(),
+                  /// Language
+                  SettingTile(
+                    icon: Icons.language_rounded,
+                    title: tr('language'),
+                    trailing: LanguageDropdown(isDarkMode: isDarkMode),
+                  ),
+                  _divider(),
 
-                  /// Theme toggle
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12.h),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.dark_mode, size: 20),
-                        SizedBox(width: 8.w),
-                        Text(
-                          StringsManager.theme,
-                          style: TextStyle(fontSize: 14.sp),
-                        ),
-                      ],
+                  /// Notifications
+                  SettingTile(
+                    icon: Icons.notifications_active,
+                    title: tr('notifications'),
+                    trailing: Switch(
+                      value: _notificationsEnabled,
+                      activeThumbColor: Colors.blueAccent,
+                      onChanged: (value) =>
+                          setState(() => _notificationsEnabled = value),
                     ),
                   ),
-
-                  const Divider(),
+                  _divider(),
 
                   /// Change password
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12.h),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.password, size: 20),
-                        SizedBox(width: 8.w),
-                        Text(
-                          StringsManager.changePassword,
-                          style: TextStyle(fontSize: 14.sp),
+                  SettingTile(
+                    icon: Icons.password,
+                    title: tr('change_password'),
+                    onTap: () {
+                      // TODO: navigate to change password screen
+                    },
+                  ),
+                  _divider(),
+
+                  /// Contact support
+                  SettingTile(
+                    icon: Icons.support_agent,
+                    title: tr('contact_support'),
+                    onTap: _contactSupport,
+                  ),
+                  _divider(),
+
+                  /// App version
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 20.h),
+                      child: Text(
+                        'App Version 1.0.0',
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: isDarkMode
+                              ? Colors.grey.shade400
+                              : Colors.grey.shade600,
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ],
@@ -194,4 +178,26 @@ class Settings extends StatelessWidget {
       ),
     );
   }
+
+  Widget _bubble(double size) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [
+            Colors.blueAccent.withOpacity(0.3),
+            Colors.white.withOpacity(0.05),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _divider() => Divider(
+    color: Colors.black.withOpacity(0.05),
+    height: 8.h,
+    thickness: 1,
+  );
 }

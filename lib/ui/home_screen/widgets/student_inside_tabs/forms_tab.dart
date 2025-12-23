@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'medical_form.dart';
 import 'nutrition_form.dart';
@@ -20,7 +21,7 @@ class FormsTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            'Forms',
+            tr('forms'),
             style: TextStyle(
               fontSize: 20.sp,
               fontWeight: FontWeight.w800,
@@ -33,8 +34,8 @@ class FormsTab extends StatelessWidget {
             context,
             color: Colors.blueAccent,
             icon: Icons.medical_services,
-            title: 'Medical Form',
-            subtitle: 'Open medical form to view / fill details',
+            title: tr('medical_form'),
+            subtitle: tr('medical_form_subtitle'),
             onTap: () {
               Navigator.push(
                 context,
@@ -50,8 +51,8 @@ class FormsTab extends StatelessWidget {
             context,
             color: Colors.green,
             icon: Icons.fastfood,
-            title: 'Nutrition Form',
-            subtitle: 'Open nutrition form to view / fill details',
+            title: tr('nutrition_form'),
+            subtitle: tr('nutrition_form_subtitle'),
             onTap: () {
               Navigator.push(
                 context,
@@ -64,10 +65,14 @@ class FormsTab extends StatelessWidget {
 
           // optional help text
           Text(
-            'Tap a card to open the corresponding form. The form opens as a full screen page.',
+            tr('forms_help_text'),
             style: TextStyle(
               fontSize: 13.sp,
-              color: Theme.of(context).textTheme.bodySmall?.color?.withOpacity(0.85),
+              color: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.color
+                  ?.withOpacity(0.85),
             ),
           ),
         ],
@@ -144,7 +149,8 @@ class FormsTab extends StatelessWidget {
                   ],
                 ),
               ),
-              Icon(Icons.chevron_right, color: Colors.white.withOpacity(0.9)),
+              Icon(Icons.chevron_right,
+                  color: Colors.white.withOpacity(0.9)),
             ],
           ),
         ),

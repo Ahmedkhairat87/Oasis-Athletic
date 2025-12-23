@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:oasisathletic/core/reusable_components/app_background.dart';
 import '../../../../../core/colors_Manager.dart';
 
@@ -18,7 +19,7 @@ class StudentReports extends StatelessWidget {
         centerTitle: true,
         titleSpacing: 0,
         title: Text(
-          "Academic Support Report",
+          tr('academic_support_report'),
           style: TextStyle(
             color: Colors.white,
             fontSize: 18.sp,
@@ -77,7 +78,7 @@ class StudentReports extends StatelessWidget {
                             ),
                             SizedBox(height: 4.h),
                             Text(
-                              "Class: P4A",
+                              "${tr('class')}: P4A",
                               style: TextStyle(
                                 fontSize: 13.sp,
                                 color: Colors.grey.shade600,
@@ -88,14 +89,14 @@ class StudentReports extends StatelessWidget {
                       ),
                       Column(
                         children: [
-                          Text("School Tasks"),
+                          Text(tr('school_tasks')),
                           _pill("23", Colors.cyan),
                         ],
                       ),
                       SizedBox(width: 6.w),
                       Column(
                         children: [
-                          Text("Extra Tasks"),
+                          Text(tr('extra_tasks')),
                           _pill("12", Colors.orange),
                         ],
                       ),
@@ -115,9 +116,9 @@ class StudentReports extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _attendanceRow("Present", "30", Icons.check_circle),
+                      _attendanceRow(tr('present'), "30", Icons.check_circle),
                       SizedBox(height: 6.h),
-                      _attendanceRow("Absent", "1", Icons.cancel),
+                      _attendanceRow(tr('absent'), "1", Icons.cancel),
                     ],
                   ),
                 ),
@@ -126,13 +127,13 @@ class StudentReports extends StatelessWidget {
 
                 /// ================= ANGLAIS =================
                 _subjectCard(
-                  title: "Anglais",
+                  title: tr('anglais'),
                   color: Colors.green.shade50,
-                  indicators: const [
-                    "Autonomie: Good",
-                    "Organisation: Good",
-                    "Expression: Needs Improvement",
-                    "Participation: Needs Improvement",
+                  indicators: [
+                    tr('autonomie_good'),
+                    tr('organisation_good'),
+                    tr('expression_needs_improvement'),
+                    tr('participation_needs_improvement'),
                   ],
                   comment:
                   "Data , Data , Data , Data , Data , Data , Data , Data , Data , Data , Data , Data , Data , Data , Data , Data , Data , Data , Data , Data",
@@ -142,13 +143,13 @@ class StudentReports extends StatelessWidget {
 
                 /// ================= FRANCAIS =================
                 _subjectCard(
-                  title: "Francais",
+                  title: tr('francais'),
                   color: Colors.orange.shade50,
-                  indicators: const [
-                    "Autonomie: Bon",
-                    "Organisation: Excellent",
-                    "Expression: Excellent",
-                    "Participation: Excellent",
+                  indicators: [
+                    tr('autonomie_bon'),
+                    tr('organisation_excellent'),
+                    tr('expression_excellent'),
+                    tr('participation_excellent'),
                   ],
                   comment:
                   "Data , Data , Data , Data , Data , Data , Data , Data , Data , Data , Data , Data , Data , Data , Data , Data , Data , Data , Data , Data",
@@ -160,8 +161,6 @@ class StudentReports extends StatelessWidget {
       ),
     );
   }
-
-  /// ================= SMALL WIDGETS =================
 
   Widget _pill(String text, Color color) {
     return Container(

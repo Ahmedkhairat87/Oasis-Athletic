@@ -6,6 +6,7 @@ import '../../../../../core/colors_Manager.dart';
 import '../../../../../core/reusable_components/profile_tab_golden_card.dart';
 import '../../../../../core/reusable_components/profile_tab_section_title.dart';
 import '../../../../../core/reusable_components/Notifiers/student_notifier.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../../../../core/services/stdProfile/stdAcademicSupportServices/AcademicSupportService.dart';
 import 'student_academic_support_report.dart';
@@ -98,7 +99,7 @@ class _AcademicTabState extends State<AcademicSupportMainTab> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SectionTitle('Academic Support'),
+            SectionTitle(tr('academic_support')),
             SizedBox(height: 12.h),
 
             /// ================= FIRST GOLD CARD =================
@@ -130,7 +131,7 @@ class _AcademicTabState extends State<AcademicSupportMainTab> {
                         SizedBox(width: 12.w),
                         Expanded(
                           child: Text(
-                            "Tasks",
+                            tr('tasks'),
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w800,
@@ -144,7 +145,7 @@ class _AcademicTabState extends State<AcademicSupportMainTab> {
                     SizedBox(height: 10.h),
 
                     Text(
-                      "Overview of school and extra tasks assigned to the student",
+                      tr('tasks_overview'),
                       style: TextStyle(
                         fontSize: 13.sp,
                         color: Theme.of(context)
@@ -179,16 +180,6 @@ class _AcademicTabState extends State<AcademicSupportMainTab> {
                         accentPurple,
                       ),
                     ),
-
-                    /*SizedBox(height: 14.h),
-
-                    _attendanceCard(
-                      context,
-                      attendanceCount,
-                      primaryBlue,
-                      accentMint,
-                      accentPurple,
-                    ),*/
                   ],
                 ),
               ),
@@ -197,7 +188,6 @@ class _AcademicTabState extends State<AcademicSupportMainTab> {
             SizedBox(height: 14.h),
 
             /// ================= SECOND GOLD CARD =================
-            /// Students’ Reports
             GoldCard(
               child: Padding(
                 padding: EdgeInsets.all(14.w),
@@ -226,7 +216,7 @@ class _AcademicTabState extends State<AcademicSupportMainTab> {
                         SizedBox(width: 12.w),
                         Expanded(
                           child: Text(
-                            "Students’ Reports",
+                            tr('students_reports'),
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w800,
@@ -240,7 +230,7 @@ class _AcademicTabState extends State<AcademicSupportMainTab> {
                     SizedBox(height: 10.h),
 
                     Text(
-                      "Detailed academic and behavioral reports for the student",
+                      tr('reports_description'),
                       style: TextStyle(
                         fontSize: 13.sp,
                         color: Theme.of(context)
@@ -269,8 +259,6 @@ class _AcademicTabState extends State<AcademicSupportMainTab> {
     );
   }
 
-  // ================= REST UNCHANGED =================
-
   Widget _assignmentsCard(
       BuildContext context,
       Color primaryBlue,
@@ -297,7 +285,7 @@ class _AcademicTabState extends State<AcademicSupportMainTab> {
             children: [
               Expanded(
                 child: Text(
-                  "Assignments",
+                  tr('assignments'),
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w700,
@@ -313,11 +301,11 @@ class _AcademicTabState extends State<AcademicSupportMainTab> {
           Row(
             children: [
               Expanded(
-                child: _badge("School", schoolTasks, primaryBlue),
+                child: _badge(tr('school'), schoolTasks, primaryBlue),
               ),
               SizedBox(width: 10.w),
               Expanded(
-                child: _badge("Extra", extraTasks, primaryBlue),
+                child: _badge(tr('extra'), extraTasks, primaryBlue),
               ),
             ],
           ),
@@ -325,70 +313,6 @@ class _AcademicTabState extends State<AcademicSupportMainTab> {
       ),
     );
   }
-
-  /*Widget _attendanceCard(
-      BuildContext context,
-      int count,
-      Color primaryBlue,
-      Color accentMint,
-      Color accentPurple,
-      ) {
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const TasksListScreen(selectedType: null),
-          ),
-        );
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 260),
-        padding: EdgeInsets.all(12.w),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(color: primaryBlue.withOpacity(0.9)),
-          gradient: LinearGradient(
-            colors: [
-              primaryBlue.withOpacity(0.09),
-              accentMint.withOpacity(0.08),
-            ],
-          ),
-        ),
-        child: Row(
-          children: [
-            Icon(Icons.calendar_today, color: accentMint, size: 18.r),
-            SizedBox(width: 10.w),
-            Expanded(
-              child: Text(
-                "Attendance",
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w700,
-                  color: primaryBlue,
-                ),
-              ),
-            ),
-            Container(
-              padding:
-              EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-              decoration: BoxDecoration(
-                color: accentPurple,
-                borderRadius: BorderRadius.circular(6.r),
-              ),
-              child: Text(
-                "$count",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }*/
 
   Widget _studentsReportsCard(
       BuildContext context,
@@ -420,7 +344,7 @@ class _AcademicTabState extends State<AcademicSupportMainTab> {
             SizedBox(width: 10.w),
             Expanded(
               child: Text(
-                "Students’ Reports",
+                tr('students_reports'),
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w700,

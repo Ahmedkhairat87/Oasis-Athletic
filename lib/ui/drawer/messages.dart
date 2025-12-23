@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:oasisathletic/ui/home_screen/MSGScreens/sendMessagesScreen.dart';
@@ -22,23 +23,23 @@ class _MessagesScreenState extends State<MessagesScreen> {
 
   final List<Map<String, dynamic>> messages = [
     {
-      "senderType": "Teacher",
+      "senderType": "teacher".tr(),
       "senderName": "Ms. Sarah",
-      "message": "Reminder: parent-teacher meeting tomorrow at 3pm.",
+      "message": "msg_parent_meeting".tr(),
       "date": "18-10-2025",
       "child": "Malek",
     },
     {
-      "senderType": "Coach",
+      "senderType": "coach".tr(),
       "senderName": "Coach Ahmed",
-      "message": "Training tomorrow at 5pm — bring shin guards.",
+      "message": "msg_training".tr(),
       "date": "17-10-2025",
       "child": "Mazen",
     },
     {
-      "senderType": "Administration",
+      "senderType": "administration".tr(),
       "senderName": "Admin Office",
-      "message": "School closed next Monday for maintenance.",
+      "message": "msg_school_closed".tr(),
       "date": "12-10-2025",
       "child": "Malek",
     },
@@ -52,16 +53,16 @@ class _MessagesScreenState extends State<MessagesScreen> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    // colors from your ColorsManager
     final Color primaryBlue =
     isDark ? ColorsManager.primaryGradientStartDark : ColorsManager.primaryGradientStart;
     final surface = theme.colorScheme.surface.withOpacity(0.78);
 
     return Scaffold(
-      // keep the body full-bleed and use your AppBackground
       extendBodyBehindAppBar: true,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight((kToolbarHeight + MediaQuery.of(context).padding.top).h),
+        preferredSize: Size.fromHeight(
+          (kToolbarHeight + MediaQuery.of(context).padding.top).h,
+        ),
         child: ClipRect(
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
@@ -73,21 +74,23 @@ class _MessagesScreenState extends State<MessagesScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 12.w),
                   child: Row(
                     children: [
-                      // back button (same look as your app)
                       SizedBox(
                         width: 44.w,
                         height: 44.h,
                         child: IconButton(
                           padding: EdgeInsets.zero,
                           onPressed: () => Navigator.maybePop(context),
-                          icon: Icon(Icons.arrow_back, size: 22.r, color: theme.iconTheme.color),
+                          icon: Icon(
+                            Icons.arrow_back,
+                            size: 22.r,
+                            color: theme.iconTheme.color,
+                          ),
                         ),
                       ),
                       SizedBox(width: 8.w),
-                      // title
                       Expanded(
                         child: Text(
-                          'Messages',
+                          'messages'.tr(),
                           style: TextStyle(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.w700,
@@ -97,7 +100,10 @@ class _MessagesScreenState extends State<MessagesScreen> {
                       ),
                       InkWell(
                         onTap: () {
-                          Navigator.pushNamed(context, sendMessagesScreen.routeName);
+                          Navigator.pushNamed(
+                            context,
+                            sendMessagesScreen.routeName,
+                          );
                         },
                         child: Padding(
                           padding: EdgeInsets.symmetric(vertical: 8.h),
@@ -105,7 +111,8 @@ class _MessagesScreenState extends State<MessagesScreen> {
                             'assets/images/compose.png',
                             width: 30.w,
                             height: 30.h,
-                            errorBuilder: (_, __, ___) => Icon(Icons.create_rounded, size: 22.r),
+                            errorBuilder: (_, __, ___) =>
+                                Icon(Icons.create_rounded, size: 22.r),
                           ),
                         ),
                       ),
@@ -121,29 +128,22 @@ class _MessagesScreenState extends State<MessagesScreen> {
       body: AppBackground(
         useAppBarBlur: false,
         child: SafeArea(
-          top: false, // AppBar already handled SafeArea
+          top: false,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
             child: Column(
               children: [
-                // Top tabs (Inbox / Sent)
                 _TopTabs(
                   selectedTab: selectedTab,
                   onTabSelected: (t) => setState(() => selectedTab = t),
                 ),
-
                 SizedBox(height: 12.h),
-
-                // Filter chips row (children)
                 _FilterChips(
                   children: children,
                   selected: selectedFilter,
                   onSelected: (s) => setState(() => selectedFilter = s),
                 ),
-
                 SizedBox(height: 14.h),
-
-                // Messages list
                 Expanded(
                   child: _MessagesList(
                     messages: messages,
@@ -173,13 +173,23 @@ class _TopTabs extends StatelessWidget {
     return Container(
       height: 40.h,
       decoration: BoxDecoration(
-        color: isDark ? Colors.white10.withOpacity(0.2) : Colors.grey.shade200.withOpacity(0.8),
+        color: isDark
+            ? Colors.white10.withOpacity(0.2)
+            : Colors.grey.shade200.withOpacity(0.8),
         borderRadius: BorderRadius.circular(25.r),
       ),
       child: Row(
         children: [
-          _TopTab(title: 'Inbox', isSelected: selectedTab == 'Inbox', onTap: () => onTabSelected('Inbox')),
-          _TopTab(title: 'Sent', isSelected: selectedTab == 'Sent', onTap: () => onTabSelected('Sent')),
+          _TopTab(
+            title: 'inbox'.tr(),
+            isSelected: selectedTab == 'Inbox',
+            onTap: () => onTabSelected('Inbox'),
+          ),
+          _TopTab(
+            title: 'sent'.tr(),
+            isSelected: selectedTab == 'Sent',
+            onTap: () => onTabSelected('Sent'),
+          ),
         ],
       ),
     );
@@ -190,7 +200,11 @@ class _TopTab extends StatelessWidget {
   final String title;
   final bool isSelected;
   final VoidCallback onTap;
-  const _TopTab({required this.title, required this.isSelected, required this.onTap});
+  const _TopTab({
+    required this.title,
+    required this.isSelected,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -203,14 +217,20 @@ class _TopTab extends StatelessWidget {
         child: Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: isSelected ? (isDark ? Colors.blueAccent.withOpacity(0.28) : Colors.white) : Colors.transparent,
+            color: isSelected
+                ? (isDark ? Colors.blueAccent.withOpacity(0.28) : Colors.white)
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(25.r),
-            boxShadow: isSelected && !isDark ? [BoxShadow(color: Colors.black12, blurRadius: 2)] : [],
+            boxShadow: isSelected && !isDark
+                ? [const BoxShadow(color: Colors.black12, blurRadius: 2)]
+                : [],
           ),
           child: Text(
             title,
             style: TextStyle(
-              color: isSelected ? (isDark ? Colors.white : Colors.black) : (isDark ? Colors.white60 : Colors.grey),
+              color: isSelected
+                  ? (isDark ? Colors.white : Colors.black)
+                  : (isDark ? Colors.white60 : Colors.grey),
               fontWeight: FontWeight.w500,
             ),
           ),
@@ -249,13 +269,19 @@ class _FilterChips extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
               decoration: BoxDecoration(
-                color: isSel ? selectedColor : (isDark ? Colors.white10.withOpacity(0.3) : Colors.grey.shade200.withOpacity(0.8)),
+                color: isSel
+                    ? selectedColor
+                    : (isDark
+                    ? Colors.white10.withOpacity(0.3)
+                    : Colors.grey.shade200.withOpacity(0.8)),
                 borderRadius: BorderRadius.circular(20.r),
               ),
               child: Text(
-                c,
+                c == 'All' ? 'all'.tr() : c,
                 style: TextStyle(
-                  color: isSel ? Colors.white : (isDark ? Colors.white70 : Colors.black),
+                  color: isSel
+                      ? Colors.white
+                      : (isDark ? Colors.white70 : Colors.black),
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -267,18 +293,19 @@ class _FilterChips extends StatelessWidget {
   }
 }
 
-/// Messages list widget (reusable)
+/// Messages list widget
 class _MessagesList extends StatelessWidget {
   final List<Map<String, dynamic>> messages;
-  final String filter; // child name or "All"
+  final String filter;
   const _MessagesList({required this.messages, required this.filter});
 
   @override
   Widget build(BuildContext context) {
-    final filtered = filter == 'All' ? messages : messages.where((m) => m['child'] == filter).toList();
+    final filtered =
+    filter == 'All' ? messages : messages.where((m) => m['child'] == filter).toList();
 
     if (filtered.isEmpty) {
-      return Center(child: Text('No messages'));
+      return Center(child: Text('no_messages'.tr()));
     }
 
     return ListView.separated(
@@ -307,7 +334,8 @@ class MessageTile extends StatelessWidget {
   final String date;
   final String childName;
 
-  const MessageTile({super.key, 
+  const MessageTile({
+    super.key,
     required this.senderType,
     required this.senderName,
     required this.message,
@@ -319,7 +347,8 @@ class MessageTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isLight = theme.brightness == Brightness.light;
-    final Color primaryBlue = isLight ? ColorsManager.primaryGradientStart : ColorsManager.primaryGradientStartDark;
+    final Color primaryBlue =
+    isLight ? ColorsManager.primaryGradientStart : ColorsManager.primaryGradientStartDark;
 
     return Card(
       margin: EdgeInsets.zero,
@@ -327,8 +356,13 @@ class MessageTile extends StatelessWidget {
       elevation: 1.5,
       child: InkWell(
         onTap: () {
-          // implement message open / details navigation if you have one
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Open message from $senderName')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'open_message_from'.tr(namedArgs: {'name': senderName}),
+              ),
+            ),
+          );
         },
         borderRadius: BorderRadius.circular(14.r),
         child: Padding(
@@ -340,7 +374,10 @@ class MessageTile extends StatelessWidget {
                 backgroundColor: theme.colorScheme.surface,
                 child: Text(
                   _initialsOf(senderName),
-                  style: TextStyle(color: primaryBlue, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    color: primaryBlue,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               SizedBox(width: 12.w),
@@ -348,16 +385,21 @@ class MessageTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // first line: sender name + child
                     Row(
                       children: [
                         Expanded(
                           child: Text(
                             senderName,
-                            style: TextStyle(fontWeight: FontWeight.w700),
+                            style: const TextStyle(fontWeight: FontWeight.w700),
                           ),
                         ),
-                        Text(date, style: TextStyle(color: theme.textTheme.bodySmall?.color, fontSize: 12.sp)),
+                        Text(
+                          date,
+                          style: TextStyle(
+                            color: theme.textTheme.bodySmall?.color,
+                            fontSize: 12.sp,
+                          ),
+                        ),
                       ],
                     ),
                     SizedBox(height: 6.h),
@@ -369,7 +411,10 @@ class MessageTile extends StatelessWidget {
                     SizedBox(height: 6.h),
                     Text(
                       childName,
-                      style: TextStyle(color: theme.textTheme.bodySmall?.color, fontSize: 12.sp),
+                      style: TextStyle(
+                        color: theme.textTheme.bodySmall?.color,
+                        fontSize: 12.sp,
+                      ),
                     ),
                   ],
                 ),
@@ -384,7 +429,10 @@ class MessageTile extends StatelessWidget {
   String _initialsOf(String name) {
     final parts = name.split(' ');
     if (parts.isEmpty) return '?';
-    if (parts.length == 1) return parts.first.characters.first.toUpperCase();
-    return '${parts.first.characters.first.toUpperCase()}${parts[1].characters.first.toUpperCase()}';
+    if (parts.length == 1) {
+      return parts.first.characters.first.toUpperCase();
+    }
+    return '${parts.first.characters.first.toUpperCase()}'
+        '${parts[1].characters.first.toUpperCase()}';
   }
 }
