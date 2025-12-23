@@ -1,7 +1,9 @@
 import 'package:oasisathletic/core/model/stdLinks/academicSupport/StdAcademicSupportResponse.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../apiControl/apiManager.dart';
-import '../../apiControl/apiServiceProvider.dart';
+
+import '../../../apiControl/apiManager.dart';
+import '../../../apiControl/apiServiceProvider.dart';
+
 
 
 class AcademicSupportService {
@@ -33,11 +35,6 @@ class AcademicSupportService {
         APIManager.getAcademicSupport,
         params,
       );
-
-      if (response == null || response is! Map) {
-        print("❌ Academic Support API invalid response");
-        return null;
-      }
 
       return StdAcademicSupportResponse.fromJson(response["data"]);
     } catch (e, st) {

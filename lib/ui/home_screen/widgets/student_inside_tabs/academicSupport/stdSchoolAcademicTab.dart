@@ -5,13 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../../../../core/colors_Manager.dart';
 import '../../../../../core/reusable_components/profile_tab_golden_card.dart';
 import '../../../../../core/reusable_components/profile_tab_section_title.dart';
-import '../../../../../core/reusable_components/student_notifier.dart';
-import '../../../../../core/services/SchoolAcademicLinksServices/StdSchoolAcademicLinksService.dart';
-import '../../../../webView-attachmentopener/openAttachment.dart'; // adjust path if needed
+import '../../../../../core/reusable_components/Notifiers/student_notifier.dart';
+import '../../../../../core/services/stdProfile/SchoolAcademicLinksServices/StdSchoolAcademicLinksService.dart';
+import '../../../../webView-attachmentopener/openAttachment.dart';
 
 class stdSchoolAcademicTab extends StatefulWidget {
   const stdSchoolAcademicTab({super.key});
@@ -32,7 +33,6 @@ class _AcademicTabState extends State<stdSchoolAcademicTab> {
     loadAcademicLinks();
   }
 
-
   Future<void> loadAcademicLinks() async {
     setState(() => _loading = true);
 
@@ -45,19 +45,17 @@ class _AcademicTabState extends State<stdSchoolAcademicTab> {
     if (!mounted) return;
 
     setState(() {
-      var responseData = data;
       _loading = false;
 
       if (data?.academicLinks != null &&
           data!.academicLinks!.isNotEmpty) {
-
         _links = data.academicLinks!
             .where((e) => e.sublinkUrlnameE != null)
             .map(
               (e) => _LinkItem(
             url: e.sublinkUrlnameE!,
             title: e.sublinkDescE,
-            schoolYear: null, // not provided by API
+            schoolYear: null,
           ),
         )
             .toList();
@@ -67,7 +65,6 @@ class _AcademicTabState extends State<stdSchoolAcademicTab> {
     });
   }
 
-  /// Determine current school year string like "2025/2026".
   String _currentSchoolYear() {
     final now = DateTime.now();
     final year = now.year;
@@ -94,9 +91,7 @@ class _AcademicTabState extends State<stdSchoolAcademicTab> {
       final List<_LinkItem> items =
       decoded.map((e) => _LinkItem.fromJson(e)).toList();
 
-      // Filter by school year (keep items with no schoolYear or matching current)
-      final filtered =
-      items.where((item) {
+      final filtered = items.where((item) {
         if (item.schoolYear == null || item.schoolYear!.isEmpty) {
           return true;
         }
@@ -118,7 +113,7 @@ class _AcademicTabState extends State<stdSchoolAcademicTab> {
   Future<void> _refresh() async => _loadLinks();
 
   void _open(String url) {
-    openAttachment(context, url); // uses your existing viewer
+    openAttachment(context, url);
   }
 
   void _actions(_LinkItem item) {
@@ -130,7 +125,7 @@ class _AcademicTabState extends State<stdSchoolAcademicTab> {
             children: [
               ListTile(
                 leading: const Icon(Icons.open_in_new),
-                title: const Text('Open'),
+                title: Text(tr('open')),
                 onTap: () {
                   Navigator.pop(ctx);
                   _open(item.url);
@@ -138,12 +133,12 @@ class _AcademicTabState extends State<stdSchoolAcademicTab> {
               ),
               ListTile(
                 leading: const Icon(Icons.copy),
-                title: const Text('Copy link'),
+                title: Text(tr('copy_link')),
                 onTap: () {
                   Navigator.pop(ctx);
                   Clipboard.setData(ClipboardData(text: item.url));
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Copied to clipboard")),
+                    SnackBar(content: Text(tr('copied_to_clipboard'))),
                   );
                 },
               ),
@@ -168,15 +163,12 @@ class _AcademicTabState extends State<stdSchoolAcademicTab> {
     final schoolYear = _currentSchoolYear();
     final isLight = Theme.of(context).brightness == Brightness.light;
 
-    // Joyful palette (copied from AcademicSupportTab)
-    final Color primaryBlue =
-    isLight
+    final Color primaryBlue = isLight
         ? ColorsManager.primaryGradientStart
         : ColorsManager.primaryGradientStartDark;
     final Color accentMint = ColorsManager.accentMint;
     final Color accentSky = ColorsManager.accentSky;
     final Color accentSun = ColorsManager.accentSun;
-    final Color accentPurple = ColorsManager.accentPurple;
 
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
@@ -185,7 +177,7 @@ class _AcademicTabState extends State<stdSchoolAcademicTab> {
         duration: const Duration(milliseconds: 320),
         curve: Curves.easeOutBack,
         builder: (context, value, child) {
-          final double t = value.clamp(0.0, 1.0);
+          final t = value.clamp(0.0, 1.0);
           return Opacity(
             opacity: t,
             child: Transform.translate(
@@ -197,17 +189,15 @@ class _AcademicTabState extends State<stdSchoolAcademicTab> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SectionTitle('Academic Links'),
+            SectionTitle(tr('academic_links')),
             SizedBox(height: 12.h),
 
-            // Main GoldCard container like AcademicSupportTab
             GoldCard(
               child: Padding(
                 padding: EdgeInsets.all(14.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // TOP ROW: Icon + Title + school year
                     Row(
                       children: [
                         Container(
@@ -223,24 +213,17 @@ class _AcademicTabState extends State<stdSchoolAcademicTab> {
                                 primaryBlue,
                               ],
                             ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: primaryBlue.withOpacity(0.25),
-                                blurRadius: 12,
-                                offset: const Offset(0, 6),
-                              ),
-                            ],
                           ),
-                          child: Icon(
-                            Icons.link,
-                            color: Colors.white,
-                            size: 28.r,
-                          ),
+                          child: Icon(Icons.link,
+                              color: Colors.white, size: 28.r),
                         ),
                         SizedBox(width: 12.w),
                         Expanded(
                           child: Text(
-                            'Academic Links — $schoolYear',
+                            tr(
+                              'academic_links_with_year',
+                              namedArgs: {'year': schoolYear},
+                            ),
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w800,
@@ -250,17 +233,12 @@ class _AcademicTabState extends State<stdSchoolAcademicTab> {
                         ),
                       ],
                     ),
-
                     SizedBox(height: 10.h),
-
-                    // LIST AREA (keeps your logic exactly)
                     SizedBox(
-                      // give the inner list a bounded height similar to other tabs
                       height: 350.h,
                       child: RefreshIndicator(
                         onRefresh: _refresh,
-                        child:
-                        _loading
+                        child: _loading
                             ? const Center(
                           child: CircularProgressIndicator(),
                         )
@@ -272,7 +250,7 @@ class _AcademicTabState extends State<stdSchoolAcademicTab> {
                             SizedBox(height: 60.h),
                             Center(
                               child: Text(
-                                "No academic links available",
+                                tr('no_academic_links'),
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   color: Colors.grey[600],
@@ -282,7 +260,7 @@ class _AcademicTabState extends State<stdSchoolAcademicTab> {
                             SizedBox(height: 10.h),
                             Center(
                               child: Text(
-                                "Links from the stage coordinator will appear here.",
+                                tr('academic_links_hint'),
                                 style: TextStyle(
                                   fontSize: 12.sp,
                                   color: Colors.grey[500],
@@ -293,52 +271,37 @@ class _AcademicTabState extends State<stdSchoolAcademicTab> {
                         )
                             : ListView.separated(
                           itemCount: _links.length,
-                          separatorBuilder:
-                              (_, __) => SizedBox(height: 10.h),
+                          separatorBuilder: (_, __) =>
+                              SizedBox(height: 10.h),
                           itemBuilder: (context, i) {
                             final item = _links[i];
-
-                            // Liquid / multi-color card row — matches AcademicSupportTab style
                             return AnimatedContainer(
-                              duration: const Duration(
-                                milliseconds: 260,
-                              ),
-                              curve: Curves.easeOut,
+                              duration:
+                              const Duration(milliseconds: 260),
                               padding: EdgeInsets.zero,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                  12.r,
-                                ),
+                                borderRadius:
+                                BorderRadius.circular(12.r),
                                 gradient: LinearGradient(
                                   colors: [
                                     accentSky.withOpacity(0.12),
                                     accentMint.withOpacity(0.10),
                                   ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
                                 ),
                                 border: Border.all(
-                                  color: accentMint.withOpacity(0.9),
+                                  color:
+                                  accentMint.withOpacity(0.9),
                                   width: 0.6.w,
                                 ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: primaryBlue.withOpacity(
-                                      0.06,
-                                    ),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 4),
-                                  ),
-                                ],
                               ),
                               child: Material(
                                 color: Colors.transparent,
                                 child: InkWell(
-                                  borderRadius: BorderRadius.circular(
-                                    12.r,
-                                  ),
+                                  borderRadius:
+                                  BorderRadius.circular(12.r),
                                   onTap: () => _open(item.url),
-                                  onLongPress: () => _actions(item),
+                                  onLongPress: () =>
+                                      _actions(item),
                                   child: Padding(
                                     padding: EdgeInsets.symmetric(
                                       horizontal: 12.w,
@@ -351,25 +314,23 @@ class _AcademicTabState extends State<stdSchoolAcademicTab> {
                                           height: 56.w,
                                           decoration: BoxDecoration(
                                             borderRadius:
-                                            BorderRadius.circular(
-                                              12.r,
-                                            ),
-                                            gradient: LinearGradient(
+                                            BorderRadius
+                                                .circular(12.r),
+                                            gradient:
+                                            LinearGradient(
                                               colors: [
-                                                primaryBlue.withOpacity(
-                                                  0.14,
-                                                ),
-                                                accentSky.withOpacity(
-                                                  0.10,
-                                                ),
+                                                primaryBlue
+                                                    .withOpacity(
+                                                    0.14),
+                                                accentSky
+                                                    .withOpacity(
+                                                    0.10),
                                               ],
-                                              begin: Alignment.topLeft,
-                                              end:
-                                              Alignment.bottomRight,
                                             ),
                                           ),
                                           child: Center(
-                                            child: _icon(item.url),
+                                            child:
+                                            _icon(item.url),
                                           ),
                                         ),
                                         SizedBox(width: 12.w),
@@ -380,16 +341,19 @@ class _AcademicTabState extends State<stdSchoolAcademicTab> {
                                                 .start,
                                             children: [
                                               Text(
-                                                item.title ?? item.url,
+                                                item.title ??
+                                                    item.url,
                                                 maxLines: 1,
                                                 overflow:
                                                 TextOverflow
                                                     .ellipsis,
                                                 style: TextStyle(
                                                   fontWeight:
-                                                  FontWeight.w800,
+                                                  FontWeight
+                                                      .w800,
                                                   fontSize: 14.sp,
-                                                  color: primaryBlue,
+                                                  color:
+                                                  primaryBlue,
                                                 ),
                                               ),
                                               SizedBox(height: 6.h),
@@ -402,7 +366,8 @@ class _AcademicTabState extends State<stdSchoolAcademicTab> {
                                                 style: TextStyle(
                                                   fontSize: 11.sp,
                                                   color:
-                                                  Colors.grey[700],
+                                                  Colors.grey[
+                                                  700],
                                                 ),
                                               ),
                                             ],
@@ -414,8 +379,8 @@ class _AcademicTabState extends State<stdSchoolAcademicTab> {
                                             Icons.open_in_new,
                                             color: accentSun,
                                           ),
-                                          onPressed:
-                                              () => _open(item.url),
+                                          onPressed: () =>
+                                              _open(item.url),
                                         ),
                                       ],
                                     ),
@@ -431,8 +396,6 @@ class _AcademicTabState extends State<stdSchoolAcademicTab> {
                 ),
               ),
             ),
-
-            SizedBox(height: 12.h),
           ],
         ),
       ),

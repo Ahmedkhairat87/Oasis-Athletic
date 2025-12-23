@@ -1,6 +1,6 @@
-import '../../apiControl/apiManager.dart';
-import '../../apiControl/apiServiceProvider.dart';
-import '../../model/msgsModels/MsgsInboxResponse.dart';
+import '../../../apiControl/apiManager.dart';
+import '../../../apiControl/apiServiceProvider.dart';
+import '../../../model/msgsModels/MsgsInboxResponse.dart';
 
 class GetMessagesInboxService {
   static Future<MsgsInboxResponse> getMsgsInbox({

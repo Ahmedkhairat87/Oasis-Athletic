@@ -1,105 +1,87 @@
-import 'dart:ui';
-
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:oasisathletic/ui/drawer/widgets/gallery/album_photos.dart';
+import 'package:oasisathletic/ui/drawer/widgets/gallery/provider/cart_provider.dart';
+import '../../core/reusable_components/app_background.dart';
+import 'package:provider/provider.dart';
+
 
 class Gallery extends StatelessWidget {
   static const routeName = '/gallery';
+
   const Gallery({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final cartCount = context.watch<CartProvider>().cart.length;
+
     return Scaffold(
-      //drawer: HomeDrawer(),
-      extendBodyBehindAppBar: true, // ✅ Allows content behind AppBar
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.white.withOpacity(0.2), // ✅ Semi-transparent
-        elevation: 0,
-        title: const Text(
-          'Gallery',
-          style: TextStyle(color: Colors.black),
-        ),
+        title: Text('Photos Gallery'.tr()),
         centerTitle: true,
-        flexibleSpace: ClipRect(
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10), // ✅ Blur effect
-            child: Container(
-              color: Colors.transparent,
-            ),
-          ),
-        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
-      body: Stack(
-        children: [
-          // ✅ Your fancy background: bubbles/gradients
-          Positioned(
-            top: -50,
-            left: -50,
-            child: Container(
-              width: 150.w,
-              height: 150.w,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.blueAccent.withOpacity(0.3),
-                    Colors.white.withOpacity(0.1),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: -60,
-            right: -60,
-            child: Container(
-              width: 200.w,
-              height: 200.w,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.lightBlue.withOpacity(0.3),
-                    Colors.white.withOpacity(0.05),
-                  ],
-                ),
-              ),
-            ),
-          ),
-
-          // ✅ Your main page content pushed below the AppBar
-          Padding(
-            padding: EdgeInsets.only(
-              top: kToolbarHeight + MediaQuery.of(context).padding.top + 20.h,
-              left: 20.w,
-              right: 20.w,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Fuck Israel 🖕🏼',
-                  style: TextStyle(
-                    fontSize: 26.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-
+      floatingActionButton: FloatingActionButton(
+        child: Stack(
+          children: [
+            const Center(child: Icon(Icons.shopping_cart)),
+            if (cartCount > 0)
+              Positioned(
+                right: 0,
+                top: 0,
+                child: CircleAvatar(
+                  radius: 9,
+                  backgroundColor: Colors.red,
+                  child: Text(
+                    '$cartCount',
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-                SizedBox(height: 20.h),
-                Text(
-                  'Palestine Will be free from the river to the sea"\n"🇵🇸🇵🇸🇵🇸🇵🇸🇵🇸🇵🇸🇵🇸🇵🇸🇵🇸🇵🇸🇵🇸🇵🇸🇵🇸🇵🇸🇵🇸"\n"From the sea to the river Palestine will live forever' ,
-                  style: TextStyle(fontSize: 16.sp, color: Colors.grey[800]),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
+              ),
+          ],
+        ),
+        onPressed: () => Navigator.pushNamed(context, '/cart'),
+      ),
+      body: AppBackground(
+        child: GridView.builder(
+          padding: EdgeInsets.all(20.w),
+          itemCount: albums.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 25.w,
+            mainAxisSpacing: 30.h,
           ),
-        ],
+          itemBuilder: (_, i) {
+            return GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => AlbumPhotos(albumName: albums[i]),
+                ),
+              ),
+              child: Column(
+                children: [
+                  Icon(Icons.photo_album,
+                      size: 60.sp, color: Colors.blue),
+                  SizedBox(height: 10.h),
+                  Text(albums[i], textAlign: TextAlign.center),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
 }
+
+const albums = [
+  'Kermesse',
+  'After School',
+];

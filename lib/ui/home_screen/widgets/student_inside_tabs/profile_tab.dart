@@ -1,4 +1,5 @@
 // lib/ui/student_inside_tabs/profile_tab.dart
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:oasisathletic/core/model/stdLinks/StdFullData.dart';
@@ -6,12 +7,11 @@ import '../../../../core/colors_Manager.dart';
 
 // reusable imports
 import '../../../../core/reusable_components/profile_tab_conditional_switch.dart';
-import '../../../../core/reusable_components/profile_tab_emergency_contact_field.dart';
 import '../../../../core/reusable_components/profile_tab_golden_card.dart';
 import '../../../../core/reusable_components/profile_tab_labeled_text_field.dart';
 import '../../../../core/reusable_components/profile_tab_section_title.dart';
 import '../../../../core/reusable_components/profile_tab_read_only_field.dart';
-import '../../../../core/reusable_components/student_header.dart'; // ReadOnlyField
+// ReadOnlyField
 
 class ProfileTab extends StatefulWidget {
   final StdFullData student; // 👈 البيانات الجاية من API
@@ -81,13 +81,6 @@ class _ProfileTabState extends State<ProfileTab> {
     _fatherAddressController.text = widget.student.fatherAddress ?? '';
     _motherAddressController.text = widget.student.motherAddress ?? '';
 
-    // Emergency contacts (assuming list of 3)
-    // if (widget.student.urgentM1!= null &&
-    //     widget.student.ur.length >= 3) {
-    //   _emergencyName.text = widget.student.emergencyContacts![0].name ?? '';
-    //   _emergencyMobile.text = widget.student.emergencyContacts![0].mobile ?? '';
-    //   _emergencyRelation.text = widget.student.emergencyContacts![0].relation ?? '';
-    // }
 
     // Medical
     _bloodGroup = widget.student.groupeblood?? '';
@@ -96,12 +89,6 @@ class _ProfileTabState extends State<ProfileTab> {
     _anySurgery = widget.student.allergies ?? false;
     _allergyDetailsController.text = widget.student.allergies?? '';
     _surgeryDetailsController.text = widget.student.allergies ?? '';
-
-    // Sports
-    // _subscriptionPlanController.text = widget.student. ?? '';
-    // _athleticProgramController.text = widget.student.athleticProgram ?? '';
-    // _primarySportController.text = widget.student.primarySport ?? '';
-    // _secondarySportController.text = widget.student.secondarySport ?? '';
 
   }
 
@@ -121,16 +108,6 @@ class _ProfileTabState extends State<ProfileTab> {
     _contactMobileController.dispose();
     _fatherAddressController.dispose();
     _motherAddressController.dispose();
-
-    // for (final c in _emergencyName) {
-    //   c.dispose();
-    // }
-    // for (final c in _emergencyMobile) {
-    //   c.dispose();
-    // }
-    // for (final c in _emergencyRelation) {
-    //   c.dispose();
-    // }
 
     _allergyDetailsController.dispose();
     _surgeryDetailsController.dispose();
@@ -239,7 +216,7 @@ class _ProfileTabState extends State<ProfileTab> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 1. Student information (READ-ONLY)
-            const SectionTitle('Student Information'),
+             SectionTitle('student_information'.tr()),
             _animatedSection(
               delayMs: 0,
               child: GoldCard(
@@ -250,42 +227,6 @@ class _ProfileTabState extends State<ProfileTab> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Avatar with joyful multicolor ring
-                        // Container(
-                        //   width: 92.w,
-                        //   height: 92.w,
-                        //   decoration: BoxDecoration(
-                        //     shape: BoxShape.circle,
-                        //     gradient: SweepGradient(
-                        //       colors: [
-                        //         primaryBlue,
-                        //         accentSky,
-                        //         accentMint,
-                        //         accentSun,
-                        //         accentCoral,
-                        //         primaryBlue,
-                        //       ],
-                        //     ),
-                        //     boxShadow: [
-                        //       BoxShadow(
-                        //         color: primaryBlue.withOpacity(0.25),
-                        //         blurRadius: 12,
-                        //         offset: const Offset(0, 6),
-                        //       )
-                        //     ],
-                        //   ),
-                        //   // child: Padding(
-                        //   //   padding: EdgeInsets.all(3.w),
-                        //   //   child: ClipOval(
-                        //   //     child: Image(
-                        //   //       image: avatar,
-                        //   //     )
-                        //   //   ),
-                        //   // ),
-                        // ),
-                        //
-                        // SizedBox(width: 12.w),
-
                         // name and small meta
                         Expanded(
                           child: Column(
@@ -315,14 +256,14 @@ class _ProfileTabState extends State<ProfileTab> {
                               SizedBox(height: 6.h),
                               // Grade on its own line
                               ReadOnlyField(
-                                label: 'Grade',
+                                label: 'Grade'.tr(),
                                 value: _gradeController.text,
                                 preferredLabelWidth: 88,
                               ),
                               SizedBox(height: 6.h),
                               // School year under grade
                               ReadOnlyField(
-                                label: 'School year',
+                                label: 'school_year'.tr(),
                                 value: _schoolYearController.text,
                                 preferredLabelWidth: 110,
                               ),
@@ -347,7 +288,7 @@ class _ProfileTabState extends State<ProfileTab> {
                     _readOnlyChips(context),
                     SizedBox(height: 10.h),
                     ReadOnlyField(
-                      label: 'Birth date',
+                      label: 'birth_date'.tr(),
                       value: _birthDateController.text,
                       preferredLabelWidth: 110,
                     ),
@@ -359,7 +300,7 @@ class _ProfileTabState extends State<ProfileTab> {
             SizedBox(height: 12.h),
 
             // 2. Contact information (editable)
-            const SectionTitle('Contact information'),
+             SectionTitle('contact_information'.tr()),
             _animatedSection(
               delayMs: 60,
               child: GoldCard(
@@ -367,7 +308,7 @@ class _ProfileTabState extends State<ProfileTab> {
                   children: [
                     LabeledTextField(
                       controller: _emailController,
-                      hint: 'Email',
+                      hint: 'Email'.tr(),
                       keyboardType: TextInputType.emailAddress,
                     ),
                     SizedBox(height: 8.h),
@@ -376,7 +317,7 @@ class _ProfileTabState extends State<ProfileTab> {
                         Expanded(
                           child: LabeledTextField(
                             controller: _fatherMobileController,
-                            hint: 'Father mobile',
+                            hint: 'father_mobile'.tr(),
                             keyboardType: TextInputType.phone,
                           ),
                         ),
@@ -384,7 +325,7 @@ class _ProfileTabState extends State<ProfileTab> {
                         Expanded(
                           child: LabeledTextField(
                             controller: _motherMobileController,
-                            hint: 'Mother mobile',
+                            hint: 'mother_mobile'.tr(),
                             keyboardType: TextInputType.phone,
                           ),
                         ),
@@ -393,30 +334,22 @@ class _ProfileTabState extends State<ProfileTab> {
                     SizedBox(height: 8.h),
                     LabeledTextField(
                       controller: _contactMobileController,
-                      hint: 'Contact mobile',
+                      hint: 'contact_mobile'.tr(),
                       keyboardType: TextInputType.phone,
                     ),
                     SizedBox(height: 12.h),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      // children: List.generate(3, (i) {
-                      //   return EmergencyContactField(
-                      //     index: i,
-                      //     // nameController: _emergencyName[i],
-                      //     // mobileController: _emergencyMobile[i],
-                      //     // relationController: _emergencyRelation[i],
-                      //   );
-                      // }),
                     ),
                     SizedBox(height: 6.h),
                     LabeledTextField(
                       controller: _fatherAddressController,
-                      hint: 'Father address',
+                      hint: 'father_address'.tr(),
                     ),
                     SizedBox(height: 8.h),
                     LabeledTextField(
                       controller: _motherAddressController,
-                      hint: 'Mother address',
+                      hint: 'mother_address'.tr(),
                     ),
                   ],
                 ),
@@ -426,7 +359,7 @@ class _ProfileTabState extends State<ProfileTab> {
             SizedBox(height: 12.h),
 
             // 3. Medical information (editable)
-            const SectionTitle('Medical information'),
+             SectionTitle('medical_information'.tr()),
             _animatedSection(
               delayMs: 120,
               child: GoldCard(
@@ -437,7 +370,7 @@ class _ProfileTabState extends State<ProfileTab> {
                     Row(
                       children: [
                         Text(
-                          'Blood group',
+                          'blood_group'.tr(),
                           style: TextStyle(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w600,
@@ -495,19 +428,19 @@ class _ProfileTabState extends State<ProfileTab> {
 
                     // Allergies switch + conditional textbox
                     ConditionalSwitch(
-                      label: 'Allergies',
+                      label: 'Allergies'.tr(),
                       value: _hasAllergies,
                       onChanged: (v) => setState(() => _hasAllergies = v),
                       child: LabeledTextField(
                         controller: _allergyDetailsController,
-                        hint: 'Allergy details (if any)',
+                        hint: 'allergy_details'.tr(),
                       ),
                     ),
                     SizedBox(height: 10.h),
 
                     // Past injuries
                     ConditionalSwitch(
-                      label: 'Past injuries',
+                      label: 'past_injuries'.tr(),
                       value: _pastInjuries,
                       onChanged: (v) => setState(() => _pastInjuries = v),
                     ),
@@ -515,12 +448,12 @@ class _ProfileTabState extends State<ProfileTab> {
 
                     // Surgery
                     ConditionalSwitch(
-                      label: 'Any surgery',
+                      label: 'any_surgery'.tr(),
                       value: _anySurgery,
                       onChanged: (v) => setState(() => _anySurgery = v),
                       child: LabeledTextField(
                         controller: _surgeryDetailsController,
-                        hint: 'Surgery details (if any)',
+                        hint: 'surgery_details'.tr(),
                       ),
                     ),
                   ],
@@ -531,7 +464,7 @@ class _ProfileTabState extends State<ProfileTab> {
             SizedBox(height: 12.h),
 
             // 4. Sports & Plan (editable)
-            const SectionTitle('Sports & Plan'),
+             SectionTitle('sports_plan'.tr()),
             _animatedSection(
               delayMs: 180,
               child: GoldCard(
@@ -539,12 +472,12 @@ class _ProfileTabState extends State<ProfileTab> {
                   children: [
                     LabeledTextField(
                       controller: _subscriptionPlanController,
-                      hint: 'Subscription plan',
+                      hint: 'subscription_plan'.tr(),
                     ),
                     SizedBox(height: 8.h),
                     LabeledTextField(
                       controller: _athleticProgramController,
-                      hint: 'Athletic program',
+                      hint: 'athletic_program'.tr(),
                     ),
                     SizedBox(height: 8.h),
                     Row(
@@ -552,14 +485,14 @@ class _ProfileTabState extends State<ProfileTab> {
                         Expanded(
                           child: LabeledTextField(
                             controller: _primarySportController,
-                            hint: 'Primary sport',
+                            hint: 'primary_sport'.tr(),
                           ),
                         ),
                         SizedBox(width: 8.w),
                         Expanded(
                           child: LabeledTextField(
                             controller: _secondarySportController,
-                            hint: 'Secondary sport',
+                            hint: 'secondary_sport'.tr(),
                           ),
                         ),
                       ],
@@ -599,7 +532,7 @@ class _ProfileTabState extends State<ProfileTab> {
                         ),
                         onPressed: _onSave,
                         child: Text(
-                          'Save',
+                          'Save'.tr(),
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w700,
@@ -649,7 +582,7 @@ class _ProfileTabState extends State<ProfileTab> {
           const Icon(Icons.check_circle, color: Colors.white),
           SizedBox(width: 8.w),
           Text(
-            'Profile saved',
+            'profile_saved'.tr(),
             style: const TextStyle(color: Colors.white),
           ),
         ],

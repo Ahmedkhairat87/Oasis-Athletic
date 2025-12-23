@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -23,22 +24,22 @@ class NavDrawerWidget extends StatelessWidget {
   final List<_NavigationItem> _listItems = [
     _NavigationItem(
       NavItem.homeView,
-      "Home",
+      "drawer_home".tr(),
       IconlyBold.home,
     ),
     _NavigationItem(
       NavItem.appointmentsView,
-      "Profile",
+      "drawer_profile".tr(),
       IconlyBold.profile,
     ),
     _NavigationItem(
       NavItem.busRegView,
-      "Orders",
+      "drawer_orders".tr(),
       IconlyBold.category,
     ),
     _NavigationItem(
       NavItem.canteenChargeView,
-      "Cart",
+      "Cart".tr(),
       IconlyBold.bag_2,
     ),
   ];
@@ -217,7 +218,7 @@ class NavDrawerWidget extends StatelessWidget {
                           ),
                           SizedBox(width: 6.w),
                           Text(
-                            'Oasis Athletics',
+                            'drawer_org_name'.tr(),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 12.sp,

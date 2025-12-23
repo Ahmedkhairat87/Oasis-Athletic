@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:oasisathletic/ui/home_screen/MSGScreens/sendMessagesScreen.dart';
@@ -10,7 +11,7 @@ import '../../../core/model/msgsModels/Inbox.dart';
 import '../../../core/model/msgsModels/Sent.dart';
 import '../../../core/model/msgsModels/message-mapper.dart';
 import '../../../core/reusable_components/app_background.dart';
-import '../../../core/services/messagesServices/getMessagesInboxService.dart';
+import '../../../core/services/sideMenu/messagesServices/getMessagesInboxService.dart';
 import 'MessageDetailsScreen.dart';
 
 
@@ -122,7 +123,7 @@ class _MessagesState extends State<Messages> {
         onPressed: () => Navigator.pop(context),
       ),
       title: Text(
-        'Messages',
+        'Messages'.tr(),
         style: TextStyle(
           color: isDark ? Colors.white : Colors.black,
           fontWeight: FontWeight.w600,
@@ -163,8 +164,8 @@ class _MessagesState extends State<Messages> {
       ),
       child: Row(
         children: [
-          _buildTopTab("Inbox", isDark),
-          _buildTopTab("Sent", isDark),
+          _buildTopTab("Inbox".tr(), isDark),
+          _buildTopTab("Sent".tr(), isDark),
         ],
       ),
     );
@@ -209,7 +210,7 @@ class _MessagesState extends State<Messages> {
       child: Row(
         children: [
           _buildFilterChip(
-            label: "All",
+            label: "All".tr(),
             isDark: isDark,
             value: "All",
           ),

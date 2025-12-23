@@ -22,6 +22,10 @@ class APIManager {
 
   static String getNewsLetter = "${fixedURL2}IntNewsLetter";
 
+  //Canteen Charge
+  static const getAmountList = "${fixedURL2}chargAmounts";
+  static const paymentLinkGeneration = "${fixedURL2}CreateNewVoucher";
+  static const paymentHistory = "${fixedURL2}stdCanteenHistory";
 
 
 

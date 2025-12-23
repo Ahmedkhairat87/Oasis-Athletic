@@ -18,8 +18,8 @@ class PaymentInformation extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white.withOpacity(0.2), // ✅ Semi-transparent
         elevation: 0,
-        title: const Text(
-          'Payment Information',
+        title: Text(
+          'Payment Information'.tr(),
           style: TextStyle(color: Colors.black),
         ),
         centerTitle: true,
@@ -101,7 +101,7 @@ class PaymentInformation extends StatelessWidget {
                             size: 100.sp,
                           color: Colors.blue,
                         ),
-                        Text("Name",
+                        Text("name".tr(),
                           style: TextStyle(
                             fontSize: 20.sp,
                             fontWeight: FontWeight.bold,

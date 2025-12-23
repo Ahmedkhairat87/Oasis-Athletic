@@ -1,5 +1,4 @@
 // lib/ui/home_screen/widgets/student_inside.dart
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,10 +21,10 @@ import '../../../core/model/stdLinks/StdMainLinks.dart';
 import '../../../core/model/stdLinks/StdSports.dart';
 import '../../../core/reusable_components/app_background.dart';
 import '../../../core/reusable_components/studentInside_tabbar.dart'; // GoldenTabBar + TabItem
-import '../../../core/reusable_components/student_notifier.dart';
+import '../../../core/reusable_components/Notifiers/student_notifier.dart';
 import '../../../core/reusable_components/students_inside_tabs.dart'; // StudentTabPages
 import '../../../core/reusable_components/student_header.dart';
-import '../../../core/services/stdLinksServices/stdLinksServices.dart'; // StudentHeader.fromNotifier
+import '../../../core/services/stdProfile/stdLinksServices/stdLinksServices.dart';
 
 class StudentInside extends StatefulWidget {
   const StudentInside({super.key});
@@ -215,7 +214,7 @@ class _StudentInsideState extends State<StudentInside> with TickerProviderStateM
   }
 
   Widget _buildTopHeader(BuildContext context, double statusBar, double total) {
-    return Container(
+    return SizedBox(
       height: total,
       child: SafeArea(
         child: Row(

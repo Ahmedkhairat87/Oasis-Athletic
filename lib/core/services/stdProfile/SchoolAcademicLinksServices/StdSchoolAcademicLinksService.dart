@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../apiControl/apiManager.dart';
-import '../../apiControl/apiServiceProvider.dart';
-import '../../model/stdLinks/schoolAcademic/StdSchoolAcademicLinks.dart';
+import '../../../apiControl/apiManager.dart';
+import '../../../apiControl/apiServiceProvider.dart';
+import '../../../model/stdLinks/schoolAcademic/StdSchoolAcademicLinks.dart';
 
 class StdSchoolAcademicLinksService {
   /// Load token from SharedPreferences automatically.
@@ -32,11 +32,6 @@ class StdSchoolAcademicLinksService {
         APIManager.getSchoolAcademicLinks,
         params,
       );
-
-      if (response == null || response is! Map) {
-        print("❌ Academic Links invalid response");
-        return null;
-      }
 
       return StdSchoolAcademicLinks.fromJson(response["data"]);
     } catch (e, st) {

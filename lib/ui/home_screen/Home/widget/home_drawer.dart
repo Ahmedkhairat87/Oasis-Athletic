@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'package:oasisathletic/ui/drawer/canteen_charge.dart';
 import 'package:oasisathletic/ui/home_screen/sideMenu/newsLetter/NewsLetterScreen.dart';
 
 import '../../../../core/colors_Manager.dart';
 import '../../../../core/model/regStdModels/SideMenu.dart';
 import '../../../drawer/about_us.dart';
 import '../../../drawer/appointments.dart';
-import '../../../drawer/newsletter.dart';
+import '../../../drawer/gallery.dart';
+import '../../../drawer/payment_Information.dart';
+import '../../../drawer/settings.dart';
 import '../../MSGScreens/messages.dart';
 
 class HomeDrawer extends StatefulWidget {
@@ -20,7 +24,6 @@ class HomeDrawer extends StatefulWidget {
 class _HomeDrawerState extends State<HomeDrawer>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-
   int selectedIndex = -1;
 
   @override
@@ -43,17 +46,55 @@ class _HomeDrawerState extends State<HomeDrawer>
       selectedIndex = index;
     });
 
-    final link = item.lnkNameEn ?? '';
+    final String link = (item.lnkNameEn ?? '').toLowerCase();
+
     Navigator.pop(context);
 
     if (link.contains('about')) {
-      Navigator.push(context, MaterialPageRoute(builder: (_) => AboutUs()));
-    } else if (link.contains('appointments')) {
-      Navigator.push(context, MaterialPageRoute(builder: (_) => Appointments()));
-    } else if (link.contains('Messages')) {
-      Navigator.push(context, MaterialPageRoute(builder: (_) => const Messages()));
-    }else if (link.contains('Newsletter')) {
-      Navigator.push(context, MaterialPageRoute(builder: (_) => const NewsLetterScreen()));
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => AboutUs()),
+      );
+    } else if (link.contains('appointment')) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => Appointments()),
+      );
+    } else if (link.contains('message')) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const Messages()),
+      );
+    } else if (link.contains('newsletter')) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const NewsLetterScreen()),
+      );
+    } else if (link.contains('canteen')) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const CanteenCharge()),
+      );
+    } else if (link.contains('settings')) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const Settings()),
+      );
+    }else if (link.contains('gallery')) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const Gallery()),
+      );
+    } else if (
+    link.contains('payment') ||
+        link.contains('fees') ||
+        link.contains('invoice')
+    ) {
+      // ✅ PAYMENT INFORMATION
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const PaymentInformation()),
+      );
     }
   }
 
@@ -89,7 +130,6 @@ class _HomeDrawerState extends State<HomeDrawer>
               accentSky: accentSky,
             ),
 
-            // Home + Logout Row
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
               child: Container(
@@ -113,28 +153,28 @@ class _HomeDrawerState extends State<HomeDrawer>
                         title: Text(
                           'Home',
                           style: TextStyle(
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14.sp),
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14.sp,
+                          ),
                         ),
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
+                        onTap: () => Navigator.pop(context),
                       ),
                     ),
                     Expanded(
                       child: ListTile(
                         dense: true,
-                        leading: Icon(Icons.logout_rounded, color: accentSun),
+                        leading: Icon(Icons.person_rounded, color: accentSun),
                         title: Text(
-                          'Logout',
+                          'Profile',
                           style: TextStyle(
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14.sp),
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14.sp,
+                          ),
                         ),
                         onTap: () {
-                          Navigator.pop(context);
+                          Navigator.pushNamed(context, '/parentprofile');
                         },
                       ),
                     ),
@@ -145,18 +185,14 @@ class _HomeDrawerState extends State<HomeDrawer>
 
             const SizedBox(height: 4),
 
-            // Grid of API side menu items
             Expanded(
               child: sideMenu.isEmpty
-                  ? const Center(
-                child: Text(
-                  "No menu items",
-                  style: TextStyle(color: Colors.white),
-                ),
-              )
+                  ? const Center(child: Text("No menu items"))
                   : GridView.builder(
                 padding: EdgeInsets.symmetric(
-                    horizontal: 10.w, vertical: 6.h),
+                  horizontal: 10.w,
+                  vertical: 6.h,
+                ),
                 itemCount: sideMenu.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
@@ -169,100 +205,37 @@ class _HomeDrawerState extends State<HomeDrawer>
                   final iconPath = item.lnkPhotoEn ?? "";
                   final bool isSelected = selectedIndex == index;
 
-                  return TweenAnimationBuilder<double>(
-                    tween: Tween(begin: 0.96, end: 1.0),
-                    duration:
-                    Duration(milliseconds: 220 + index * 40),
-                    curve: Curves.easeOutBack,
-                    builder: (context, value, child) {
-                      final opacity = value.clamp(0.0, 1.0);
-                      return Opacity(
-                        opacity: opacity,
-                        child: Transform.translate(
-                          offset: Offset(0, (1 - opacity) * 10),
-                          child: child,
-                        ),
-                      );
-                    },
-                    child: Card(
-                      elevation: isSelected ? 6 : 2,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      shadowColor: isSelected
-                          ? ColorsManager.accentMint.withOpacity(0.35)
-                          : Colors.transparent,
-                      clipBehavior: Clip.antiAlias,
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 220),
-                        curve: Curves.easeOut,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          gradient: isSelected
-                              ? LinearGradient(
-                            colors: [
-                              Colors.white.withOpacity(0.92),
-                              ColorsManager.accentMint
-                                  .withOpacity(0.16),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          )
-                              : null,
-                          color: isSelected
-                              ? null
-                              : Colors.white.withOpacity(0.92),
-                          border: Border.all(
-                            color: isSelected
-                                ? ColorsManager.primaryGradientStart
-                                : Colors.black12.withOpacity(0.2),
-                            width: isSelected ? 1.8 : 1.0,
-                          ),
-                        ),
-                        child: InkWell(
-                          onTap: () =>
-                              _handleSideMenuTap(context, item, index),
-                          borderRadius: BorderRadius.circular(20),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
+                  return Card(
+                    elevation: isSelected ? 6 : 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(20),
+                      onTap: () =>
+                          _handleSideMenuTap(context, item, index),
+                      child: Column(
+                        children: [
+                          Expanded(
                             child: Container(
-                              color: isSelected
-                                  ? Colors.white.withOpacity(0.92)
-                                  : Colors.white.withOpacity(0.92),
-                              child: Column(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.stretch,
-                                children: [
-                                  // Image/Icon fills available space
-                                  Expanded(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                        BorderRadius.circular(16),
-                                        image: iconPath.isNotEmpty
-                                            ? DecorationImage(
-                                          image:
-                                          NetworkImage(iconPath),
-                                          fit: BoxFit.cover,
-                                        )
-                                            : null,
-                                        color: iconPath.isEmpty
-                                            ? Colors.white12
-                                            : null,
-                                      ),
-                                      child: iconPath.isEmpty
-                                          ? const Center(
-                                        child: Icon(Icons.menu,
-                                            color: Colors.white,
-                                            size: 32),
-                                      )
-                                          : null,
-                                    ),
-                                  ),
-                                ],
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                image: iconPath.isNotEmpty
+                                    ? DecorationImage(
+                                  image:
+                                  NetworkImage(iconPath),
+                                  fit: BoxFit.cover,
+                                )
+                                    : null,
                               ),
+                              child: iconPath.isEmpty
+                                  ? const Center(
+                                child: Icon(Icons.menu),
+                              )
+                                  : null,
                             ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
                   );
@@ -275,102 +248,69 @@ class _HomeDrawerState extends State<HomeDrawer>
     );
   }
 
-  Widget _buildHeader(BuildContext context,
-      {required Color primaryBlue,
+  Widget _buildHeader(
+      BuildContext context, {
+        required Color primaryBlue,
         required Color secondaryBlue,
-        required Color accentSky}) {
+        required Color accentSky,
+      }) {
     return SizedBox(
       height: 170.h,
-      child: TweenAnimationBuilder<double>(
-        tween: Tween(begin: 0.9, end: 1.0),
-        duration: const Duration(milliseconds: 320),
-        curve: Curves.easeOutBack,
-        builder: (context, value, child) {
-          final opacity = value.clamp(0.0, 1.0);
-          return Opacity(
-            opacity: opacity,
-            child: Transform.scale(
-              scale: value,
-              alignment: Alignment.bottomLeft,
-              child: child,
-            ),
-          );
-        },
-        child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [primaryBlue, secondaryBlue, accentSky],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius:
-            BorderRadius.vertical(bottom: Radius.circular(24.r)),
-            boxShadow: [
-              BoxShadow(
-                color: primaryBlue.withOpacity(0.35),
-                blurRadius: 18,
-                offset: const Offset(0, 8),
-              ),
-            ],
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [primaryBlue, secondaryBlue, accentSky],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          padding:
-          EdgeInsets.only(left: 18.w, right: 18.w, top: 32.h, bottom: 18.h),
-          child: Row(
-            children: [
-              Container(
-                width: 56.w,
-                height: 56.w,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: SweepGradient(
-                    colors: [
-                      ColorsManager.accentSun,
-                      ColorsManager.accentMint,
-                      ColorsManager.accentSky,
-                      primaryBlue,
-                      ColorsManager.accentSun,
-                    ],
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(24.r),
+          ),
+        ),
+        padding: EdgeInsets.only(
+          left: 18.w,
+          right: 18.w,
+          top: 32.h,
+          bottom: 18.h,
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 28.w,
+              backgroundColor: Colors.white,
+              child: Text(
+                'Hi',
+                style: TextStyle(
+                  color: primaryBlue,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 16.sp,
+                ),
+              ),
+            ),
+            SizedBox(width: 12.w),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Hello!',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
-                child: Padding(
-                  padding: EdgeInsets.all(3.w),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white.withOpacity(0.95),
-                    child: Text(
-                      'Hi',
-                      style: TextStyle(
-                          color: primaryBlue,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 16.sp),
-                    ),
+                SizedBox(height: 4.h),
+                Text(
+                  'Welcome to Oasis Athletics',
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.86),
+                    fontSize: 13.sp,
                   ),
                 ),
-              ),
-              SizedBox(width: 12.w),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Hello!',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24.sp,
-                          fontWeight: FontWeight.w800),
-                    ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      'Welcome to Oasis Athletics',
-                      style: TextStyle(
-                          color: Colors.white.withOpacity(0.86), fontSize: 13.sp),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+              ],
+            ),
+          ],
         ),
       ),
     );

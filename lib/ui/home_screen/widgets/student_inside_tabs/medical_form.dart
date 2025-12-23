@@ -1,6 +1,7 @@
 // lib/ui/home_screen/widgets/student_inside_tabs/medical_form.dart
 import 'dart:ui';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -364,8 +365,8 @@ class _MedicalFormState extends State<MedicalForm> {
   void _saveData() {
     if (!_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please complete required fields'),
+         SnackBar(
+          content: Text('Please complete required fields'.tr()),
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -438,8 +439,8 @@ class _MedicalFormState extends State<MedicalForm> {
     print('Medical form saved -> payload:\n$data');
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Medical form saved successfully'),
+       SnackBar(
+        content: Text('Medical form saved successfully'.tr()),
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -572,7 +573,7 @@ class _MedicalFormState extends State<MedicalForm> {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          'Child Medical History',
+          'Child Medical History'.tr(),
           style: const TextStyle(color: Colors.black),
         ),
         flexibleSpace: ClipRect(
@@ -586,7 +587,7 @@ class _MedicalFormState extends State<MedicalForm> {
           IconButton(
             icon: const Icon(Icons.save, color: Colors.black87),
             onPressed: _isEditing ? _saveProfile : null,
-            tooltip: 'Save form',
+            tooltip: 'Save form'.tr(),
           ),
         ],
       ),
@@ -620,7 +621,7 @@ class _MedicalFormState extends State<MedicalForm> {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Text(
-                                    'Last update :',
+                                    'Last update :'.tr(),
                                     style: TextStyle(fontSize: 11.sp),
                                   ),
                                   Text(
@@ -635,18 +636,18 @@ class _MedicalFormState extends State<MedicalForm> {
                             if (!_isEditing)
                               IconButton(
                                 icon: Icon(Icons.edit, color: ColorsManager.accentPurple),
-                                tooltip: 'Edit',
+                                tooltip: 'Edit'.tr(),
                                 onPressed: _enterEditMode,
                               )
                             else ...[
                               IconButton(
                                 icon: const Icon(Icons.close, color: Colors.redAccent),
-                                tooltip: 'Cancel',
+                                tooltip: 'Cancel'.tr(),
                                 onPressed: _cancelEditMode,
                               ),
                               IconButton(
                                 icon: Icon(Icons.check, color: ColorsManager.accentMint),
-                                tooltip: 'Save',
+                                tooltip: 'Save'.tr(),
                                 onPressed: _saveProfile,
                               ),
                             ],
@@ -661,7 +662,7 @@ class _MedicalFormState extends State<MedicalForm> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 // Blood group
-                                _sectionHeader('Blood Group'),
+                                _sectionHeader('Blood Group'.tr()),
                                 _editableWrapper(
                                   child: _sectionCard(
                                     _bloodGroupRadios(primaryStart),
@@ -670,7 +671,7 @@ class _MedicalFormState extends State<MedicalForm> {
                                 ),
 
                                 // Allergies
-                                _sectionHeader('1. Allergies'),
+                                _sectionHeader('1. Allergies'.tr()),
                                 _editableWrapper(
                                   child: _sectionCard(
                                     Column(
@@ -680,13 +681,13 @@ class _MedicalFormState extends State<MedicalForm> {
                                           children: [
                                             Expanded(
                                               child: Text(
-                                                'Does the child have allergies?',
+                                                'Does the child have allergies?'.tr(),
                                                 style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600),
                                               ),
                                             ),
                                             SizedBox(width: 8.w),
                                             ChoiceChip(
-                                              label: const Text('No'),
+                                              label: Text('No'.tr()),
                                               selected: !_hasAllergies,
                                               onSelected: !_isEditing ? null : (_) => setState(() => _hasAllergies = false),
                                               selectedColor: ColorsManager.accentMint,
@@ -694,7 +695,7 @@ class _MedicalFormState extends State<MedicalForm> {
                                             ),
                                             SizedBox(width: 8.w),
                                             ChoiceChip(
-                                              label: const Text('Yes'),
+                                              label: Text('Yes'.tr()),
                                               selected: _hasAllergies,
                                               onSelected: !_isEditing ? null : (_) => setState(() => _hasAllergies = true),
                                               selectedColor: ColorsManager.accentCoral,
@@ -704,16 +705,16 @@ class _MedicalFormState extends State<MedicalForm> {
                                         ),
                                         if (_hasAllergies) ...[
                                           SizedBox(height: 8.h),
-                                          Text('Known Allergies (select any):', style: TextStyle(fontWeight: FontWeight.w600)),
+                                          Text('Known Allergies (select any):'.tr(), style: TextStyle(fontWeight: FontWeight.w600)),
                                           _checkboxListFromMap(_knownAllergies, enabled: _isEditing),
                                           SizedBox(height: 8.h),
-                                          TextFormField(controller: _typeOfAllergyController, decoration: _inputDecoration('Type of Allergy')),
+                                          TextFormField(controller: _typeOfAllergyController, decoration: _inputDecoration('Type of Allergy'.tr())),
                                           SizedBox(height: 8.h),
-                                          TextFormField(controller: _severityController, decoration: _inputDecoration('Severity')),
+                                          TextFormField(controller: _severityController, decoration: _inputDecoration('Severity'.tr())),
                                           SizedBox(height: 8.h),
-                                          TextFormField(controller: _specificTreatmentController, decoration: _inputDecoration('Specific Treatment or Medication'), maxLines: 2),
+                                          TextFormField(controller: _specificTreatmentController, decoration: _inputDecoration('Specific Treatment or Medication'.tr()), maxLines: 2),
                                           SizedBox(height: 8.h),
-                                          TextFormField(controller: _otherAllergyController, decoration: _inputDecoration('If other (describe)')),
+                                          TextFormField(controller: _otherAllergyController, decoration: _inputDecoration('If other (describe)'.tr())),
                                         ],
                                       ],
                                     ),
@@ -721,65 +722,65 @@ class _MedicalFormState extends State<MedicalForm> {
                                 ),
 
                                 // Chronic conditions
-                                _sectionHeader('2. Chronic Conditions'),
+                                _sectionHeader('2. Chronic Conditions'.tr()),
                                 _editableWrapper(
                                   child: _sectionCard(
                                     Column(
                                       children: [
-                                        TextFormField(controller: _chronicConditionsController, decoration: _inputDecoration('Condition(s)'), maxLines: 2),
+                                        TextFormField(controller: _chronicConditionsController, decoration: _inputDecoration('Condition(s)'.tr()), maxLines: 2),
                                         SizedBox(height: 8.h),
-                                        TextFormField(controller: _chronicTreatmentController, decoration: _inputDecoration('Treatment / Management Plan'), maxLines: 2),
+                                        TextFormField(controller: _chronicTreatmentController, decoration: _inputDecoration('Treatment / Management Plan'.tr()), maxLines: 2),
                                         SizedBox(height: 8.h),
-                                        TextFormField(controller: _chronicEmergencyController, decoration: _inputDecoration('Emergency Protocols (if any)'), maxLines: 2),
+                                        TextFormField(controller: _chronicEmergencyController, decoration: _inputDecoration('Emergency Protocols (if any)'.tr()), maxLines: 2),
                                       ],
                                     ),
                                   ),
                                 ),
 
                                 // Past surgeries / hospitalization
-                                _sectionHeader('3. Past Surgeries / Procedures'),
+                                _sectionHeader('3. Past Surgeries / Procedures'.tr()),
                                 _editableWrapper(
                                   child: _sectionCard(
                                     Column(
                                       children: [
-                                        TextFormField(controller: _pastSurgeryController, decoration: _inputDecoration('Surgery Type & Date'), maxLines: 2),
+                                        TextFormField(controller: _pastSurgeryController, decoration: _inputDecoration('Surgery Type & Date'.tr()), maxLines: 2),
                                         SizedBox(height: 8.h),
-                                        TextFormField(controller: _hospitalizationReasonController, decoration: _inputDecoration('Reason for Hospitalization'), maxLines: 2),
+                                        TextFormField(controller: _hospitalizationReasonController, decoration: _inputDecoration('Reason for Hospitalization'.tr()), maxLines: 2),
                                         SizedBox(height: 8.h),
-                                        TextFormField(controller: _hospitalizationDatesController, decoration: _inputDecoration('Date(s)')),
+                                        TextFormField(controller: _hospitalizationDatesController, decoration: _inputDecoration('Date(s)'.tr())),
                                       ],
                                     ),
                                   ),
                                 ),
 
                                 // Family medical history
-                                _sectionHeader('4. Family Medical History'),
-                                _editableWrapper(child: _sectionCard(TextFormField(controller: _familyHistoryController, decoration: _inputDecoration('Relevant Family Medical History'), maxLines: 3))),
+                                _sectionHeader('4. Family Medical History'.tr()),
+                                _editableWrapper(child: _sectionCard(TextFormField(controller: _familyHistoryController, decoration: _inputDecoration('Relevant Family Medical History'.tr()), maxLines: 3))),
 
                                 // Current medications dynamic rows
-                                _sectionHeader('5. Current Medications'),
+                                _sectionHeader('5. Current Medications'.tr()),
                                 _editableWrapper(
                                   child: _sectionCard(
                                     Column(
                                       children: [
-                                        _smallHint('Add medications the child is taking (Medication / Dosage / Frequency)'),
+                                        _smallHint('Add medications the child is taking (Medication / Dosage / Frequency)'.tr()),
                                         for (var i = 0; i < _medications.length; i++)
                                           Padding(
                                             padding: EdgeInsets.only(bottom: 8.h),
                                             child: Row(
                                               children: [
-                                                Expanded(flex: 4, child: TextFormField(controller: _medications[i]['name'], decoration: _inputDecoration('Medication'))),
+                                                Expanded(flex: 4, child: TextFormField(controller: _medications[i]['name'], decoration: _inputDecoration('Medication'.tr()))),
                                                 SizedBox(width: 8.w),
-                                                Expanded(flex: 3, child: TextFormField(controller: _medications[i]['dosage'], decoration: _inputDecoration('Dosage'))),
+                                                Expanded(flex: 3, child: TextFormField(controller: _medications[i]['dosage'], decoration: _inputDecoration('Dosage'.tr()))),
                                                 SizedBox(width: 8.w),
-                                                Expanded(flex: 3, child: TextFormField(controller: _medications[i]['freq'], decoration: _inputDecoration('Frequency'))),
+                                                Expanded(flex: 3, child: TextFormField(controller: _medications[i]['freq'], decoration: _inputDecoration('Frequency'.tr()))),
                                                 SizedBox(width: 8.w),
                                                 Column(
                                                   children: [
                                                     IconButton(
                                                       icon: const Icon(Icons.delete_outline),
                                                       onPressed: _isEditing && _medications.length > 1 ? () => _removeMedicationRow(i) : null,
-                                                      tooltip: 'Remove',
+                                                      tooltip: 'Remove'.tr(),
                                                     ),
                                                   ],
                                                 ),
@@ -791,7 +792,7 @@ class _MedicalFormState extends State<MedicalForm> {
                                           child: TextButton.icon(
                                             onPressed: _isEditing ? _addMedicationRow : null,
                                             icon: const Icon(Icons.add),
-                                            label: const Text('Add medication'),
+                                            label:  Text('Add medication'.tr()),
                                           ),
                                         ),
                                       ],
@@ -800,7 +801,7 @@ class _MedicalFormState extends State<MedicalForm> {
                                 ),
 
                                 // Immunization record
-                                _sectionHeader('6. Immunization Record'),
+                                _sectionHeader('6. Immunization Record'.tr()),
                                 _editableWrapper(
                                   child: _sectionCard(
                                     Column(
@@ -810,32 +811,32 @@ class _MedicalFormState extends State<MedicalForm> {
                                             Expanded(
                                               child: InkWell(
                                                 onTap: _isEditing ? () => _pickDate(context, (d) => setState(() => _lastImmunizationDate = d), initial: _lastImmunizationDate) : null,
-                                                child: InputDecorator(decoration: _inputDecoration('Date of Last Immunization'), child: Text(_lastImmunizationDate != null ? DateFormat.yMMMd().format(_lastImmunizationDate!) : 'Select date')),
+                                                child: InputDecorator(decoration: _inputDecoration('Date of Last Immunization'.tr()), child: Text(_lastImmunizationDate != null ? DateFormat.yMMMd().format(_lastImmunizationDate!) : 'Select date'.tr())),
                                               ),
                                             ),
                                           ],
                                         ),
                                         SizedBox(height: 8.h),
-                                        TextFormField(controller: _vaccinesReceivedController, decoration: _inputDecoration('Vaccines Received'), maxLines: 2),
+                                        TextFormField(controller: _vaccinesReceivedController, decoration: _inputDecoration('Vaccines Received'.tr()), maxLines: 2),
                                       ],
                                     ),
                                   ),
                                 ),
 
                                 // Vision & Hearing
-                                _sectionHeader('7. Vision & Hearing'),
+                                _sectionHeader('7. Vision & Hearing'.tr()),
                                 _editableWrapper(
                                   child: _sectionCard(
                                     Column(
                                       children: [
-                                        TextFormField(controller: _visionProblemsController, decoration: _inputDecoration('Vision Problems')),
+                                        TextFormField(controller: _visionProblemsController, decoration: _inputDecoration('Vision Problems'.tr())),
                                         SizedBox(height: 8.h),
                                         Row(
                                           children: [
                                             Expanded(
                                               child: InkWell(
                                                 onTap: _isEditing ? () => _pickDate(context, (d) => setState(() => _lastEyeExam = d), initial: _lastEyeExam) : null,
-                                                child: InputDecorator(decoration: _inputDecoration('Last Eye Exam Date'), child: Text(_lastEyeExam != null ? DateFormat.yMMMd().format(_lastEyeExam!) : 'dd/mm/yyyy')),
+                                                child: InputDecorator(decoration: _inputDecoration('Last Eye Exam Date'.tr()), child: Text(_lastEyeExam != null ? DateFormat.yMMMd().format(_lastEyeExam!) : 'dd/mm/yyyy')),
                                               ),
                                             ),
                                             SizedBox(width: 8.w),
@@ -852,22 +853,22 @@ class _MedicalFormState extends State<MedicalForm> {
                                                   }
                                                 });
                                               },
-                                              children: const [
-                                                Padding(padding: EdgeInsets.symmetric(horizontal: 12), child: Text('No')),
-                                                Padding(padding: EdgeInsets.symmetric(horizontal: 12), child: Text('Yes')),
+                                              children: [
+                                                Padding(padding: EdgeInsets.symmetric(horizontal: 12), child: Text('No'.tr())),
+                                                Padding(padding: EdgeInsets.symmetric(horizontal: 12), child: Text('Yes'.tr())),
                                               ],
                                             ),
                                           ],
                                         ),
                                         SizedBox(height: 8.h),
-                                        TextFormField(controller: _hearingProblemsController, decoration: _inputDecoration('Hearing Problems')),
+                                        TextFormField(controller: _hearingProblemsController, decoration: _inputDecoration('Hearing Problems'.tr())),
                                         SizedBox(height: 8.h),
                                         Row(
                                           children: [
                                             Expanded(
                                               child: InkWell(
                                                 onTap: _isEditing ? () => _pickDate(context, (d) => setState(() => _lastHearingTest = d), initial: _lastHearingTest) : null,
-                                                child: InputDecorator(decoration: _inputDecoration('Last Hearing Test Date'), child: Text(_lastHearingTest != null ? DateFormat.yMMMd().format(_lastHearingTest!) : 'dd/mm/yyyy')),
+                                                child: InputDecorator(decoration: _inputDecoration('Last Hearing Test Date'.tr()), child: Text(_lastHearingTest != null ? DateFormat.yMMMd().format(_lastHearingTest!) : 'dd/mm/yyyy')),
                                               ),
                                             ),
                                             SizedBox(width: 8.w),
@@ -884,9 +885,9 @@ class _MedicalFormState extends State<MedicalForm> {
                                                   }
                                                 });
                                               },
-                                              children: const [
-                                                Padding(padding: EdgeInsets.symmetric(horizontal: 12), child: Text('No')),
-                                                Padding(padding: EdgeInsets.symmetric(horizontal: 12), child: Text('Yes')),
+                                              children: [
+                                                Padding(padding: EdgeInsets.symmetric(horizontal: 12), child: Text('No'.tr())),
+                                                Padding(padding: EdgeInsets.symmetric(horizontal: 12), child: Text('Yes'.tr())),
                                               ],
                                             ),
                                           ],
@@ -897,57 +898,57 @@ class _MedicalFormState extends State<MedicalForm> {
                                 ),
 
                                 // Physical activity & sports
-                                _sectionHeader('8. Physical Activity & Sports'),
+                                _sectionHeader('8. Physical Activity & Sports'.tr()),
                                 _editableWrapper(
                                   child: _sectionCard(
                                     Column(
                                       children: [
-                                        TextFormField(controller: _activityLimitationsController, decoration: _inputDecoration('Limitations on Physical Activity'), maxLines: 2),
+                                        TextFormField(controller: _activityLimitationsController, decoration: _inputDecoration('Limitations on Physical Activity'.tr()), maxLines: 2),
                                         SizedBox(height: 8.h),
-                                        TextFormField(controller: _sportsParticipationController, decoration: _inputDecoration('Sports Participation (limitations)'), maxLines: 2),
+                                        TextFormField(controller: _sportsParticipationController, decoration: _inputDecoration('Sports Participation (limitations)'.tr()), maxLines: 2),
                                         SizedBox(height: 8.h),
-                                        TextFormField(controller: _specialEquipmentController, decoration: _inputDecoration('Special Equipment Needed')),
+                                        TextFormField(controller: _specialEquipmentController, decoration: _inputDecoration('Special Equipment Needed'.tr())),
                                       ],
                                     ),
                                   ),
                                 ),
 
                                 // Mental & Behavioral
-                                _sectionHeader('9. Mental & Behavioral Health'),
+                                _sectionHeader('9. Mental & Behavioral Health'.tr()),
                                 _editableWrapper(
                                   child: _sectionCard(
                                     Column(
                                       children: [
-                                        TextFormField(controller: _mentalHistoryController, decoration: _inputDecoration('Mental Health History'), maxLines: 2),
+                                        TextFormField(controller: _mentalHistoryController, decoration: _inputDecoration('Mental Health History'.tr()), maxLines: 2),
                                         SizedBox(height: 8.h),
-                                        TextFormField(controller: _diagnosedConditionsController, decoration: _inputDecoration('Diagnosed Conditions'), maxLines: 2),
+                                        TextFormField(controller: _diagnosedConditionsController, decoration: _inputDecoration('Diagnosed Conditions'.tr()), maxLines: 2),
                                         SizedBox(height: 8.h),
-                                        TextFormField(controller: _therapyMedicationController, decoration: _inputDecoration('Medication or Therapy'), maxLines: 2),
+                                        TextFormField(controller: _therapyMedicationController, decoration: _inputDecoration('Medication or Therapy'.tr()), maxLines: 2),
                                         SizedBox(height: 8.h),
-                                        TextFormField(controller: _behavioralConcernsController, decoration: _inputDecoration('Behavioral Concerns'), maxLines: 2),
+                                        TextFormField(controller: _behavioralConcernsController, decoration: _inputDecoration('Behavioral Concerns'.tr()), maxLines: 2),
                                         SizedBox(height: 8.h),
-                                        TextFormField(controller: _supportNeededController, decoration: _inputDecoration('Support Needed')),
+                                        TextFormField(controller: _supportNeededController, decoration: _inputDecoration('Support Needed'.tr())),
                                       ],
                                     ),
                                   ),
                                 ),
 
                                 // Dietary restrictions
-                                _sectionHeader('10. Dietary Restrictions'),
+                                _sectionHeader('10. Dietary Restrictions'.tr()),
                                 _editableWrapper(
                                   child: _sectionCard(
                                     Column(
                                       children: [
-                                        TextFormField(controller: _specialDietController, decoration: _inputDecoration('Any Special Diet / Nutritional Needs')),
+                                        TextFormField(controller: _specialDietController, decoration: _inputDecoration('Any Special Diet / Nutritional Needs'.tr())),
                                         SizedBox(height: 8.h),
-                                        TextFormField(controller: _foodAllergiesController, decoration: _inputDecoration('Food Allergies or Sensitivities')),
+                                        TextFormField(controller: _foodAllergiesController, decoration: _inputDecoration('Food Allergies or Sensitivities'.tr())),
                                       ],
                                     ),
                                   ),
                                 ),
 
                                 // Past injuries
-                                _sectionHeader('11. Past Injuries'),
+                                _sectionHeader('11. Past Injuries'.tr()),
                                 _editableWrapper(
                                   child: _sectionCard(
                                     Column(
@@ -955,7 +956,7 @@ class _MedicalFormState extends State<MedicalForm> {
                                         Row(
                                           children: [
                                             ChoiceChip(
-                                              label: const Text('No'),
+                                              label: Text('No'.tr()),
                                               selected: _pastInjuryNone,
                                               onSelected: !_isEditing ? null : (_) => setState(() {
                                                 _pastInjuryNone = !_pastInjuryNone;
@@ -969,7 +970,7 @@ class _MedicalFormState extends State<MedicalForm> {
                                             ),
                                             SizedBox(width: 8.w),
                                             ChoiceChip(
-                                              label: const Text('Yes'),
+                                              label: Text('Yes'.tr()),
                                               selected: _pastInjuryYes,
                                               onSelected: !_isEditing ? null : (_) => setState(() {
                                                 _pastInjuryYes = !_pastInjuryYes;
@@ -981,7 +982,7 @@ class _MedicalFormState extends State<MedicalForm> {
                                         if (_pastInjuryYes) ...[
                                           SizedBox(height: 8.h),
                                           Column(children: _pastInjuries.keys.map((k) => CheckboxListTile(dense: true, contentPadding: EdgeInsets.zero, title: Text(k), value: _pastInjuries[k], onChanged: !_isEditing ? null : (v) => setState(() => _pastInjuries[k] = v ?? false))).toList()),
-                                          TextFormField(controller: _pastInjuriesOtherController, decoration: _inputDecoration('If other')),
+                                          TextFormField(controller: _pastInjuriesOtherController, decoration: _inputDecoration('If other'.tr())),
                                         ],
                                       ],
                                     ),
@@ -989,7 +990,7 @@ class _MedicalFormState extends State<MedicalForm> {
                                 ),
 
                                 // Surgeries
-                                _sectionHeader('12. Surgeries'),
+                                _sectionHeader('12. Surgeries'.tr()),
                                 _editableWrapper(
                                   child: _sectionCard(
                                     Column(
@@ -997,7 +998,7 @@ class _MedicalFormState extends State<MedicalForm> {
                                         Row(
                                           children: [
                                             ChoiceChip(
-                                              label: const Text('No'),
+                                              label: Text('No'.tr()),
                                               selected: _surgeriesNone,
                                               onSelected: !_isEditing ? null : (_) => setState(() {
                                                 _surgeriesNone = !_surgeriesNone;
@@ -1011,7 +1012,7 @@ class _MedicalFormState extends State<MedicalForm> {
                                             ),
                                             SizedBox(width: 8.w),
                                             ChoiceChip(
-                                              label: const Text('Yes'),
+                                              label: Text('Yes'.tr()),
                                               selected: _surgeriesYes,
                                               onSelected: !_isEditing ? null : (_) => setState(() {
                                                 _surgeriesYes = !_surgeriesYes;
@@ -1023,7 +1024,7 @@ class _MedicalFormState extends State<MedicalForm> {
                                         if (_surgeriesYes) ...[
                                           SizedBox(height: 8.h),
                                           Column(children: _surgeries.keys.map((k) => CheckboxListTile(dense: true, contentPadding: EdgeInsets.zero, title: Text(k), value: _surgeries[k], onChanged: !_isEditing ? null : (v) => setState(() => _surgeries[k] = v ?? false))).toList()),
-                                          TextFormField(controller: _surgeriesOtherController, decoration: _inputDecoration('If other')),
+                                          TextFormField(controller: _surgeriesOtherController, decoration: _inputDecoration('If other'.tr())),
                                         ],
                                       ],
                                     ),
@@ -1043,7 +1044,7 @@ class _MedicalFormState extends State<MedicalForm> {
                                           backgroundColor: Theme.of(context).colorScheme.surface,
                                         ),
                                         onPressed: () => Navigator.of(context).pop(),
-                                        child: Text('Cancel', style: TextStyle(fontSize: 14.sp)),
+                                        child: Text('Cancel'.tr(), style: TextStyle(fontSize: 14.sp)),
                                       ),
                                     ),
                                     SizedBox(width: 12.w),
@@ -1057,7 +1058,7 @@ class _MedicalFormState extends State<MedicalForm> {
                                           elevation: 2,
                                         ),
                                         onPressed: _isEditing ? _saveProfile : null,
-                                        child: Text('Save', style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600)),
+                                        child: Text('Save'.tr(), style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600)),
                                       ),
                                     ),
                                   ],
